@@ -5,7 +5,7 @@ autoload zsh/terminfo
 # https://github.com/holman/dotfiles/blob/master/zsh/prompt.zsh
 
 unpushed () {
-	$(/usr/bin/env git cherry -v @{upstream} 2>/dev/null)
+	/usr/bin/env git cherry -v @{upstream} 2>/dev/null
 }
 
 need_push () {
@@ -13,7 +13,7 @@ need_push () {
 	then
 		echo ""
 	else
-		echo " with %{$fg_bold[magenta]%}unpushed%{$reset_color%} "
+		echo "with %{$fg_bold[magenta]%}unpushed%{$reset_color%} "
 	fi
 }
 
@@ -110,7 +110,7 @@ $PR_LIGHT_CYAN${(e)PR_FILLBAR}\
 %{%s%}$PR_NOCOLOR\
 
 %(?.$PR_GREEN●.$PR_LIGHT_RED◖%?◗) \
-$(rb_prompt)$(scm_prompt)$(need_push)\
+$(rb_prompt)$(scm_prompt)\
 $PR_LIGHT_BLACK>$PR_GREEN>$PR_LIGHT_GREEN>\
 $PR_NO_COLOUR '
 
