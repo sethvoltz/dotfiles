@@ -1,0 +1,7 @@
+echo -e "\nYou are logged on ${Red}$HOST"
+echo -e "\nAdditionnal information:$Reset " ; uname -a
+echo -e "\n${Red}Users logged on:$Reset " ; w -h
+echo -e "\n${Red}Current date:$Reset " ; date
+echo -e "\n${Red}Machine stats:$Reset " ; uptime
+echo -e "\n${Red}Memory stats:$Reset " ; free.py
+echo

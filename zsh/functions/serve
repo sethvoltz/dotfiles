@@ -1,0 +1,2 @@
+# Start a static web server serving the current directory tree
+python -m SimpleHTTPServer ${1:-8080}

@@ -1,0 +1,29 @@
+[[ $1 ]] || { cd ..; return; } # default to 1 level
+
+local x= traverse= curpath=
+
+for x; do
+	if [[ $x =~ +([[:digit:]]) ]]; then
+		(( x == 0 )) && return # noop
+
+		# build a path to avoid munging OLDPWD
+		while (( x-- )); do
+			traverse+=../
+		done
+
+		cd "$traverse"
+	else
+		curpath=$PWD
+
+		while [[ $curpath && ! -e $curpath/$x ]]; do
+			curpath=${curpath%/*}
+		done
+
+		if [[ $curpath ]]; then
+			cd "$curpath"
+		else
+			printf "error: failed to locate \`%s' in a parent directory\n" "$x"
+			return 1
+		fi
+	fi
+done

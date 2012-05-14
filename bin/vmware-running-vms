@@ -1,0 +1,116 @@
+#!/usr/bin/env ruby
+# 
+# 1. /Library/Application\ Support/VMware\ Fusion/vmrun -T ws list
+# 2. For each item in the given list as a path to the VMX file as <vmx_file>:
+#    a. Search <vmx_file> for "ethernet0.connectionType" as <type>
+#       i. If type is "nat" then use <lease_path>:
+#          /var/db/vmware/vmnet-dhcpd-vmnet8.leases
+#      ii. If type is "bridged" then use <lease_path>:
+#          /var/db/vmware/vmnet-dhcpd-vmnet1.leases
+#    b. Search <vmx_file> for "ethernet0.generatedAddress" as <mac>
+#    c. Search <lease_path> for <mac> in a "lease <ip> { ... }" block
+#    d. If no IP comes back in <lease_path>, check <config_path> for a static IP as "host <hostname> { ... }"
+#    e. Search <vmx_file> for "displayName" as <name>
+#    f. Return <name>, <ip> and <mac>
+# 
+# Future Extension:
+# * Automatically modify /etc/hosts to add displayName as a "host name" to its IP.
+#   * Only if displayName follows the FQDN form. Add multiple aliases for host if it ends in .local
+#     or .localdomain. E.g. pki.local would get the entry "<ip>   pki.local pki"
+# 
+# Format...
+# > Running Virtual Machines:
+# >   R pki.local (172.16.81.34)
+
+# Get list of running VMs
+vmx_files = []
+`"/Library/Application Support/VMware Fusion/vmrun" -T ws list`.each_line do |l|
+	vmx_files << l if l.match "^/"
+end
+
+# Parse through DHCP lease files
+nat_lease_file = "/var/db/vmware/vmnet-dhcpd-vmnet8.leases"
+nat_config_file = "/Library/Application Support/VMware Fusion/vmnet8/dhcpd.conf"
+bridge_lease_file = "/var/db/vmware/vmnet-dhcpd-vmnet1.leases"
+bridge_config_file = "/Library/Application Support/VMware Fusion/vmnet1/dhcpd.conf"
+
+leases = {}
+
+def read_lease_file(file)
+	state = :open
+	leases_temp = {}
+	temp = {}
+	File.read(file).each_line do |l|
+		next if l.match /^#/ or l.match /^\s*$/ # No comments or empty lines
+		if state == :open
+			if(m = l.match 'lease ([0-9.]{7,15})') # Get IP
+				temp = { :ip => m[1] }
+				state = :inside
+			end
+		elsif state == :inside
+			if l.match '\}'
+				leases_temp[temp[:mac]] = temp[:ip] if(temp.include? :ip and temp.include? :mac)
+				state = :open
+			elsif(m = l.match /hardware ethernet ([0-9a-f:]{17});/i) # Get MAC Address
+				temp[:mac] = m[1].downcase
+			end
+		end # state
+	end # File.read
+	leases_temp
+end
+
+def read_config_file(file)
+	state = :open
+	config_temp = {}
+	temp = {}
+	File.read(file).each_line do |l|
+		next if l.match /^#/ or l.match /^\s*$/ # No comments or empty lines
+		if state == :open
+			if(m = l.match 'host\s+(\S+)\s+\{') # Get IP
+				temp = { :host => m[1] }
+				state = :inside
+			end
+		elsif state == :inside
+			if l.match '\}'
+				config_temp[temp[:mac]] = temp[:ip] if(temp.include? :ip and temp.include? :mac)
+				state = :open
+			elsif(m = l.match /hardware ethernet ([0-9a-f:]{17})/i) # Get MAC Address
+				temp[:mac] = m[1].downcase
+			elsif(m = l.match /fixed-address ([0-9.]{7,15})/)
+				temp[:ip] = m[1]
+			end
+		end # state
+	end # File.read
+	config_temp
+end
+
+leases[:nat] = read_lease_file(nat_lease_file)
+leases[:nat].merge! read_config_file(nat_config_file)
+leases[:bridge] = read_lease_file(bridge_lease_file)
+leases[:bridge].merge! read_config_file(bridge_config_file)
+
+puts "Running Virtual Machines:"
+
+the_lines = []
+# For each VM by VMX file
+vmx_files.each do |file|
+	# Extract VMX parameters
+	vmx_file = {}
+	File.read(file.strip).each_line { |l| m = l.match(/\s*([^\s]+)\s+=\s+"(.+)"/); vmx_file[m[1].downcase] = m[2] if m }
+	
+	address = (vmx_file['ethernet0.generatedaddress'] || vmx_file['ethernet0.address']).downcase
+	
+	ip = if vmx_file['ethernet0.connectiontype'] == "nat"
+		leases[:nat][address]
+	else
+		leases[:bridge][address]
+	end
+	
+	the_lines << "  R #{vmx_file['displayname']} (#{ip})"
+end
+
+if vmx_files.empty?
+	the_lines << "   - none -"
+end
+
+puts the_lines.sort.join "\n"

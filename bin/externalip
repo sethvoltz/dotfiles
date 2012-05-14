@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+# EXTERNAL=`curl --silent http://checkip.dyndns.org | awk '{print $6}' | cut -f 1 -d "<"`
+EXTERNAL=`dig +short myip.opendns.com @resolver1.opendns.com`
+if [[ $EXTERNAL ]]
+then echo "External : ${EXTERNAL}"
+else echo "External : «no connection»"
+fi
+# echo "External :" `curl --silent http://checkip.dyndns.org | awk '{print $6}' | cut -f 1 -d "<"`

@@ -1,0 +1,27 @@
+rails_root      = File.basename(Dir.pwd)
+console_running = IRB.conf[:LOAD_MODULES] && IRB.conf[:LOAD_MODULES].include?('console_with_helpers')
+rails_running   = !(IRB.conf[:LOAD_MODULES] && IRB.conf[:LOAD_MODULES].include?('console_with_helpers'))
+
+IRB.conf[:PROMPT][:RAILS] = {
+	:PROMPT_I => "[%03n] #{rails_root} > ",
+	:PROMPT_S => "[%03n] #{rails_root} * ",
+	:PROMPT_C => "[%03n] #{rails_root} ? ",
+	:PROMPT_N => "[%03n] #{rails_root} > ",
+	:RETURN   => "=> %s\n" 
+}
+IRB.conf[:PROMPT_MODE] = :RAILS
+
+# Called after the irb session is initialized and Rails has been loaded (props: Mike Clark).
+IRB.conf[:IRB_RC] = Proc.new do
+	if defined?(ActiveRecord)
+		begin
+			require 'hirb'
+			Hirb.enable
+		rescue LoadError => err
+			warn "Couldn't load Hirb: #{err}"
+		end
+
+		ActiveRecord::Base.logger = Logger.new(STDOUT)
+		# ActiveRecord::Base.instance_eval { alias :[] :find }
+	end
+end

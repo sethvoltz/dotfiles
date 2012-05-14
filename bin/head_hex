@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby
+
+if ARGV.size < 2
+  puts "usage: head_hex byte_count filename"
+  exit 1
+end
+
+num_bytes = ARGV[0].to_i
+filename = ARGV[1]
+
+file_size = File.size(filename)
+file = open(filename, "rb")
+
+if (num_bytes > file_size)
+  num_bytes = file_size
+end
+
+puts file.read(num_bytes).unpack('H*').first.gsub(/../) {|x| "#{x} "}

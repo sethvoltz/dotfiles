@@ -1,0 +1,11 @@
+local i= char= url=$*
+declare -i len=${#url}
+
+for (( i = 0; i < len; i++ )); do
+	char=${url:i:1}
+	case "$char" in
+		[a-zA-Z0-9.~_-]) printf "$char" ;;
+		' ') printf + ;;
+		*) printf '%%%X' "'$char" ;;
+	esac
+done

@@ -1,0 +1,3 @@
+# Man with fallback
+
+/usr/bin/man $@ || (help $@ 2> /dev/null && help $@ | less)

@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+/usr/bin/pmset -a hibernatemode 0
+rm /var/vm/sleepimage

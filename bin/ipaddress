@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+myiface=`ifconfig $1 | grep "inet " | grep -v 127.0.0.1 | awk '{print $2}'`
+
+if [ "$myiface" != "" ]
+then
+    echo "$2 : $myiface"
+else
+    echo "$2 : INACTIVE"
+fi

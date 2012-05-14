@@ -1,0 +1,5 @@
+# Quit an OS X application from the command line
+
+for app in $*; do
+	osascript -e 'quit app "'$app'"'
+done

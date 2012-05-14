@@ -1,0 +1,28 @@
+#!/usr/bin/env zsh
+#
+# Shows all 256 colors of xterm's 256-color mode.
+# Make sure your terminal is at least 108x47.
+# This script has been placed into the Public Domain by its author, J. S. Connell.
+#
+
+clear
+
+column=1
+line=1
+xlimit=6
+ylimit=6
+color=16
+while [ $color -lt 256 ]; do
+    printf "%3d: \x1B[48;5;%dm            \x1B[0m " $color $color
+    color=$[$color+1]
+    column=$[$column+1]
+    if [ $column -gt $xlimit ]; then
+        echo
+        column=1
+        line=$[$line+1]
+        if [ $line -gt $ylimit ]; then
+            echo
+            line=1
+        fi
+    fi
+done

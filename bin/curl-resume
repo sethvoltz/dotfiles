@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby
+
+if ARGV.length < 1
+	$stderr.puts "Usage: #{File.basename $0} <uri to file> [<path to output file>]"
+	exit 1
+end
+
+require 'uri'
+
+uri = URI.parse ARGV[0]
+
+filename = if ARGV.length > 1
+	ARGV[1]
+else
+	File.basename uri.path
+end
+
+exec "curl -C - -o #{filename} #{uri.to_s}"

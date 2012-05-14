@@ -1,0 +1,67 @@
+#!/usr/bin/env ruby
+
+# http://m.wund.com/cgi-bin/findweather/getForecast?query=95131
+
+require 'open-uri'
+require 'optparse'
+
+APP_VERSION = "1.0.0"
+BASE_URI = "http://m.wund.com/cgi-bin/findweather/getForecast?query="
+
+def get_weather_data(zip_code)
+	page_data = ""
+	open(BASE_URI + zip_code) { |f| f.each_line { |line| page_data += line }}
+
+	{
+		:temperature => (page_data.match(%r|<td>Temperature</td>.*?<span class="nowrap"><b>([0-9.]+)</b>|m) || [0,0])[1].to_f.round,
+		:conditions => (page_data.match(%r|<td>Conditions</td>.*?<td><b>(.+?)</b>|m) || [])[1]
+	}
+end
+
+def parse_options
+	# Specify options
+	opts = OptionParser.new do |opts|
+		opts.banner = "Usage: #{$0} [options] zip_code"
+		opts.separator ''
+		opts.separator 'Options:'
+		
+		
+		opts.on('-d', 'Use unicode degrees symbol for temperatures') { |bool| @options[:degrees] = bool }
+		opts.on('-u', 'Suppress temperature unit') { |bool| @options[:unit] = !bool }
+		opts.on('-t', 'Show current temperature') { |bool| @options[:temperature] = bool }
+		opts.on('-c', 'Show current conditions') { |bool| @options[:conditions] = bool }
+		
+		opts.on_tail('--version', 'Show version')         { output_version ; exit 0 }
+		opts.on_tail('-h', '--help', 'Show this message') { puts opts ; exit 0 }
+	end
+	opts.parse! rescue puts opts and exit 1 # Parse options with fail catch and message
+end
+
+def output_version
+	puts "#{File.basename(__FILE__)} version #{APP_VERSION}"
+end
+
+@options = {
+	:degrees => false,
+	:unit => true,
+	:temperature => false,
+	:conditions => false
+}
+parse_options
+
+unless @options[:temperature] or @options[:conditions]
+	$stderr.puts "You must show at least one weather metric."
+	exit 1
+end
+
+if (@options[:zip_code] ||= ARGV.shift).nil?
+	$stderr.puts "You must provide a Zip Code."
+	exit 1
+end
+
+degrees = @options[:degrees] ? "°" : ""
+unit = @options[:unit] ? "F" : ""
+
+weather = get_weather_data @options[:zip_code]
+puts "#{weather[:temperature]}#{degrees}#{unit}" if @options[:temperature]
+puts "#{weather[:conditions]}" if @options[:conditions]

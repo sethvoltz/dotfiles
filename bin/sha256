@@ -1,0 +1,14 @@
+#!/usr/bin/env ruby
+
+require 'digest/sha2'
+
+if ARGV.size < 1
+	puts "usage: sha256 filename"
+	exit 1
+end
+
+filename = ARGV[0]
+
+reply = Digest::SHA256.hexdigest(File.read(filename))
+
+puts reply

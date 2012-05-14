@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+
+def osx_current_airport_network
+	network = `system_profiler SPAirPortDataType | grep -e "Current Wireless Network:"`
+	network = network.sub(/Current Wireless Network: /, "").strip
+end

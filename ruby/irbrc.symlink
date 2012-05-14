@@ -1,0 +1,81 @@
+#!/usr/bin/ruby
+
+require 'rubygems' rescue nil
+require 'irb/completion'
+require 'irb/ext/save-history'
+require 'pp'
+
+# Add all gems in the global gemset to the $LOAD_PATH so they can be used in rails3 console with bundler
+bundler_escaped = false
+if defined?(::Bundler)
+	# $LOAD_PATH.concat Dir.glob("#{ENV['rvm_path']}/gems/#{ENV['rvm_ruby_string']}@global/gems/*/lib")
+
+	def attempt_breakout(path)
+		print "Attempting breakout with '#{path}'... "
+		begin
+			load path
+			puts "Success!"
+			return true
+		rescue LoadError
+			puts "Failed."
+		end
+		false
+	end
+
+	# Kudos: https://github.com/ConradIrwin/pry-debundle/blob/master/lib/pry-debundle.rb
+	Gem.post_reset_hooks.reject!{ |hook| hook.source_location.first =~ %r{/bundler/} }
+	Gem::Specification.reset
+
+	bundler_escaped = attempt_breakout(Bundler.bundle_path.join 'rubygems', 'custom_require.rb') unless bundler_escaped
+	bundler_escaped = attempt_breakout(File.join Bundler.bundle_path.to_s.gsub('/gems/', '/'), 'rubygems', 'custom_require.rb') unless bundler_escaped
+end
+
+# Return value colorization
+begin
+	require 'wirble'
+	Wirble.init(:skip_prompt => true, :skip_history => true)
+	Wirble.colorize
+rescue LoadError => err
+	warn "Couldn't load Wirble: #{err}"
+end
+
+# Add ReadLine support
+ARGV.concat [ "--readline" ]
+
+# Command history and history saving
+IRB.conf[:SAVE_HISTORY] = 500
+IRB.conf[:HISTORY_FILE] = "#{ENV['HOME']}/.irb_history" 
+
+# Basic automatic indenting
+IRB.conf[:AUTO_INDENT]  = true
+
+# Custom Prompt
+IRB.conf[:PROMPT] ||= {}
+IRB.conf[:PROMPT][:SETH] = {
+	:PROMPT_I => "[%03n] > ",
+	:PROMPT_S => "[%03n] * ",
+	:PROMPT_C => "[%03n] ? ",
+	:PROMPT_N => "[%03n] > ",
+	:RETURN   => "=> %s\n" 
+}
+IRB.conf[:PROMPT_MODE]  = :SETH
+
+# Rails only
+load "~/.railsrc" if ENV['RAILS_ENV'] || defined? Rails
+
+# http://blog.evanweaver.com/articles/2006/12/13/benchmark/
+def benchmark(times = 1000, samples = 20)
+	times *= samples
+	cur = Time.now
+	result = times.times { yield }
+	print "#{cur = (Time.now - cur) / samples.to_f } seconds"
+	puts " (#{(cur / $last_benchmark * 100).to_i - 100}% change)" rescue puts ""
+	$last_benchmark = cur
+	result
+end
+
+class Object
+  def local_methods(obj = self)
+    (obj.methods - obj.class.superclass.instance_methods).sort
+  end
+end

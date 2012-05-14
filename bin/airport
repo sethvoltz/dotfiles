@@ -1,0 +1,25 @@
+#!/usr/bin/env ruby
+
+network_name = ""
+network_channel = ""
+
+mode = :find_network_name
+`system_profiler SPAirPortDataType`.split("\n").each do |line|
+	case mode
+	when :find_network_name
+		next unless line =~ /Current Network Information/
+		mode = :capture_network_name
+	when :capture_network_name
+		network_name = line.match(/\W*(.*?):/)[1]
+		mode = :capture_network_channel
+	when :capture_network_channel
+		next unless line =~ /Channel:/
+		network_channel = line.match(/Channel: ([0-9]*)/)[1]
+	end
+end
+
+unless network_name.empty?
+	print " Network : #{network_name} (Ch. #{network_channel})"
+else
+	print " Network : «not connected»"
+end

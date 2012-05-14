@@ -1,0 +1,36 @@
+# Kill all processes based on grep match
+
+# Do not mess with the global OPTIND value
+local OPTIND;
+local level=15;
+
+# Parse options and custom catch bad switches
+while getopts ":s:" opt; do
+	if [[ $opt == "s" ]]; then
+		if [[ $OPTARG =~ ^[12369]$|^1[45]$ ]]; then
+			level=$OPTARG
+		else
+			echo "Invalid signal value. Please check the 'kill' manpage for acceptable signals." >&2
+			return 2
+		fi
+	else
+		echo "Usage: gkill [-s SIGNAL] REGEX" >&2
+		return 1
+	fi
+done
+
+# Get rid of the options parsed by getopts
+shift $(($OPTIND - 1))
+
+# Check for existance of search param
+if [ $1 ]; then
+	local counter=0
+	for i in $(ps wwAo pid,command | grep "$1" | grep -v grep | sed -e 's/^ *\([0-9]*\).*$/\1/'); do
+		kill -s $level $i
+		counter=$(($counter+1))
+	done
+	echo "Killed $counter processes."
+else
+	echo "Usage: gkill [-s SIGNAL] REGEX" >&2
+	return 1
+fi

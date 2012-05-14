@@ -1,0 +1,21 @@
+#!/bin/bash
+STARTX=/usr/X11/bin/startx
+
+if [ `cat $STARTX | grep -q 'defaultserverargs="-dpi 96"'` ]; then
+  echo "*** 'startx' already uses 96 dpi"; exit
+fi
+
+if [ `cat $STARTX | grep -q '^defaultserverargs=".*"'` ]; then 
+ echo "*** 'startx' has been already altered. Please check the file manually"; exit
+fi
+
+if [ -x $STARTX.orig ]; then
+  echo "*** You already have a '/usr/X11/bin/startx.orig' file."
+  echo "*** 'startx' has _NOT_ been changed. Please check the file manually."
+  exit
+fi
+
+
+cp $STARTX $STARTX.orig
+sed -i "" -e 's/^defaultserverargs=""/defaultserverargs="-dpi 96"/g' $STARTX 
+echo 'startx' set to use 96 dpi. Please restart X11.
