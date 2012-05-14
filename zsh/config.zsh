@@ -18,7 +18,6 @@ export VISUAL=$EDITOR
 # Other Settings
 export PAGER=less
 export CLICOLOR=1
-# export LSCOLORS=gxfxcxdxbxegedabagacad # Color scheme optimized for dark background
 export LC_CTYPE=en_US.UTF-8 # Ensure UTF-8 always, everywhere
 
 fpath=($ZSH/zsh/functions $fpath)
