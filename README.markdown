@@ -1,24 +1,14 @@
-# holman does dotfiles
+# Seth does dotfiles
 
 ## dotfiles
 
-Your dotfiles are how you personalize your system. These are mine. The very
-prejudiced mix: OS X, zsh, Ruby, Rails, git, homebrew, rbenv, vim. If you
-match up along most of those lines, you may dig my dotfiles.
-
-I was a little tired of having long alias files and everything strewn about
-(which is extremely common on other dotfiles projects, too). That led to this
-project being much more topic-centric. I realized I could split a lot of things
-up into the main areas I used (Ruby, git, system libraries, and so on), so I
-structured the project accordingly.
-
-If you're interested in the philosophy behind why projects like these are
-awesome, you might want to [read my post on the
+This dotfiles organization system is heavily based on @holman's dotfiles
+repository. [Rad his post on the
 subject](http://zachholman.com/2010/08/dotfiles-are-meant-to-be-forked/).
 
 ## install
 
-- `git clone git://github.com/holman/dotfiles ~/.dotfiles`
+- `git clone git://github.com/tauceti/dotfiles ~/.dotfiles`
 - `cd ~/.dotfiles`
 - `rake install`
 
@@ -77,14 +67,10 @@ said, I do use this as *my* dotfiles, so there's a good chance I may break
 something if I forget to make a check for a dependency.
 
 If you're brand-new to the project and run into any blockers, please
-[open an issue](https://github.com/holman/dotfiles/issues) on this repository
-and I'd love to get it fixed for you!
+[check out the original project](https://github.com/holman/dotfiles/) on his
+repository.
 
 ## thanks
 
-I forked [Ryan Bates](http://github.com/ryanb)' excellent
-[dotfiles](http://github.com/ryanb/dotfiles) for a couple years before the
-weight of my changes and tweaks inspired me to finally roll my own. But Ryan's
-dotfiles were an easy way to get into bash customization, and then to jump ship
-to zsh a bit later. A decent amount of the code in these dotfiles stem or are
-inspired from Ryan's original project.
+I forked [Zach Holman](http://github.com/holman)'s excellent
+[dotfiles](http://github.com/holman/dotfiles) and tweaked for all my needs.
