@@ -1,5 +1,6 @@
 # Ruby Environment Manager
-eval "$(rbenv init -)"
+# /!\ MAKE SURE this is in zshenv.symlink or non-interactive shells will fail on Ruby
+#     eval "$(rbenv init -)"
 
 # rehash shims
 rbenv rehash 2>/dev/null
