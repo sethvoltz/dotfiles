@@ -1,3 +1,7 @@
+#!/usr/bin/env bash
+
+# http://apple.stackexchange.com/questions/5435/what-are-some-tips-or-tricks-for-terminal-in-mac-os-x?page=4&tab=votes
+
 currFolderPath=$( /usr/bin/osascript <<EOT
 	tell application "Finder"
 		try
