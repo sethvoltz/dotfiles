@@ -4,8 +4,6 @@
 #   export PS1='%3~$(git_info_for_prompt)%# '
 # fi
 
-export LSCOLORS="gxfxcxdxbxegedabagacad" # Color scheme optimized for dark background
-export CLICOLOR=true
 
 # Editors
 export EDITOR='vim'
@@ -17,7 +15,8 @@ export VISUAL=$EDITOR
 
 # Other Settings
 export PAGER=less
-export CLICOLOR=1
+export CLICOLOR=true
+export LSCOLORS="gxfxcxdxbxegedabagacad" # Color scheme optimized for dark background
 export LC_CTYPE=en_US.UTF-8 # Ensure UTF-8 always, everywhere
 
 fpath=($ZSH/zsh/functions $fpath)
@@ -39,7 +38,6 @@ setopt EXTENDED_HISTORY # add timestamps to history
 setopt PROMPT_SUBST
 setopt CORRECT
 setopt COMPLETE_IN_WORD
-setopt IGNORE_EOF
 
 setopt APPEND_HISTORY # adds history
 setopt INC_APPEND_HISTORY SHARE_HISTORY  # adds history incrementally and share it across sessions
