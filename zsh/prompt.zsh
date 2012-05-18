@@ -43,14 +43,15 @@ function precmd {
 	PR_FILLBAR=""
 	PR_PWDLEN=""
 
-	local promptsize=${#${(%):-[%n@%m:%l]()}}
+  # promptsize defines the size of the left-portion of the first line of the prompt.
+  # Be sure to put in placeholders for all styling characters as well as dynamic attributes.
+	local promptsize=${#${(%):-.%! [%n@%m......]()}}
 	local pwdsize=${#${(%):-%~}}
     
 	if [[ "$promptsize + $pwdsize" -gt $TERMWIDTH ]]; then
 		((PR_PWDLEN=$TERMWIDTH - $promptsize))
 	else
 		PR_FILLBAR="\${(l.(($TERMWIDTH - ($promptsize + $pwdsize))).. .)}"
-		# PR_FILLBAR="\${(l.(($TERMWIDTH - ($promptsize + $pwdsize)))..${PR_HBAR}.)}"
 	fi
 }
 
@@ -81,10 +82,10 @@ setprompt () {
     
 	case $TERM in
 		xterm*)
-			PR_TITLEBAR=$'%{\e]0;%(!.-=*[ROOT]*=- | .)%n@%m:%~ | ${COLUMNS}x${LINES} | %y\a%}'
+			PR_TITLEBAR=$'%{\e]0;%(!.[ROOT] .)%n@%m:%~\a%}'
 			;;
 		screen)
-			PR_TITLEBAR=$'%{\e_screen \005 (\005t) | %(!.-=[ROOT]=- | .)%n@%m:%~ | ${COLUMNS}x${LINES} | %y\e\\%}'
+			PR_TITLEBAR=$'%{\e_screen \005 (\005t) | %(!.[ROOT] .)%n@%m:%~\e\\%}'
 			;;
 		*)
 			PR_TITLEBAR=''
@@ -103,16 +104,17 @@ setprompt () {
   # Finally, the prompt.
 
 	PROMPT='$PR_STITLE${(e)PR_TITLEBAR}\
-%{%S%}\
-${PR_YELLOW}[%n@%m:%l]\
-$PR_LIGHT_CYAN${(e)PR_FILLBAR}\
+%{$fg[black]$bg[yellow]%}\
+𐄦%! [%n@%m]\
+%{$fg[cyan] ░▒$fg[yellow]$bg[cyan]▒░ %}\
+${PR_BLACK}${(e)PR_FILLBAR}\
 (%$PR_PWDLEN<...<%~%<<)\
-%{%s%}$PR_NOCOLOR\
+%{$reset_color%}\
 
 %(?.$PR_GREEN●.$PR_LIGHT_RED◖%?◗) \
 $(rb_prompt)$(scm_prompt)\
 %(?.$PR_LIGHT_BLACK»$PR_GREEN»$PR_LIGHT_GREEN».$PR_LIGHT_BLACK»$PR_RED»$PR_LIGHT_RED»)\
-$PR_NO_COLOUR '
+%{$reset_color%} '
 
 	RPROMPT=' $PR_LIGHT_BLUE($PR_YELLOW%D{%a, %b %d} %D{%H:%M}$PR_LIGHT_BLUE)$PR_NO_COLOUR'
 
