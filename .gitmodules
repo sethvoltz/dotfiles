@@ -130,3 +130,6 @@
 	path = vim/vim.symlink/bundle/nerd-tree
 	url = git://github.com/scrooloose/nerdtree.git
 	ignore = untracked
+[submodule "vim/vim.symlink/bundle/tomorrow-theme"]
+	path = vim/vim.symlink/bundle/tomorrow-theme
+	url = git://github.com/chriskempson/vim-tomorrow-theme.git
