@@ -102,11 +102,14 @@ setprompt () {
     
   ###
   # Finally, the prompt.
+  # A and B colors define the first line's colors and the gradient transition
+
+	A_COLOR='yellow'
+	B_COLOR='cyan'
 
 	PROMPT='$PR_STITLE${(e)PR_TITLEBAR}\
-%{$fg[black]$bg[yellow]%}\
-𐄦%! [%n@%m]\
-%{$fg[cyan] ░▒$fg[yellow]$bg[cyan]▒░ %}\
+$PR_BLACK%{$bg[$A_COLOR]%}𐄦%! [%n@%m]\
+%{$fg[$B_COLOR] ░▒$fg[$A_COLOR]$bg[$B_COLOR]▒░ %}\
 ${PR_BLACK}${(e)PR_FILLBAR}\
 (%$PR_PWDLEN<...<%~%<<)\
 %{$reset_color%}\
