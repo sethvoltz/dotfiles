@@ -20,7 +20,8 @@ need_push () {
 rb_prompt(){
 	if $(which rbenv &> /dev/null)
 	then
-		echo "%{$fg_no_bold[green]%}‹$(rbenv version | awk '{print $1}')›%{$reset_color%} "
+    # echo "‹$(rbenv version | awk '{print $1}')› "
+		echo "with ruby $(rbenv version | awk '{print $1}') "
 	else
 		echo ""
 	fi
@@ -45,7 +46,11 @@ function precmd {
 
   # promptsize defines the size of the left-portion of the first line of the prompt.
   # Be sure to put in placeholders for all styling characters as well as dynamic attributes.
-	local promptsize=${#${(%):-.%! [%n@%m......]()}}
+  # Template: ${#${(%):-____()}} where ____ is replaced with the contents.
+
+	# local promptsize=${#${(%):-.%! [%n@%m......]()}}
+	local rb_pr="$(rb_prompt)"
+	local promptsize=${#${(%):-.%! [%n@%m]......$rb_pr()}}
 	local pwdsize=${#${(%):-%~}}
     
 	if [[ "$promptsize + $pwdsize" -gt $TERMWIDTH ]]; then
@@ -110,12 +115,12 @@ setprompt () {
 	PROMPT='$PR_STITLE${(e)PR_TITLEBAR}\
 $PR_BLACK%{$bg[$A_COLOR]%}𐄦%! [%n@%m]\
 %{$fg[$B_COLOR] ░▒$fg[$A_COLOR]$bg[$B_COLOR]▒░ %}\
-${PR_BLACK}${(e)PR_FILLBAR}\
+${PR_BLACK}$(rb_prompt)${(e)PR_FILLBAR}\
 (%$PR_PWDLEN<...<%~%<<)\
 %{$reset_color%}\
 
 %(?.$PR_GREEN●.$PR_LIGHT_RED◖%?◗) \
-$(rb_prompt)$(scm_prompt)\
+$(scm_prompt)\
 %(?.$PR_LIGHT_BLACK»$PR_GREEN»$PR_LIGHT_GREEN».$PR_LIGHT_BLACK»$PR_RED»$PR_LIGHT_RED»)\
 %{$reset_color%} '
 
