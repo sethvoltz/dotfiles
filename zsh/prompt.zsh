@@ -28,7 +28,7 @@ rb_prompt(){
 }
 
 scm_prompt(){
-	echo "%{$fg[green]%}$(vcprompt -f '(%n:%b%m%u) ')%{$reset_color%}"
+	vcprompt -f '(%n:%b%m%u) '
 }
 
 ####################################################################################################
@@ -119,7 +119,7 @@ ${PR_BLACK}$(rb_prompt)${(e)PR_FILLBAR}\
 (%$PR_PWDLEN<...<%~%<<)\
 %{$reset_color%}\
 
-%(?.$PR_GREEN●.$PR_LIGHT_RED◖%?◗) \
+%(?.$PR_GREEN●.$PR_RED◖%?◗) \
 $(scm_prompt)\
 %(?.$PR_LIGHT_BLACK»$PR_GREEN»$PR_LIGHT_GREEN».$PR_LIGHT_BLACK»$PR_RED»$PR_LIGHT_RED»)\
 %{$reset_color%} '
