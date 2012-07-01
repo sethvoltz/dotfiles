@@ -1,24 +1,24 @@
-# Seth does dotfiles
+      .     .        .         
+      |     |   ,- o |         
+    ,-| ,-. |-  |  . | ,-. ,-. 
+    | | | | |   |- | | |-' `-. 
+  o `-' `-' `-' |  ' ' `-' `-' 
+               -'              
 
-## Dotfiles
+  git clone git://github.com/tauceti/dotfiles ~/.dotfiles
+  cd ~/.dotfiles
+  rake install
 
-This dotfiles organization system is heavily based on @holman's dotfiles repository. [Read his post
-on the subject](http://zachholman.com/2010/08/dotfiles-are-meant-to-be-forked/).
-
-## Install
-
-- `git clone git://github.com/tauceti/dotfiles ~/.dotfiles`
-- `cd ~/.dotfiles`
-- `rake install`
+# .dotfiles
 
 The install rake task will symlink the appropriate files in `.dotfiles` to your home directory.
 Everything is configured and tweaked within `~/.dotfiles`, though.
 
 The main file you'll want to change right off the bat is `zsh/zshrc.symlink`, which sets up a few
-paths that'll be different on your particular machine.
+paths that may be different on your particular machine.
 
-Files in `.dotfiles/bin` will be added to your path. For executables that are private or should not
-be added to this repository, use `~/bin` instead. See [Components][#components] below for more
+Files in `.dotfiles/bin` will be available in your path. For executables that are private or should
+not be added to this repository, use `~/bin` instead. See [Components][#components] below for more
 information.
 
 ## Topical
