@@ -128,6 +128,10 @@ map <Leader>te :tabe <C-R>=expand("%:p:h") . "/" <CR>
 " Command mode: Ctrl+P
 cmap <C-P> <C-R>=expand("%:p:h") . "/" <CR>
 
+" w!! to write a file as sudo
+" Stolen from Yan Pritzker (skwp), who stole it from Steve Losh
+cmap w!! w !sudo tee % >/dev/null
+
 " Use modeline overrides
 set modeline
 set modelines=10
