@@ -1,7 +1,13 @@
 Icon
 .DS_Store
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+Desktop.ini
 .svn
 .tissues
 *~
 *.swp
 *.rbc
+.sass-cache
