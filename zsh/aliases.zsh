@@ -16,3 +16,21 @@ alias grep='grep --color'
 # alias unpushed='unpushed=`git unpushed` && echo -n $unpushed | wc -l | tr -d " "'
 alias netprocs='lsof -P -i -n | cut -f 1 -d " " | uniq'
 alias recent="find . -type f -print0 -o \( -type d -path './.*' -prune -o -path './tmp' -prune -o -path './log' -prune \) | xargs -0 ls -lrt | tail -n 20"
+
+# Enhanced WHOIS lookup
+alias whois="whois -h whois-servers.net"
+
+# Flush Directory Service cache
+alias flush="dscacheutil -flushcache"
+
+# View HTTP traffic
+alias sniff="sudo ngrep -d 'en1' -t '^(GET|POST) ' 'tcp and port 80'"
+alias httpdump="sudo tcpdump -i en1 -n -s 0 -w - | grep -a -o -E \"Host\: .*|GET \/.*\""
+
+# Clear Apple System Logs for faster shell startup
+alias clearasl="sudo rm -rfv /private/var/log/asl/*.asl"
+
+# One of @janmoesen’s ProTip™s
+for method in GET HEAD POST PUT DELETE TRACE OPTIONS; do
+	alias "$method"="lwp-request -m '$method'"
+done
