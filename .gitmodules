@@ -136,3 +136,9 @@
 [submodule "vim/vim.symlink/bundle/indent-guides"]
 	path = vim/vim.symlink/bundle/indent-guides
 	url = git://github.com/nathanaelkane/vim-indent-guides.git
+[submodule "vim/vim.symlink/bundle/powerline"]
+	path = vim/vim.symlink/bundle/powerline
+	url = git://github.com/Lokaltog/vim-powerline.git
+[submodule "vim/vim.symlink/bundle/nerd-tree-tabs"]
+	path = vim/vim.symlink/bundle/nerd-tree-tabs
+	url = git://github.com/jistr/vim-nerdtree-tabs.git

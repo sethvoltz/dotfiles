@@ -1,10 +1,18 @@
+" Use Vim settings, rather then Vi settings (much better!).
+" This must be first, because it changes other options as a side effect.
+set nocompatible
+
 " Set mapleader to comma
 let mapleader = ","
 
-" Load up Pathogen
+" =----------------------------------------------------------------------------------= Pathogen =--=
+" Load up Pathogen to load all plugins in ~/.vim/bundle
+
 runtime bundle/pathogen/autoload/pathogen.vim
 call pathogen#infect()
 call pathogen#helptags()
+
+" =--------------------------------------------------------------------------= General Settings =--=
 
 if has("autocmd")
 	autocmd bufwritepost .vimrc source $MYVIMRC
@@ -15,40 +23,44 @@ if has("gui_running")
 	set guioptions=-t
 endif
 
-" Main settings
-set nocompatible
-set scrolloff=4
-
-set number
+set number                     " Enable line numbers
+set scrolloff=4                " Ensure at least 4 lines are visible above and below the cursor position
 set ruler
+set encoding=utf-8
+set backspace=indent,eol,start " allow backspacing over everything in insert mode
+set showcmd                    " Show (partial) command in the status line
+
 syntax on
 
-" Set encoding
-set encoding=utf-8
+" This makes vim act like all other editors, buffers can
+" exist in the background without being in a window.
+" http://items.sjbach.com/319/configuring-vim-right
+set hidden
 
-" Core Whitespace
-set nowrap
-set noexpandtab
-set shiftwidth=2
-set tabstop=2
-set autoindent
+" =------------------------------------------------------------------= Core Whitespace Settings =--=
 
-" Custom tabbing - I can't do this until I can set YAML separately.
-"autocmd User Rails set sw=4 sts=4 noet
-"autocmd FileType ruby setlocal ts=2 sts=2 sw=2 noexpandtab
+set autoindent    " 
+set smartindent   " 
+set smarttab      " 
+set shiftwidth=2  " Tabs are two columns wide
+set softtabstop=2 " Ditto
+set tabstop=2     " Ditto
+set expandtab     " 
+set textwidth=100 " I like long lines and no other coder can deny.
+set nowrap        " But not be default.
 
-" Vidualize Leading and Trailing Whitespace
-"set list listchars=tab:➜\ ,trail:·
+" Highlight spaces at the end of the line except in help files
 if has("autocmd")
 	autocmd BufNewFile,BufReadPost,FilterReadPost,FileReadPost,Syntax * SpaceHi
 	au FileType help NoSpaceHi
 endif
 
-" Searching
-set hlsearch
-set incsearch
-set ignorecase
-set smartcase
+" ----------------------------------------------------------------------------------= Searching =--=
+
+set hlsearch   " Highlight search results
+set incsearch  " Find the next search as we type
+set ignorecase " Ignore case in searches
+set smartcase  " Be smart about case
 
 " Press escape to clear search
 " http://stackoverflow.com/questions/657447/vim-clear-last-search-highlighting
@@ -66,23 +78,13 @@ set laststatus=2
 " This is likely a bludgeon to solve some other issue, but it works
 set noequalalways
 
-" NERDTree configuration
-let NERDTreeIgnore=['\.pyc$', '\.rbc$', '\~$']
-map <Leader>n :NERDTreeToggle<CR>
+" =---------------------------------------------------------------------------= Persistent Undo =--=
+" Keep undo history across sessions, by storing in file.
+" Only works all the time.
 
-" Command-T configuration
-let g:CommandTMaxHeight=20
-
-" ZoomWin configuration
-map <Leader><Leader> :ZoomWin<CR>
-
-" CTags
-map <Leader>rt :!ctags --extra=+f -R *<CR><CR>
-map <C-\> :tnext<CR>
-
-" Gundo configuration
-nmap <F5> :GundoToggle<CR>
-imap <F5> <ESC>:GundoToggle<CR>
+silent !mkdir ~/.vim/backups > /dev/null 2>&1
+set undodir=~/.vim/backups
+set undofile
 
 " Remember last location in file
 if has("autocmd")
@@ -90,20 +92,15 @@ if has("autocmd")
 		\| exe "normal g'\"" | endif
 endif
 
-function! s:setupWrapping()
-	set wrap
-	set wrapmargin=2
-	set textwidth=100
-endfunction
+" =------------------------------------------------------------------------------= Code Folding =--=
 
-function! s:setupMarkup()
-	call s:setupWrapping()
-	map <buffer> <Leader>p :Hammer<CR>
-endfunction
+set foldmethod=indent   " Fold based on indent
+set foldnestmax=3       " Deepest fold is 3 levels
+set nofoldenable        " Dont fold by default
 
 if has("autocmd")
 	" Thorfile, Rakefile, Vagrantfile and Gemfile are Ruby
-	au BufRead,BufNewFile {Gemfile,Rakefile,Vagrantfile,Thorfile,config.ru}		 set ft=ruby
+	au BufRead,BufNewFile {Gemfile,Rakefile,Vagrantfile,Thorfile,config.ru} set ft=ruby
 
 	" md, markdown, and mk are markdown and define buffer-local preview
 	au BufRead,BufNewFile *.{md,markdown,mdown,mkd,mkdn} call s:setupMarkup()
@@ -114,13 +111,10 @@ if has("autocmd")
 	au BufRead,BufNewFile *.txt call s:setupWrapping()
 endif
 
-" allow backspacing over everything in insert mode
-set backspace=indent,eol,start
-
 " load the plugin and indent settings for the detected filetype
 filetype plugin indent on
 
-autocmd FileType ruby setlocal ts=2 sts=2 sw=2 noexpandtab
+" autocmd FileType ruby setlocal ts=2 sts=2 sw=2 noexpandtab
 
 " Opens an edit command with the path of the currently edited file filled in
 " Normal mode: <Leader>e
@@ -134,42 +128,14 @@ map <Leader>te :tabe <C-R>=expand("%:p:h") . "/" <CR>
 " Command mode: Ctrl+P
 cmap <C-P> <C-R>=expand("%:p:h") . "/" <CR>
 
-" Unimpaired configuration
-" Bubble single lines
-nmap <C-Up> [e
-nmap <C-Down> ]e
-nmap <C-k> [e
-nmap <C-j> ]e
-" Bubble multiple lines
-vmap <C-Up> [egv
-vmap <C-Down> ]egv
-vmap <C-k> [egv
-vmap <C-j> ]egv
-
-" Enable syntastic syntax checking
-let g:syntastic_enable_signs=1
-let g:syntastic_quiet_warnings=1
-
-" gist-vim defaults
-if has("mac")
-	let g:gist_clip_command = 'pbcopy'
-elseif has("unix")
-	let g:gist_clip_command = 'xclip -selection clipboard'
-endif
-let g:gist_detect_filetype = 1
-let g:gist_open_browser_after_post = 1
-
 " Use modeline overrides
 set modeline
 set modelines=10
 
 " Default color scheme
 if has("gui_running")
-	"set background=dark
-	" color desert
 	color Tomorrow-Night
 else
-	" color ir_black
 	color Tomorrow-Night-Bright
 endif
 
@@ -189,25 +155,43 @@ endif
 set backupdir=~/.vim/backup
 set directory=~/.vim/backup
 
-" Turn off jslint errors by default
-let g:JSLintHighlightErrorLine = 0
+function! s:setupWrapping()
+	set wrap
+	set wrapmargin=2
+	set textwidth=100
+endfunction
 
+function! s:setupMarkup()
+	call s:setupWrapping()
+	map <buffer> <Leader>p :Hammer<CR>
+endfunction
+
+" =---------------------------------------------------------------------------= MacVIM Behavior =--=
 " MacVIM shift+arrow-keys behavior (required in .vimrc)
 " http://enethrie.com/2011/06/16/use-set-selectmode-to-disable-select-mode-in-vim-2
-" Comment out the next line and uncomment the following in order to act like
-" Vim instead of Mac OS
-let macvim_hig_shift_movement = 1
-" set selectmode=
+
+" Act Like Mac OS
+" let macvim_hig_shift_movement = 1
+
+" Act like Vim
+set selectmode=
 
 " % to bounce from do to end etc.
 runtime! macros/matchit.vim
 
-" Show (partial) command in the status line
-set showcmd
-
 if has("gui_running")
 	" Automatically resize splits when resizing MacVim window
 	autocmd VimResized * wincmd =
-
-	let g:indent_guides_enable_on_vim_startup = 1
 endif
+
+" CTags
+map <Leader>rt :!ctags --extra=+f -R *<CR><CR>
+map <C-\> :tnext<CR>
+
+" =---------------------------------------------------------------------------= Plugin Settings =--=
+" Load individual files for each plugin or customization that should not be in
+" this general configuration file.
+
+for f in split(glob('~/.vim/plugin/settings/*.vim'), '\n')
+	exe 'source' f
+endfor
