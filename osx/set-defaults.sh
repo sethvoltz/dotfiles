@@ -5,6 +5,8 @@
 # The original idea (and a couple settings) were grabbed from:
 #   https://github.com/mathiasbynens/dotfiles/blob/master/.osx
 #
+# Additional items from http://secrets.blacktree.com/
+# 
 # Run ./set-defaults.sh and you'll be good to go.
 
 # Disable press-and-hold for keys in favor of key repeat
@@ -87,6 +89,13 @@ defaults write com.apple.dock no-glass -bool true
 
 # Speed up Mission Control animations
 defaults write com.apple.dock expose-animation-duration -float 0.1
+
+# Pin Dock to the top right.
+defaults write com.apple.dock pinning -string right
+defaults write com.apple.dock pinning -string end
+
+# Dim hidden apps in the Dock
+defaults write com.apple.dock showhidden -bool true
 
 # Disable Safari’s thumbnail cache for History and Top Sites
 defaults write com.apple.Safari DebugSnapshotsUpdatePolicy -int 2
