@@ -8,9 +8,64 @@ let mapleader = ","
 " =----------------------------------------------------------------------------------= Pathogen =--=
 " Load up Pathogen to load all plugins in ~/.vim/bundle
 
-runtime bundle/pathogen/autoload/pathogen.vim
-call pathogen#infect()
-call pathogen#helptags()
+" runtime bundle/pathogen/autoload/pathogen.vim
+" call pathogen#infect()
+" call pathogen#helptags()
+
+" =------------------------------------------------------------------------------------= Vundle =--=
+" Manage bundled plugins via Vundle for consolidated management within this file
+
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
+
+" let Vundle manage Vundle
+" required! 
+Bundle 'gmarik/vundle'
+
+" Github Repos
+Bundle 'mileszs/ack.vim'
+Bundle 'wincent/Command-T'
+Bundle 'tpope/vim-fugitive'
+Bundle 'tpope/vim-git'
+Bundle 'tpope/vim-haml'
+Bundle 'michaeljsmith/vim-indent-object'
+Bundle 'pangloss/vim-javascript'
+Bundle 'ddollar/nerdcommenter'
+Bundle 'tpope/vim-surround'
+Bundle 'vim-scripts/taglist.vim'
+Bundle 'ervandew/supertab'
+Bundle 'tpope/vim-cucumber'
+Bundle 'timcharper/textile.vim'
+Bundle 'tpope/vim-rails'
+Bundle 'taq/vim-rspec'
+Bundle 'vim-scripts/ZoomWin'
+Bundle 'msanders/snipmate.vim'
+Bundle 'tsaleh/vim-align'
+Bundle 'tpope/vim-unimpaired'
+Bundle 'vim-scripts/searchfold.vim'
+Bundle 'tpope/vim-endwise'
+Bundle 'kchmck/vim-coffee-script'
+Bundle 'scrooloose/syntastic'
+Bundle 'ajf/puppet-vim'
+Bundle 'bdd/vim-scala'
+Bundle 'mattn/gist-vim'
+Bundle 'sjl/gundo.vim'
+Bundle 'vim-scripts/spacehi.vim'
+Bundle 'hallison/vim-markdown'
+Bundle 'scrooloose/nerdtree'
+Bundle 'chriskempson/vim-tomorrow-theme'
+Bundle 'nathanaelkane/vim-indent-guides'
+Bundle 'Lokaltog/vim-powerline'
+Bundle 'jistr/vim-nerdtree-tabs'
+
+" vim-scripts repos
+" Bundle 'FuzzyFinder'
+
+" non github repos
+" Bundle 'git://git.wincent.com/command-t.git'
+
+" load the plugin and indent settings for the detected filetype
+filetype plugin indent on     " required!
 
 " =--------------------------------------------------------------------------= General Settings =--=
 
@@ -110,9 +165,6 @@ if has("autocmd")
 
 	au BufRead,BufNewFile *.txt call s:setupWrapping()
 endif
-
-" load the plugin and indent settings for the detected filetype
-filetype plugin indent on
 
 " autocmd FileType ruby setlocal ts=2 sts=2 sw=2 noexpandtab
 

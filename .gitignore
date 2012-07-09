@@ -1,5 +1,6 @@
 vim/vim.symlink/.netrwhist
 vim/vim.symlink/backups
+vim/vim.symlink/bundle
 git/gitconfig.symlink
 mediatomb/mediatomb.symlink/mediatomb.db
 mediatomb/mediatomb.symlink/mediatomb.html
