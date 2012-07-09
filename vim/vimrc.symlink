@@ -5,13 +5,6 @@ set nocompatible
 " Set mapleader to comma
 let mapleader = ","
 
-" =----------------------------------------------------------------------------------= Pathogen =--=
-" Load up Pathogen to load all plugins in ~/.vim/bundle
-
-" runtime bundle/pathogen/autoload/pathogen.vim
-" call pathogen#infect()
-" call pathogen#helptags()
-
 " =------------------------------------------------------------------------------------= Vundle =--=
 " Manage bundled plugins via Vundle for consolidated management within this file
 
@@ -19,53 +12,54 @@ set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
 " let Vundle manage Vundle
-" required! 
-Bundle 'gmarik/vundle'
+Bundle 'gmarik/vundle' " required!
 
-" Github Repos
-Bundle 'mileszs/ack.vim'
-Bundle 'wincent/Command-T'
-Bundle 'tpope/vim-fugitive'
-Bundle 'tpope/vim-git'
-Bundle 'tpope/vim-haml'
-Bundle 'michaeljsmith/vim-indent-object'
-Bundle 'pangloss/vim-javascript'
-Bundle 'ddollar/nerdcommenter'
-Bundle 'tpope/vim-surround'
-Bundle 'vim-scripts/taglist.vim'
-Bundle 'ervandew/supertab'
-Bundle 'tpope/vim-cucumber'
-Bundle 'timcharper/textile.vim'
-Bundle 'tpope/vim-rails'
-Bundle 'taq/vim-rspec'
-Bundle 'vim-scripts/ZoomWin'
-Bundle 'msanders/snipmate.vim'
-Bundle 'tsaleh/vim-align'
-Bundle 'tpope/vim-unimpaired'
-Bundle 'vim-scripts/searchfold.vim'
-Bundle 'tpope/vim-endwise'
-Bundle 'kchmck/vim-coffee-script'
-Bundle 'scrooloose/syntastic'
-Bundle 'ajf/puppet-vim'
-Bundle 'bdd/vim-scala'
-Bundle 'mattn/gist-vim'
-Bundle 'sjl/gundo.vim'
-Bundle 'vim-scripts/spacehi.vim'
-Bundle 'hallison/vim-markdown'
-Bundle 'scrooloose/nerdtree'
+" Editing
+Bundle 'tpope/vim-git'                      " Git runtime files for Vim
+Bundle 'tpope/vim-fugitive'                 " Git wrapper and deep integration
+Bundle 'tpope/vim-unimpaired'               " Convenient key mappings based around brackets
+Bundle 'tpope/vim-endwise'                  " Automattically add 'end' block closer for Ruby
+Bundle 'michaeljsmith/vim-indent-object'    " Allow folding and block awareness based on indent
+Bundle 'ddollar/nerdcommenter'              " Language-aware commenting and comment management
+Bundle 'ervandew/supertab'                  " Source code completion using the tab key
+Bundle 'tsaleh/vim-align'                   " Align columns of text on equals, comments, etc
+Bundle 'scrooloose/syntastic'               " Language-aware syntax checking and alerting
+Bundle 'tpope/vim-surround'                 " Quoting and parenthesizing made simple
+" Bundle 'msanders/snipmate.vim'            " Clone of TextMate's snippet feature
+" Bundle 'mattn/gist-vim'                   " Integration with Github Gist service
+" Bundle 'vim-scripts/searchfold.vim'       " Fold away all code not matching most recent search
+
+" UI Additions
+Bundle 'scrooloose/nerdtree'                " Project / file system browser
+Bundle 'jistr/vim-nerdtree-tabs'            " Synchronize NERD Tree between tabs
+Bundle 'vim-scripts/spacehi.vim'            " Highlight trailing spaces and preceding tabs
+Bundle 'nathanaelkane/vim-indent-guides'    " Highlight indents based on per-file settings
+Bundle 'Lokaltog/vim-powerline'             " Fancy modeline with special characters
+Bundle 'vim-scripts/taglist.vim'            " Language-aware source file browser
+" Bundle 'vim-scripts/ZoomWin'              " Zoom a window full-screen with 'Ctrl-w o'
+
+" Search & Files
+Bundle 'mileszs/ack.vim'                    " Ack integration
+Bundle 'wincent/Command-T'                  " TextMate-style fuzzy file search
+Bundle 'sjl/gundo.vim'                      " Graphical undo
+
+" Languages
+Bundle 'tpope/vim-haml'                     " HAML
+Bundle 'tpope/vim-cucumber'                 " Cucumber
+Bundle 'tpope/vim-rails'                    " Rails
+Bundle 'timcharper/textile.vim'             " Textile
+Bundle 'pangloss/vim-javascript'            " Javascript
+Bundle 'taq/vim-rspec'                      " RSpec
+Bundle 'kchmck/vim-coffee-script'           " Coffee Script
+Bundle 'ajf/puppet-vim'                     " Puppet
+Bundle 'bdd/vim-scala'                      " SCALA
+Bundle 'hallison/vim-markdown'              " Markdown
+
+" Themes
 Bundle 'chriskempson/vim-tomorrow-theme'
-Bundle 'nathanaelkane/vim-indent-guides'
-Bundle 'Lokaltog/vim-powerline'
-Bundle 'jistr/vim-nerdtree-tabs'
-
-" vim-scripts repos
-" Bundle 'FuzzyFinder'
-
-" non github repos
-" Bundle 'git://git.wincent.com/command-t.git'
 
 " load the plugin and indent settings for the detected filetype
-filetype plugin indent on     " required!
+filetype plugin indent on " required!
 
 " =--------------------------------------------------------------------------= General Settings =--=
 
