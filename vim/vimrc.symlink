@@ -12,48 +12,49 @@ set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
 " let Vundle manage Vundle
-Bundle 'gmarik/vundle' " required!
+" required!
+Bundle 'gmarik/vundle'
 
 " Editing
-Bundle 'tpope/vim-git'                      " Git runtime files for Vim
-Bundle 'tpope/vim-fugitive'                 " Git wrapper and deep integration
-Bundle 'tpope/vim-unimpaired'               " Convenient key mappings based around brackets
-Bundle 'tpope/vim-endwise'                  " Automattically add 'end' block closer for Ruby
-Bundle 'michaeljsmith/vim-indent-object'    " Allow folding and block awareness based on indent
-Bundle 'ddollar/nerdcommenter'              " Language-aware commenting and comment management
-Bundle 'ervandew/supertab'                  " Source code completion using the tab key
-Bundle 'tsaleh/vim-align'                   " Align columns of text on equals, comments, etc
-Bundle 'scrooloose/syntastic'               " Language-aware syntax checking and alerting
-Bundle 'tpope/vim-surround'                 " Quoting and parenthesizing made simple
-" Bundle 'msanders/snipmate.vim'            " Clone of TextMate's snippet feature
-" Bundle 'mattn/gist-vim'                   " Integration with Github Gist service
-" Bundle 'vim-scripts/searchfold.vim'       " Fold away all code not matching most recent search
+Bundle 'tpope/vim-git'
+Bundle 'tpope/vim-fugitive'
+Bundle 'tpope/vim-unimpaired'
+Bundle 'tpope/vim-endwise'
+Bundle 'michaeljsmith/vim-indent-object'
+Bundle 'ddollar/nerdcommenter'
+Bundle 'ervandew/supertab'
+Bundle 'tsaleh/vim-align'
+Bundle 'scrooloose/syntastic'
+Bundle 'tpope/vim-surround'
+" Bundle 'msanders/snipmate.vim'
+" Bundle 'mattn/gist-vim'
+" Bundle 'vim-scripts/searchfold.vim'
 
 " UI Additions
-Bundle 'scrooloose/nerdtree'                " Project / file system browser
-Bundle 'jistr/vim-nerdtree-tabs'            " Synchronize NERD Tree between tabs
-Bundle 'vim-scripts/spacehi.vim'            " Highlight trailing spaces and preceding tabs
-Bundle 'nathanaelkane/vim-indent-guides'    " Highlight indents based on per-file settings
-Bundle 'Lokaltog/vim-powerline'             " Fancy modeline with special characters
-Bundle 'vim-scripts/taglist.vim'            " Language-aware source file browser
-" Bundle 'vim-scripts/ZoomWin'              " Zoom a window full-screen with 'Ctrl-w o'
+Bundle 'scrooloose/nerdtree'
+Bundle 'jistr/vim-nerdtree-tabs'
+Bundle 'vim-scripts/spacehi.vim'
+Bundle 'nathanaelkane/vim-indent-guides'
+Bundle 'Lokaltog/vim-powerline'
+Bundle 'vim-scripts/taglist.vim'
+" Bundle 'vim-scripts/ZoomWin'
 
 " Search & Files
-Bundle 'mileszs/ack.vim'                    " Ack integration
-Bundle 'wincent/Command-T'                  " TextMate-style fuzzy file search
-Bundle 'sjl/gundo.vim'                      " Graphical undo
+Bundle 'mileszs/ack.vim'
+Bundle 'wincent/Command-T'
+Bundle 'sjl/gundo.vim'
 
 " Languages
-Bundle 'tpope/vim-haml'                     " HAML
-Bundle 'tpope/vim-cucumber'                 " Cucumber
-Bundle 'tpope/vim-rails'                    " Rails
-Bundle 'timcharper/textile.vim'             " Textile
-Bundle 'pangloss/vim-javascript'            " Javascript
-Bundle 'taq/vim-rspec'                      " RSpec
-Bundle 'kchmck/vim-coffee-script'           " Coffee Script
-Bundle 'ajf/puppet-vim'                     " Puppet
-Bundle 'bdd/vim-scala'                      " SCALA
-Bundle 'hallison/vim-markdown'              " Markdown
+Bundle 'tpope/vim-haml'
+Bundle 'tpope/vim-cucumber'
+Bundle 'tpope/vim-rails'
+Bundle 'timcharper/textile.vim'
+Bundle 'pangloss/vim-javascript'
+Bundle 'taq/vim-rspec'
+Bundle 'kchmck/vim-coffee-script'
+Bundle 'ajf/puppet-vim'
+Bundle 'bdd/vim-scala'
+Bundle 'hallison/vim-markdown'
 
 " Themes
 Bundle 'chriskempson/vim-tomorrow-theme'
