@@ -5,6 +5,8 @@ set nocompatible
 " Set mapleader to comma
 let mapleader = ","
 
+set updatetime=2000 " Set the updatetime value to 2 seconds instead of 4 for more responsive scripts
+
 " =------------------------------------------------------------------------------------= Vundle =--=
 " Manage bundled plugins via Vundle for consolidated management within this file
 
