@@ -39,7 +39,7 @@ Bundle 'jistr/vim-nerdtree-tabs'
 Bundle 'vim-scripts/spacehi.vim'
 Bundle 'nathanaelkane/vim-indent-guides'
 Bundle 'Lokaltog/vim-powerline'
-Bundle 'vim-scripts/taglist.vim'
+Bundle 'majutsushi/tagbar'
 " Bundle 'vim-scripts/ZoomWin'
 
 " Search & Files
