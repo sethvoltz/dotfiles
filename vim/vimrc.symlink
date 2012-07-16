@@ -131,6 +131,11 @@ set laststatus=2
 " This is likely a bludgeon to solve some other issue, but it works
 set noequalalways
 
+" Search for the word under the cursor without moving the cursor
+" http://superuser.com/questions/255024/vim-highlighting-a-search-term-without-moving-the-cursor
+map <Leader>* :let @/ = '\<'.expand('<cword>').'\>'\|set hlsearch<C-M>
+map <Leader>g* :let @/ = expand('<cword>')\|set hlsearch<C-M>
+
 " =---------------------------------------------------------------------------= Persistent Undo =--=
 " Keep undo history across sessions, by storing in file.
 " Only works all the time.
