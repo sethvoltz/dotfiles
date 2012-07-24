@@ -1,5 +1,78 @@
-# Quit an OS X application from the command line
+#!/bin/zsh -f
 
-for app in $*; do
-	osascript -e 'quit app "'$app'"'
-done
+
+
+#------------------------------------------------------------------------
+# quit
+#
+# by Wataru Kagawa (05/17/05)
+# wkagawa@jota.gsc.riken.go.jp
+#
+# A function to quit Mac OS X applications.  Native applications are
+# quitted using an osascript, and X11 applications are quitted by killing
+# its pid.
+#
+# usage: quit [-f] application
+#------------------------------------------------------------------------
+
+
+
+#-------------------------
+# Defining local variables
+#-------------------------
+
+local SelectedApp USAGE_TEXT tsess pid
+
+
+#-----------------------------------------
+# Updates the list of running applications
+#-----------------------------------------
+
+_get_running_apps
+
+
+#--------------------------
+# Retrieve application name
+#--------------------------
+
+SelectedApp=${${(f)@}#-f }
+
+
+#----------------------------------------------------------
+# Exits this function if application is missing or mistyped
+#----------------------------------------------------------
+
+USAGE_TEXT="quit: options (-f) [application name]
+	required arguments: [application name]
+	Quits the currently running application.  All native applications are quitted by
+	an osascript by default.  X11 applications are quitted by the kill command.
+
+	-f, force quit application by killing its pid"
+
+if [[ -z $SelectedApp || $@ == '-' || $@ == '-f' ]]; then
+	print "Usage: $USAGE_TEXT"
+	return 0
+fi
+
+if [[ -z ${(M)list:#$SelectedApp} ]]; then
+	print "\e[1m${RED} No such application running. \e[0m"
+	return 0
+fi
+
+
+#---------------------------------------------------------------------------------
+# Quits the application either by using an osascript or by using the kill command.
+#---------------------------------------------------------------------------------
+
+tsess=$list[$list[(i)$SelectedApp]-1]
+pid=$list[$list[(i)$SelectedApp]-2]
+
+if [[ $1 == '-f' || $tsess != '0' ]]; then
+
+	kill $pid
+
+else
+
+	osascript -e "tell application \"$SelectedApp\" to quit"
+
+fi
