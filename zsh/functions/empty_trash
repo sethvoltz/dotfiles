@@ -1,0 +1,4 @@
+#!/bin/zsh -f
+
+osascript -e "tell app \"Finder\" to empty trash"   
+

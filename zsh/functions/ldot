@@ -1,0 +1,8 @@
+#!/bin/zsh -f 
+
+# ldot: list <dot>files
+ if [ -n "$1" ]; then
+        command ls -AFlhd "$1"/\.[^\.]*;
+else
+        command ls -AFlhd \.[^\.]*;
+fi
