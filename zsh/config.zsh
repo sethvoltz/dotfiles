@@ -19,7 +19,7 @@ export CLICOLOR=true
 export LSCOLORS="gxfxcxdxbxegedabagacad" # Color scheme optimized for dark background
 export LC_CTYPE=en_US.UTF-8 # Ensure UTF-8 always, everywhere
 
-fpath=($ZSH/zsh/functions $fpath)
+fpath=(/usr/local/share/zsh-completions $ZSH/zsh/functions $fpath)
 
 autoload -U $ZSH/zsh/functions/*(:t)
 
