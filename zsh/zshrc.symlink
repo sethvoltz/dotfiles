@@ -8,7 +8,7 @@ export PROJECTS=~/Development/Shift
 export DEVELOPMENT=~/Development
 
 # source every .zsh file in this rep
-for config_file ($ZSH/**/*.zsh) source $config_file
+for config_file ($ZSH/**/*.zsh~*/backups/*) source $config_file
 
 # use .localrc for SUPER SECRET CRAP that you don't
 # want in your public, versioned repo.
@@ -22,4 +22,4 @@ autoload -U compinit
 compinit
 
 # load every completion after autocomplete loads
-for config_file ($ZSH/**/completion.sh) source $config_file
+for config_file ($ZSH/**/completion.sh~*/backups/*) source $config_file
