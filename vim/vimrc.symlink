@@ -43,6 +43,7 @@ Bundle 'majutsushi/tagbar'
 " Bundle 'vim-scripts/ZoomWin'
 
 " Search & Files
+Bundle 'bufexplorer.zip'
 Bundle 'mileszs/ack.vim'
 Bundle 'wincent/Command-T'
 Bundle 'sjl/gundo.vim'
