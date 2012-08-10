@@ -14,7 +14,7 @@ alias profileme="history | awk '{print \$2}' | awk 'BEGIN{FS=\"|\"}{print \$1}' 
 alias path='echo -e ${PATH//:/\\n}' # Each part on its own line
 alias grep='grep --color'
 # alias unpushed='unpushed=`git unpushed` && echo -n $unpushed | wc -l | tr -d " "'
-alias netprocs='lsof -P -i -n | cut -f 1 -d " " | uniq'
+alias netprocs="lsof -P -i -n +c0 | awk '{printf \"%-5s %s\\n\", \$2, \$1}' | uniq"
 alias recent="find . -type f -print0 -o \( -type d -path './.*' -prune -o -path './tmp' -prune -o -path './log' -prune \) | xargs -0 ls -lrt | tail -n 20"
 
 # Enhanced WHOIS lookup
