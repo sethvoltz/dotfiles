@@ -7,6 +7,9 @@ export PROJECTS=~/Development/Shift
 # your development folder that we can `d [tab]` to
 export DEVELOPMENT=~/Development
 
+# Before we do any fancy globbing, be sure extendedglob is enabled
+setopt extendedglob
+
 # source every .zsh file in this rep
 for config_file ($ZSH/**/*.zsh~*/backups/*) source $config_file
 
