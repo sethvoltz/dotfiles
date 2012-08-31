@@ -1,2 +1,4 @@
+# export CC=/usr/local/bin/gcc-4.2 # Only needed for old non-LLVM supporting installs?
+
 # Ruby Development Environment.
 eval "$(rbenv init -)"
