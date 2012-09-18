@@ -4,3 +4,4 @@ vim/vim.symlink/bundle
 git/gitconfig.symlink
 mediatomb/mediatomb.symlink/mediatomb.db
 mediatomb/mediatomb.symlink/mediatomb.html
+vim/vim.symlink/backup/*.swp
