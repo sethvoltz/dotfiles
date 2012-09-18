@@ -194,7 +194,8 @@ set modelines=10
 
 " Default color scheme
 if has("gui_running")
-	color Tomorrow-Night
+	" color Tomorrow-Night
+  color Tomorrow-Night-Bright
 else
 	color Tomorrow-Night-Bright
 endif
