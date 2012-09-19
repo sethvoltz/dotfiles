@@ -1,1 +1,1 @@
-ping $1 | while read pong; do echo "$(date "+%Y%m%d%H%M%S"): $pong"; done > "ping-$1-report.txt" &
+ping $1 | while read pong; do echo "$(date -u "+%Y%m%d%H%M%S"): $pong"; done > "ping-$1-report.txt" &
