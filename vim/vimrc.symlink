@@ -49,6 +49,7 @@ Bundle 'wincent/Command-T'
 Bundle 'sjl/gundo.vim'
 
 " Languages
+Bundle 'vim-ruby/vim-ruby'
 Bundle 'tpope/vim-haml'
 Bundle 'tpope/vim-cucumber'
 Bundle 'tpope/vim-rails'
