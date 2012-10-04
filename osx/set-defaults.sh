@@ -16,7 +16,7 @@ defaults write -g ApplePressAndHoldEnabled -bool false
 defaults write com.apple.NetworkBrowser BrowseAllInterfaces 1
 
 # Always open everything in Finder's list view. This is important.
-defaults write com.apple.Finder FXPreferredViewStyle Nlsv
+# defaults write com.apple.Finder FXPreferredViewStyle Nlsv
 
 # Show the ~/Library folder
 chflags nohidden ~/Library
@@ -125,7 +125,7 @@ defaults write com.apple.terminal StringEncodings -array 4
 defaults write com.apple.iTunes NSUserKeyEquivalents -dict-add "Target Search Field" "@F"
 
 # Reset Launchpad
-[ -e ~/Library/Application\ Support/Dock/*.db ] && rm ~/Library/Application\ Support/Dock/*.db
+# [ -e ~/Library/Application\ Support/Dock/*.db ] && rm ~/Library/Application\ Support/Dock/*.db
 
 # Prevent Time Machine from prompting to use new hard drives as backup volume
 defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
