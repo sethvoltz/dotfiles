@@ -1,0 +1,103 @@
+#!/usr/bin/env ruby
+
+# USAGE
+#   gemfile [--bundle] [--details] [--fetch] [--sorted] [--commentate]
+# DESCRIPTION
+#   Displays gem urls and summaries found in a Gemfile.
+#   cd into a directory with a Gemfile and run `gemfile`
+# PREREQUISITES
+#   gem install bundler paint
+# FLAGS
+#   bundle: Display all bundled gems (default is only top level dependencies)
+#   details: Show gem descriptions
+#   fetch: If a gem could not be found on the system, try to fetch its data from rubygems.org
+#   sorted: Show in alphabetical order instead of the one in the Gemfile
+#   commentate: Add gem descriptions to the __END__ section of your Gemfile
+
+require 'rubygems' unless defined? Gem
+require 'bundler' # gem install bundler
+require 'open-uri'
+require 'paint'   # gem install paint
+require 'json'
+
+if RUBY_VERSION >= "1.9.3"
+  require 'io/console'
+  width = STDIN.winsize[1]
+else
+  width = `stty size | cut -d" " -f2`.to_i
+end
+
+FakeSpec = Struct.new :name, :homepage, :description
+
+bundle  = $*.delete '--bundle'
+details = $*.delete '--details'
+fetch   = $*.delete '--fetch'
+sorted  = $*.delete '--sorted'
+commentate = $*.delete '--commentate'
+
+specs = 
+  if bundle
+    Bundler.load.specs
+  else
+    Bundler.definition.dependencies.map do |d|
+      begin
+        d.to_spec
+      rescue Gem::LoadError
+        Thread.new do
+          homepage, description = "", ""
+          if fetch
+            begin
+              gem_data = JSON.parse(open("https://rubygems.org/api/v1/gems/#{URI.escape(d.name)}.json").read)
+              homepage, description = gem_data["homepage_uri"], gem_data["info"]
+            rescue
+            end
+          end
+          FakeSpec.new d.name, homepage, description
+        end
+      end
+    end.map{ |t| t.respond_to?(:value) ? t.value : t }
+  end
+
+specs = specs.sort_by(&:name) if sorted
+
+res = ""
+specs.each{ |s|
+  res << Paint[s.name, :bold]
+  if s.homepage && !s.homepage.empty?
+    res << "#{details ? " | " : " "}#{s.homepage}"
+  end
+  res << "\n"
+
+  if details
+    res << (s.description || s.summary).
+      gsub(/\s+/m," ").
+      gsub(/^ /,"").
+      scan(/.{0,#{ width -2 }}(?:\s|\z)/).map{ |l| "  #{l}\n" }.join
+  end
+}
+
+if commentate
+  gemfile_source = File.read(Bundler.default_gemfile)
+
+  really_do_it = true
+  if gemfile_source =~ /^__END__/
+    print 'There already is a data section defined in your Gemfile... replace? [Yn]'; question = gets
+    if question =~ /\A[yY]?\n\z/
+      File.open(Bundler.default_gemfile, 'w'){ |f|
+        f.write gemfile_source.gsub(/\n?^__END__.*?\z/m, '')
+      }
+    else
+      really_do_it = false
+      puts 'Not updated'
+    end
+  end
+
+  if really_do_it
+    File.open(Bundler.default_gemfile, 'a'){ |f|
+      f.write("\n__END__\n#{ Time.now.strftime(%[%e#{->o{%w[st nd rd][~-o%10]||%[th]}[Time.now.day]} of %B, %Y]) }\n\n#{ Paint.unpaint(res) }")
+    }
+    puts 'Appended gem information to your Gemfile'
+  end
+else 
+  print res
+end
