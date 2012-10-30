@@ -31,6 +31,10 @@ scm_prompt(){
 	vcprompt -f '(%n:%b%m%u) '
 }
 
+fishy_collapsed_wd(){
+  echo $(pwd | perl -pe "s|^$HOME|~|g; s|/([^/])[^/]*(?=/)|/\$1|g")
+}
+
 ####################################################################################################
 # Adapted from http://aperiodic.net/phil/prompt/
 
@@ -87,7 +91,8 @@ setprompt () {
     
 	case $TERM in
 		xterm*)
-			PR_TITLEBAR=$'%{\e]0;%(!.[ROOT] .)%n@%m:%~\a%}'
+			# PR_TITLEBAR=$'%{\e]0;%(!.[ROOT] .)%n@%m:%~\a%}'
+      PR_TITLEBAR=$'%{\e]0;%(!.[ROOT] .) $(fishy_collapsed_wd) %n@%m\a%}'
 			;;
 		screen)
 			PR_TITLEBAR=$'%{\e_screen \005 (\005t) | %(!.[ROOT] .)%n@%m:%~\e\\%}'
