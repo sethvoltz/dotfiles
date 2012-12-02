@@ -58,7 +58,7 @@ Bundle 'pangloss/vim-javascript'
 Bundle 'taq/vim-rspec'
 Bundle 'kchmck/vim-coffee-script'
 Bundle 'ajf/puppet-vim'
-Bundle 'bdd/vim-scala'
+" Bundle 'bdd/vim-scala'
 Bundle 'hallison/vim-markdown'
 
 " Themes
