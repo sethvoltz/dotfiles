@@ -63,6 +63,7 @@ Bundle 'hallison/vim-markdown'
 
 " Themes
 Bundle 'chriskempson/vim-tomorrow-theme'
+Bundle 'altercation/vim-colors-solarized'
 
 " load the plugin and indent settings for the detected filetype
 filetype plugin indent on " required!
