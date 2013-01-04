@@ -118,7 +118,7 @@ setprompt () {
   B_COLOR='cyan'
 
   PROMPT='$PR_STITLE${(e)PR_TITLEBAR}\
-$PR_BLACK%{$bg[$A_COLOR]%}𐄦%! [%n@%m]\
+$PR_BLACK%{$bg[$A_COLOR]%}❥%! [%n@%m]\
 %{$fg[$B_COLOR] ░▒$fg[$A_COLOR]$bg[$B_COLOR]▒░ %}\
 ${PR_BLACK}$(rb_prompt)${(e)PR_FILLBAR}\
 (%$PR_PWDLEN<...<%~%<<)\
