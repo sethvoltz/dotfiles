@@ -1,2 +1,2 @@
 # export POW_RVM_PATH=/usr/local/rvm/scripts/rvm
-export PATH=/Users/seth/.rbenv/shims:$PATH
+export PATH=$(rbenv root)/shims:$(brew --prefix rbenv)/bin:$PATH
