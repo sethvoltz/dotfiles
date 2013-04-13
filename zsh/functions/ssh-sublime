@@ -1,0 +1,6 @@
+# Quickly install the rmate/rsub tool to a given remote server
+ssh $1 '
+mkdir -p ~/bin
+wget -O ~/bin/rsub https://raw.github.com/aurora/rmate/master/rmate
+chmod +x ~/bin/rsub
+'
