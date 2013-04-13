@@ -59,7 +59,10 @@ Bundle 'taq/vim-rspec'
 Bundle 'kchmck/vim-coffee-script'
 Bundle 'ajf/puppet-vim'
 " Bundle 'bdd/vim-scala'
-Bundle 'hallison/vim-markdown'
+" Bundle 'tpope/vim-markdown'
+Bundle 'kirbysayshi/vim-markdown'
+" Bundle 'xezv/vim-squirrel'
+Bundle 'vim-scripts/squirrel.vim'
 
 " Themes
 Bundle 'chriskempson/vim-tomorrow-theme'
