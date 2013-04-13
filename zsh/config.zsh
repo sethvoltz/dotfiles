@@ -4,7 +4,6 @@
 #   export PS1='%3~$(git_info_for_prompt)%# '
 # fi
 
-
 # Editors
 export EDITOR='vim'
 export LESSEDIT='vim ?lm+%lm. %f'
