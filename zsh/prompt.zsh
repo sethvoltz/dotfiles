@@ -54,7 +54,7 @@ function precmd {
 
   # local promptsize=${#${(%):-.%! [%n@%m......]()}}
   local rb_pr="$(rb_prompt)"
-  local promptsize=${#${(%):-.%! [%n@%m]......$rb_pr()}}
+  local promptsize=${#${(%):-..%! [%n@%m]......$rb_pr()}}
   local pwdsize=${#${(%):-%~}}
     
   if [[ "$promptsize + $pwdsize" -gt $TERMWIDTH ]]; then
@@ -118,7 +118,7 @@ setprompt () {
   B_COLOR='cyan'
 
   PROMPT='$PR_STITLE${(e)PR_TITLEBAR}\
-$PR_BLACK%{$bg[$A_COLOR]%}❥%! [%n@%m]\
+$PR_BLACK%{$bg[$A_COLOR]%}👻 %! [%n@%m]\
 %{$fg[$B_COLOR] ░▒$fg[$A_COLOR]$bg[$B_COLOR]▒░ %}\
 ${PR_BLACK}$(rb_prompt)${(e)PR_FILLBAR}\
 (%$PR_PWDLEN<...<%~%<<)\
