@@ -5,29 +5,26 @@ require 'irb/completion'
 require 'irb/ext/save-history'
 require 'pp'
 
-# Add all gems in the global gemset to the $LOAD_PATH so they can be used in rails3 console with bundler
-bundler_escaped = false
+# Break out of Bundler jail
 if defined?(::Bundler)
-	# $LOAD_PATH.concat Dir.glob("#{ENV['rvm_path']}/gems/#{ENV['rvm_ruby_string']}@global/gems/*/lib")
-
-	def attempt_breakout(path)
-		print "Attempting breakout with '#{path}'... "
+	def breakout path
 		begin
 			load path
-			puts "Success!"
-			return true
-		rescue LoadError
-			puts "Failed."
+			puts "Broke out of Bundler jail ^_^"
+		rescue
+			puts "Unable to break out of Bundler o_O"
 		end
-		false
 	end
 
 	# Kudos: https://github.com/ConradIrwin/pry-debundle/blob/master/lib/pry-debundle.rb
 	Gem.post_reset_hooks.reject!{ |hook| hook.source_location.first =~ %r{/bundler/} }
 	Gem::Specification.reset
 
-	bundler_escaped = attempt_breakout(Bundler.bundle_path.join 'rubygems', 'custom_require.rb') unless bundler_escaped
-	bundler_escaped = attempt_breakout(File.join Bundler.bundle_path.to_s.gsub('/gems/', '/'), 'rubygems', 'custom_require.rb') unless bundler_escaped
+	if Gem::VERSION.to_i >= 2
+		breakout 'rubygems/core_ext/kernel_require.rb'
+	else
+		breakout 'rubygems/custom_require.rb'
+	end
 end
 
 # Return value colorization
@@ -44,7 +41,7 @@ ARGV.concat [ "--readline" ]
 
 # Command history and history saving
 IRB.conf[:SAVE_HISTORY] = 500
-IRB.conf[:HISTORY_FILE] = "#{ENV['HOME']}/.irb_history" 
+IRB.conf[:HISTORY_FILE] = "#{ENV['HOME']}/.irb_history"
 
 # Basic automatic indenting
 IRB.conf[:AUTO_INDENT]  = true
@@ -56,7 +53,7 @@ IRB.conf[:PROMPT][:SETH] = {
 	:PROMPT_S => "[%03n] * ",
 	:PROMPT_C => "[%03n] ? ",
 	:PROMPT_N => "[%03n] > ",
-	:RETURN   => "=> %s\n" 
+	:RETURN   => "=> %s\n"
 }
 IRB.conf[:PROMPT_MODE]  = :SETH
 
