@@ -26,3 +26,8 @@ compinit
 
 # load every completion after autocomplete loads
 for config_file ($ZSH/**/completion.sh~*/backups/*) source $config_file
+
+# Python Development Environment. - Must run last after all paths are setup.
+if [ -f /usr/local/share/python/virtualenvwrapper.sh ]; then
+    source /usr/local/share/python/virtualenvwrapper.sh
+fi

@@ -21,9 +21,17 @@ rb_prompt(){
   if $(which rbenv &> /dev/null)
   then
     # echo "‹$(rbenv version | awk '{print $1}')› "
-    echo "with ruby $(rbenv version | awk '{print $1}') "
+    echo "ruby: $(rbenv version | awk '{print $1}') "
   else
     echo ""
+  fi
+}
+
+# Note: Add the following the $WORKON_HOME/postactivate
+#   PS1="$_OLD_VIRTUAL_PS1"
+py_prompt(){
+  if (($+VIRTUAL_ENV)); then
+    echo "python: $(basename $VIRTUAL_ENV)"
   fi
 }
 
@@ -54,9 +62,10 @@ function precmd {
 
   # local promptsize=${#${(%):-.%! [%n@%m......]()}}
   local rb_pr="$(rb_prompt)"
-  local promptsize=${#${(%):-..%! [%n@%m]......$rb_pr()}}
+  local py_pr="$(py_prompt)"
+  local promptsize=${#${(%):-..%! [%n@%m]......$rb_pr$py_pr()}}
   local pwdsize=${#${(%):-%~}}
-    
+
   if [[ "$promptsize + $pwdsize" -gt $TERMWIDTH ]]; then
     ((PR_PWDLEN=$TERMWIDTH - $promptsize))
   else
@@ -88,7 +97,7 @@ setprompt () {
 
   ###
   # Decide if we need to set titlebar text.
-    
+
   case $TERM in
     xterm*)
       # PR_TITLEBAR=$'%{\e]0;%(!.[ROOT] .)%n@%m:%~\a%}'
@@ -101,7 +110,7 @@ setprompt () {
       PR_TITLEBAR=''
       ;;
   esac
-    
+
   ###
   # Decide whether to set a screen title
   if [[ "$TERM" == "screen" ]]; then
@@ -109,7 +118,7 @@ setprompt () {
   else
     PR_STITLE=''
   fi
-    
+
   ###
   # Finally, the prompt.
   # A and B colors define the first line's colors and the gradient transition
@@ -120,7 +129,7 @@ setprompt () {
   PROMPT='$PR_STITLE${(e)PR_TITLEBAR}\
 $PR_BLACK%{$bg[$A_COLOR]%}👻 %! [%n@%m]\
 %{$fg[$B_COLOR] ░▒$fg[$A_COLOR]$bg[$B_COLOR]▒░ %}\
-${PR_BLACK}$(rb_prompt)${(e)PR_FILLBAR}\
+${PR_BLACK}$(rb_prompt)$(py_prompt)${(e)PR_FILLBAR}\
 (%$PR_PWDLEN<...<%~%<<)\
 %{$reset_color%}\
 
