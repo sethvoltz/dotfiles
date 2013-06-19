@@ -123,10 +123,10 @@ setprompt () {
   # Finally, the prompt.
   # A and B colors define the first line's colors and the gradient transition
 
-  BAS_NUM=$(hostname | od | tr ' ' '\n' | awk '{total = total + $1}END{print total}')
-  COLOR_LIST=(green yellow blue magenta cyan red)
-  A_COLOR=$COLOR_LIST[$(( NUM % 6 ))]
-  B_COLOR=$COLOR_LIST[$(( (NUM + 3) % 6 ))]
+  BASE_NUM=$(hostname | od | tr ' ' '\n' | awk '{total = total + $1}END{print total}')
+  COLOR_LIST=(red green yellow blue magenta cyan)
+  A_COLOR=$COLOR_LIST[$(( (BASE_NUM % 6) + 1 ))]
+  B_COLOR=$COLOR_LIST[$(( ((BASE_NUM + 3) % 6) + 1 ))]
 
   PROMPT='$PR_STITLE${(e)PR_TITLEBAR}\
 $PR_BLACK%{$bg[$A_COLOR]%}👻 %! [%n@%m]\
