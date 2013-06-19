@@ -6,7 +6,7 @@
                  -'              
 
     # Please have a recent Ruby, RubyGems and Rake installed
-    git clone git://github.com/tauceti/dotfiles ~/.dotfiles
+    git clone git://github.com/sethvoltz/dotfiles ~/.dotfiles
     cd ~/.dotfiles
     rake install
 
