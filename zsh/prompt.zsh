@@ -31,7 +31,7 @@ rb_prompt(){
 #   PS1="$_OLD_VIRTUAL_PS1"
 py_prompt(){
   if (($+VIRTUAL_ENV)); then
-    echo "python: $(basename $VIRTUAL_ENV)"
+    echo "python: $(basename $VIRTUAL_ENV) "
   fi
 }
 
@@ -63,13 +63,13 @@ function precmd {
   # local promptsize=${#${(%):-.%! [%n@%m......]()}}
   local rb_pr="$(rb_prompt)"
   local py_pr="$(py_prompt)"
-  local promptsize=${#${(%):-%! [%n@%m]......$rb_pr$py_pr()}}
-  local pwdsize=${#${(%):-%~}}
+  local promptsize=${#${(%):-%! [%n@%m]......%~}}
+  local rightsize=${#${(%):-$rb_pr$py_pr}}
 
-  if [[ "$promptsize + $pwdsize" -gt $TERMWIDTH ]]; then
+  if [[ "$promptsize + $rightsize" -gt $TERMWIDTH ]]; then
     ((PR_PWDLEN=$TERMWIDTH - $promptsize))
   else
-    PR_FILLBAR="\${(l.(($TERMWIDTH - ($promptsize + $pwdsize))).. .)}"
+    PR_FILLBAR="\${(l.(($TERMWIDTH - ($promptsize + $rightsize))).. .)}"
   fi
 }
 
@@ -125,12 +125,12 @@ setprompt () {
 
   BASE_NUM=$(( $(hostname | od | tr ' ' '\n' | awk '{total = total + $1}END{print total}') % 6 ))
   COLOR_LIST=(
-    "%K{154}" "%K{148} %K{184} %K{214} %K{208} %K{203} "
-    "%K{214}" "%K{208} %K{203} %K{198} %K{199} %K{164} "
-    "%K{198}" "%K{199} %K{164} %K{129} %K{093} %K{063} "
+    "214" "%K{208} %K{203} %K{198} %K{199} %K{164} "
+    "198" "%K{199} %K{164} %K{129} %K{093} %K{063} "
     "129" "%K{093} %K{063} %K{033} %K{039} %K{044} "
-    "%K{033}" "%K{039} %K{044} %K{049} %K{048} %K{083} "
-    "%K{049}" "%K{048} %K{083} %K{118} %K{154} %K{184} "
+    "033" "%K{039} %K{044} %K{049} %K{048} %K{083} "
+    "049" "%K{048} %K{083} %K{118} %K{154} %K{184} "
+    "154" "%K{148} %K{184} %K{214} %K{208} %K{203} "
   )
   START_COLOR=$COLOR_LIST[$(( (BASE_NUM * 2) + 1 ))]
   GRADIENT=$COLOR_LIST[$(( (BASE_NUM * 2) + 2 ))]
@@ -138,8 +138,7 @@ setprompt () {
   PROMPT='$PR_STITLE${(e)PR_TITLEBAR}\
 %F{black}%K{$START_COLOR}%! [%n@%m] \
 $GRADIENT\
-$(rb_prompt)$(py_prompt)${(e)PR_FILLBAR}\
-(%$PR_PWDLEN<...<%~%<<)\
+%$PR_PWDLEN<...<%~%<<${(e)PR_FILLBAR}$(rb_prompt)$(py_prompt)\
 %{$reset_color%}\
 
 %F{$START_COLOR}╙─%(?.$PR_GREEN●.$PR_RED◯ %?) \
