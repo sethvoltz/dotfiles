@@ -144,7 +144,7 @@ $GRADIENT\
 %F{$START_COLOR}╙─%(?.$PR_GREEN●.$PR_RED◯ %?) \
 $(scm_prompt)\
 %(?.%F{022}»%F{034}»%F{046}».%F{052}»%F{124}»%F{196}»)\
-%{$reset_color%} '
+%{$reset_color%}%f%k '
 
   RPROMPT=' $PR_LIGHT_BLUE($PR_YELLOW%D{%a, %b %d} %D{%H:%M}$PR_LIGHT_BLUE)$PR_NO_COLOUR'
 
