@@ -35,3 +35,5 @@ for config_file ($ZSH/**/completion.sh~*/backups/*) source $config_file
 if [ -f /usr/local/share/python/virtualenvwrapper.sh ]; then
     source /usr/local/share/python/virtualenvwrapper.sh
 fi
+
+export REPORTTIME=10
