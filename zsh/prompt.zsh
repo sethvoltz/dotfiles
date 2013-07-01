@@ -63,7 +63,7 @@ function precmd {
   # local promptsize=${#${(%):-.%! [%n@%m......]()}}
   local rb_pr="$(rb_prompt)"
   local py_pr="$(py_prompt)"
-  local promptsize=${#${(%):-..%! [%n@%m]......$rb_pr$py_pr()}}
+  local promptsize=${#${(%):-%! [%n@%m]......$rb_pr$py_pr()}}
   local pwdsize=${#${(%):-%~}}
 
   if [[ "$promptsize + $pwdsize" -gt $TERMWIDTH ]]; then
@@ -123,21 +123,28 @@ setprompt () {
   # Finally, the prompt.
   # A and B colors define the first line's colors and the gradient transition
 
-  BASE_NUM=$(hostname | od | tr ' ' '\n' | awk '{total = total + $1}END{print total}')
-  COLOR_LIST=(red green yellow blue magenta cyan)
-  A_COLOR=$COLOR_LIST[$(( (BASE_NUM % 6) + 1 ))]
-  B_COLOR=$COLOR_LIST[$(( ((BASE_NUM + 3) % 6) + 1 ))]
+  BASE_NUM=$(( $(hostname | od | tr ' ' '\n' | awk '{total = total + $1}END{print total}') % 6 ))
+  COLOR_LIST=(
+    "%K{154}" "%K{148} %K{184} %K{214} %K{208} %K{203} "
+    "%K{214}" "%K{208} %K{203} %K{198} %K{199} %K{164} "
+    "%K{198}" "%K{199} %K{164} %K{129} %K{093} %K{063} "
+    "129" "%K{093} %K{063} %K{033} %K{039} %K{044} "
+    "%K{033}" "%K{039} %K{044} %K{049} %K{048} %K{083} "
+    "%K{049}" "%K{048} %K{083} %K{118} %K{154} %K{184} "
+  )
+  START_COLOR=$COLOR_LIST[$(( (BASE_NUM * 2) + 1 ))]
+  GRADIENT=$COLOR_LIST[$(( (BASE_NUM * 2) + 2 ))]
 
   PROMPT='$PR_STITLE${(e)PR_TITLEBAR}\
-$PR_BLACK%{$bg[$A_COLOR]%}👻 %! [%n@%m]\
-%{$fg[$B_COLOR] ░▒$fg[$A_COLOR]$bg[$B_COLOR]▒░ %}\
-${PR_BLACK}$(rb_prompt)$(py_prompt)${(e)PR_FILLBAR}\
+%F{black}%K{$START_COLOR}%! [%n@%m] \
+$GRADIENT\
+$(rb_prompt)$(py_prompt)${(e)PR_FILLBAR}\
 (%$PR_PWDLEN<...<%~%<<)\
 %{$reset_color%}\
 
-%(?.$PR_GREEN●.$PR_RED◖%?◗) \
+%F{$START_COLOR}╙─%(?.$PR_GREEN●.$PR_RED◯ %?) \
 $(scm_prompt)\
-%(?.$PR_LIGHT_BLACK»$PR_GREEN»$PR_LIGHT_GREEN».$PR_LIGHT_BLACK»$PR_RED»$PR_LIGHT_RED»)\
+%(?.%F{022}»%F{034}»%F{046}».%F{052}»%F{124}»%F{196}»)\
 %{$reset_color%} '
 
   RPROMPT=' $PR_LIGHT_BLUE($PR_YELLOW%D{%a, %b %d} %D{%H:%M}$PR_LIGHT_BLUE)$PR_NO_COLOUR'
