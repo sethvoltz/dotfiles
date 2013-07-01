@@ -63,7 +63,7 @@ function precmd {
   # local promptsize=${#${(%):-.%! [%n@%m......]()}}
   local rb_pr="$(rb_prompt)"
   local py_pr="$(py_prompt)"
-  local promptsize=${#${(%):-%! [%n@%m]......%~}}
+  local promptsize=${#${(%):-[%n@%m]......%~}}
   local rightsize=${#${(%):-$rb_pr$py_pr}}
 
   if [[ "$promptsize + $rightsize" -gt $TERMWIDTH ]]; then
@@ -136,7 +136,7 @@ setprompt () {
   GRADIENT=$COLOR_LIST[$(( (BASE_NUM * 2) + 2 ))]
 
   PROMPT='$PR_STITLE${(e)PR_TITLEBAR}\
-%F{black}%K{$START_COLOR}%! [%n@%m] \
+%F{black}%K{$START_COLOR}[%n@%m] \
 $GRADIENT\
 %$PR_PWDLEN<...<%~%<<${(e)PR_FILLBAR}$(rb_prompt)$(py_prompt)\
 %{$reset_color%}\
