@@ -1,2 +1,2 @@
 # Quickly copy your SSH public key to a given remote server
-cat ~/.ssh/id_rsa.pub | ssh $1 'umask 077 ; mkdir -p ~/.ssh ; cat - >> ~/.ssh/authorized_keys'
+cat ~/.ssh/id_rsa.pub | ssh $* 'umask 077 ; mkdir -p ~/.ssh ; cat - >> ~/.ssh/authorized_keys'
