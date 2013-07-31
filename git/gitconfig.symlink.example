@@ -8,24 +8,29 @@
 # install this to the correct location by running the project's main `rake`
 # task.
 [user]
-        name = Zach Holman
-        email = your@example.com
-[alias]
-        co = checkout
-        promote = !$ZSH/bin/git-promote
-        wtf     = !$ZSH/bin/git-wtf
-        rank-contributers = !$ZSH/bin/git-rank-contributers
-        count   = !git shortlog -sn
+        name = Seth Voltz
+        email = your@email.com
 [color]
-        diff = auto
         status = auto
         branch = auto
+        diff = auto
+        interactive = auto
+[alias]
+        stat = status
+        quicklog = log --pretty=format:\"%h %cr %cn %Cgreen%s%Creset\"
+        unpushed = !GIT_CURRENT_BRANCH=$(git name-rev --name-only HEAD) && git log origin/$GIT_CURRENT_BRANCH..$GIT_CURRENT_BRANCH --oneline
+        deliver = !$ZSH/git/git-deliver/deliver.sh
+[gui]
+        fontui = -family Monaco -size 10 -weight normal -slant roman -underline 0 -overstrike 0
+        fontdiff = -family Monaco -size 10 -weight normal -slant roman -underline 0 -overstrike 0
 [core]
-        excludesfile = ~/.gitignore
-        editor = mate -w
-[apply]
-        whitespace = nowarn
-[github]
-        user = holman
-[mergetool]
+        excludesfile = /Users/seth/.gitignore
+[difftool "sourcetree"]
+        cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+        path =
+[mergetool "sourcetree"]
+        cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+        trustExitCode = true
         keepBackup = false
+[push]
+        default = simple
