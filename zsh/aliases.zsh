@@ -10,7 +10,9 @@ alias ...='cd ../..'
 alias ....='cd ../../..'
 alias cwd='pwd | pbcopy'    # Copy the current directory to the pastebin
 alias gowd='cd "`pbpaste`"' # Change into the directory in the pastebin
-alias profileme="history | awk '{print \$2}' | awk 'BEGIN{FS=\"|\"}{print \$1}' | sort | uniq -c | sort -n | tail -n 20 | sort -nr"
+
+# profileme: history 1 # Magic to show all history items.
+alias profileme="history 1 | awk '{print \$2}' | awk 'BEGIN{FS=\"|\"}{print \$1}' | sort | uniq -c | sort -n | tail -n 20 | sort -nr"
 alias path='echo -e ${PATH//:/\\n}' # Each part on its own line
 alias grep='grep --color'
 # alias unpushed='unpushed=`git unpushed` && echo -n $unpushed | wc -l | tr -d " "'
@@ -18,7 +20,7 @@ alias netprocs="lsof -P -i -n +c0 | awk '{printf \"%-5s %s\\n\", \$2, \$1}' | un
 alias recent="find . -type f -print0 -o \( -type d -path './.*' -prune -o -path './tmp' -prune -o -path './log' -prune \) | xargs -0 ls -lrt | tail -n 20"
 
 # Enhanced WHOIS lookup
-alias whois="whois -h whois-servers.net"
+# alias whois="whois -h whois-servers.net"
 
 # Flush Directory Service cache
 alias flush="dscacheutil -flushcache"
