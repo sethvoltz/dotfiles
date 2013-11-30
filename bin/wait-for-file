@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+# Watches a directory for a file glob newer than the script start time. When a
+# matching file arrives, prints the found filename to stdout. For each cycle
+# with no matches, a period (.) is printed to stderr.
+#
+# Usage:
+# wait-for-file [path [glob [delay]]]
+#
+#   path defaults to the current directory
+#   glob defaults to all files
+#   delay defaults to 1 second
+#
+# Examples:
+#   wait-for-file log | echo
+#   wait-for-file log '*-runner.log' | xargs tail -f
+#
+# Author: Seth Voltz <seth@designgods.net>
+#
+# TODO:
+#   * Replace fixed parameters with option parsing
+#   * Add usage help text on -h
+
+CURRENT_DATE=$(date '+%Y-%m-%d %H:%M:%S')
+BASE_PATH=${1:-.}
+FILE_GLOB=${2:-*}
+SLEEP_DELAY=${3:-1}
+
+set -x
+while true; do
+  if [ $(find "$BASE_PATH" -name "$FILE_GLOB" -newermt "$CURRENT_DATE" -print -quit | wc -l) = "0" ]; then
+    printf '.' >&2
+  else
+    echo >&2
+    echo $(find "$BASE_PATH" -name "$FILE_GLOB" -newermt "$CURRENT_DATE" -print -quit)
+    exit 0
+  fi
+  sleep $SLEEP_DELAY
+done
