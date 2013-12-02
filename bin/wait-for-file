@@ -18,6 +18,7 @@
 # Author: Seth Voltz <seth@designgods.net>
 #
 # TODO:
+#   * Force quoting of glob parameter
 #   * Replace fixed parameters with option parsing
 #   * Add usage help text on -h
 
@@ -26,7 +27,6 @@ BASE_PATH=${1:-.}
 FILE_GLOB=${2:-*}
 SLEEP_DELAY=${3:-1}
 
-set -x
 while true; do
   if [ $(find "$BASE_PATH" -name "$FILE_GLOB" -newermt "$CURRENT_DATE" -print -quit | wc -l) = "0" ]; then
     printf '.' >&2
