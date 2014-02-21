@@ -38,4 +38,5 @@ if [ -f /usr/local/share/python/virtualenvwrapper.sh ]; then
     source /usr/local/share/python/virtualenvwrapper.sh
 fi
 
-export REPORTTIME=10
+export TIMEFMT="%U user %S system %P cpu %*E total, running %J"
+REPORTTIME=5
