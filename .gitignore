@@ -5,3 +5,4 @@ git/gitconfig.symlink
 mediatomb/mediatomb.symlink/mediatomb.db
 mediatomb/mediatomb.symlink/mediatomb.html
 vim/vim.symlink/backup/*.sw[lmnop]
+*.sublime-workspace
