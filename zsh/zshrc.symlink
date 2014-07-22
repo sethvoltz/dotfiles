@@ -40,3 +40,6 @@ fi
 
 export TIMEFMT="%U user %S system %P cpu %*E total, running %J"
 REPORTTIME=5
+
+### Added by the Heroku Toolbelt
+export PATH="/usr/local/heroku/bin:$PATH"
