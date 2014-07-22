@@ -35,7 +35,7 @@ fetch   = $*.delete '--fetch'
 sorted  = $*.delete '--sorted'
 commentate = $*.delete '--commentate'
 
-specs = 
+specs =
   if bundle
     Bundler.load.specs
   else
@@ -98,6 +98,6 @@ if commentate
     }
     puts 'Appended gem information to your Gemfile'
   end
-else 
+else
   print res
 end

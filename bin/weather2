@@ -24,13 +24,13 @@ def parse_options
 		opts.banner = "Usage: #{$0} [options] zip_code"
 		opts.separator ''
 		opts.separator 'Options:'
-		
-		
+
+
 		opts.on('-d', 'Use unicode degrees symbol for temperatures') { |bool| @options[:degrees] = bool }
 		opts.on('-u', 'Suppress temperature unit') { |bool| @options[:unit] = !bool }
 		opts.on('-t', 'Show current temperature') { |bool| @options[:temperature] = bool }
 		opts.on('-c', 'Show current conditions') { |bool| @options[:conditions] = bool }
-		
+
 		opts.on_tail('--version', 'Show version')         { output_version ; exit 0 }
 		opts.on_tail('-h', '--help', 'Show this message') { puts opts ; exit 0 }
 	end

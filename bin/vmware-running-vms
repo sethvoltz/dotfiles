@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-# 
+#
 # 1. /Library/Application\ Support/VMware\ Fusion/vmrun -T ws list
 # 2. For each item in the given list as a path to the VMX file as <vmx_file>:
 #    a. Search <vmx_file> for "ethernet0.connectionType" as <type>
@@ -12,12 +12,12 @@
 #    d. If no IP comes back in <lease_path>, check <config_path> for a static IP as "host <hostname> { ... }"
 #    e. Search <vmx_file> for "displayName" as <name>
 #    f. Return <name>, <ip> and <mac>
-# 
+#
 # Future Extension:
 # * Automatically modify /etc/hosts to add displayName as a "host name" to its IP.
 #   * Only if displayName follows the FQDN form. Add multiple aliases for host if it ends in .local
 #     or .localdomain. E.g. pki.local would get the entry "<ip>   pki.local pki"
-# 
+#
 # Format...
 # > Running Virtual Machines:
 # >   R pki.local (172.16.81.34)
@@ -97,15 +97,15 @@ vmx_files.each do |file|
 	# Extract VMX parameters
 	vmx_file = {}
 	File.read(file.strip).each_line { |l| m = l.match(/\s*([^\s]+)\s+=\s+"(.+)"/); vmx_file[m[1].downcase] = m[2] if m }
-	
+
 	address = (vmx_file['ethernet0.generatedaddress'] || vmx_file['ethernet0.address']).downcase
-	
+
 	ip = if vmx_file['ethernet0.connectiontype'] == "nat"
 		leases[:nat][address]
 	else
 		leases[:bridge][address]
 	end
-	
+
 	the_lines << "  R #{vmx_file['displayname']} (#{ip})"
 end
 

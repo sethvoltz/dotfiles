@@ -15,6 +15,7 @@ mode = :find_network_name
 	when :capture_network_channel
 		next unless line =~ /Channel:/
 		network_channel = line.match(/Channel: ([0-9]*)/)[1]
+		break
 	end
 end
 

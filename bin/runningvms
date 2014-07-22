@@ -8,17 +8,17 @@ running_vms.split("\n").each do |item|
 	if(item =~/"(.*?)" (\{[0-9a-f-]{36,40}\})/)
 		has_vms = true
 		vm_name = $1
-		
+
 		labels = []
 		vm_state = nil
-		
+
 		`VBoxManage showvminfo "#{vm_name}"`.each do |info_line|
 			if element = info_line.match(/^VRDP:\s*enabled \((.*)\)/)
 				vrdp_port = element[1].match(/Ports ([0-9]+?),/)[1]
 				labels << "rdp:#{vrdp_port}"
 				break
 			end
-			
+
 			if element = info_line.match(/^State:\s*(.*?)\s\(/)
 				vm_state = element[1]
 				break
@@ -30,7 +30,7 @@ running_vms.split("\n").each do |item|
 			if_ip = vminfo.match(/value: ([0-9.]+?),/)[1]
 			labels << "ip:#{if_ip}"
 		end
-		
+
 		if labels
 			marker = vm_state ? vm_state[0..0].upcase : '-'
 			puts "  #{marker} #{vm_name} (#{labels.join ', '})"
