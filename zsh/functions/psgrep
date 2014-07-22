@@ -1,0 +1,1 @@
+ps wwaux | grep -v grep | grep "$@" -i --color=auto;
