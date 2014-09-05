@@ -18,6 +18,7 @@ alias grep='grep --color'
 # alias unpushed='unpushed=`git unpushed` && echo -n $unpushed | wc -l | tr -d " "'
 alias netprocs="lsof -P -i -n +c0 | awk '{printf \"%-5s %s\\n\", \$2, \$1}' | uniq"
 alias recent="find . -type f -print0 -o \( -type d -path './.*' -prune -o -path './tmp' -prune -o -path './log' -prune \) | xargs -0 ls -lrt | tail -n 20"
+alias fuck='sudo $(fc -ln -1)'
 
 # Enhanced WHOIS lookup
 # alias whois="whois -h whois-servers.net"
