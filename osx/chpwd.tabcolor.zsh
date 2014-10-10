@@ -1,8 +1,15 @@
 update_tab_chpwd() {
-  # Ensure tab-color file exists
-  if [ -f ".tab-color" ]; then
+  # Search for a tab-color file
+  color_file=$(pwd -P 2>/dev/null || command pwd)
+  while [ ! -e "$color_file/.tab-color" ]; do
+    color_file=${color_file%/*}
+    if [ "$color_file" = "" ]; then break; fi
+  done
+
+  # If the tab-color file exists
+  if [ ! -z "$color_file" ]; then
     # Ensure contents contain the hex code
-    color=`cat .tab-color| egrep '#[0-9a-f]{6}'`
+    color=`cat $color_file/.tab-color| egrep '#[0-9a-f]{6}'`
     if [ -n "$color" ]; then
       # Extract just the color code
       color=${(MS)color##\#[0-9a-zA-Z][0-9a-zA-Z][0-9a-zA-Z][0-9a-zA-Z][0-9a-zA-Z][0-9a-zA-Z]}
@@ -12,6 +19,9 @@ update_tab_chpwd() {
       echo -ne "\033]6;1;bg;green;brightness;$((0x$color[4,5]))\a"
       echo -ne "\033]6;1;bg;blue;brightness;$((0x$color[6,7]))\a"
     fi
+  else
+    # No color file exists, reset the tab to default
+    echo -ne "\033]6;1;bg;*;default\a"
   fi
 }
 
