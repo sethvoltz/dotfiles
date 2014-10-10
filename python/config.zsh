@@ -11,15 +11,15 @@ export PIP_VIRTUALENV_BASE=$HOME/.virtualenvs
 export WORKON_HOME=$PIP_VIRTUALENV_BASE
 
 # Pip should only run if there is a virtualenv currently activated
-export PIP_REQUIRE_VIRTUALENV=true
+#export PIP_REQUIRE_VIRTUALENV=true
 
 # Cache pip-installed packages to avoid re-downloading
 export PIP_DOWNLOAD_CACHE=$HOME/.pip/cache
 
-syspip() {
-   PIP_REQUIRE_VIRTUALENV="" pip "$@"
-}
+# syspip() {
+#    PIP_REQUIRE_VIRTUALENV="" pip "$@"
+# }
 
-syspip3() {
-   PIP_REQUIRE_VIRTUALENV="" pip3 "$@"
-}
+# syspip3() {
+#    PIP_REQUIRE_VIRTUALENV="" pip3 "$@"
+# }
