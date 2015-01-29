@@ -1,0 +1,83 @@
+// Settings
+
+var altCmd = ['alt', 'cmd'],
+    padding = 0;
+
+// Keyboard shortcuts
+
+api.bind('left', altCmd, function() { Window.focusedWindow().toLeftHalf(); });
+api.bind('right', altCmd, function() { Window.focusedWindow().toRightHalf(); });
+api.bind('up', altCmd, function() { Window.focusedWindow().toTopHalf(); });
+api.bind('down', altCmd, function() { Window.focusedWindow().toBottomHalf(); });
+api.bind('f', altCmd, function() { Window.focusedWindow().toFullScreen(); });
+
+// Adjust window size
+// https://gist.github.com/teetrinkers/9435065
+
+// ### Helper methods `Window`
+//
+// #### Window#toGrid()
+//
+// This method can be used to push a window to a certain position and size on
+// the screen by using four floats instead of pixel sizes.  Examples:
+//
+//     // Window position: top-left; width: 25%, height: 50%
+//     someWindow.toGrid( 0, 0, 0.25, 0.5 );
+//
+//     // Window position: 30% top, 20% left; width: 50%, height: 35%
+//     someWindow.toGrid( 0.3, 0.2, 0.5, 0.35 );
+//
+// The window will be automatically focussed.  Returns the window instance.
+function windowToGrid(window, x, y, width, height) {
+  var screen = window.screen().frameWithoutDockOrMenu();
+
+  window.setFrame({
+  x: Math.round( x * screen.width ) + padding + screen.x,
+  y: Math.round( y * screen.height ) + padding + screen.y,
+  width: Math.round( width * screen.width ) - ( 2 * padding ),
+  height: Math.round( height * screen.height ) - ( 2 * padding )
+  });
+
+  window.focusWindow();
+
+  return window;
+}
+
+function toGrid(x, y, width, height) {
+  windowToGrid(Window.focusedWindow(), x, y, width, height);
+}
+
+Window.prototype.toGrid = function(x, y, width, height) {
+  windowToGrid(this, x, y, width, height);
+};
+
+// Convenience method, doing exactly what it says.  Returns the window
+// instance.
+Window.prototype.toFullScreen = function() {
+  return this.toGrid( 0, 0, 1, 1 );
+};
+
+
+// Convenience method, pushing the window to the top half of the screen.
+// Returns the window instance.
+Window.prototype.toTopHalf = function() {
+  return this.toGrid( 0, 0, 1, 0.5 );
+};
+
+// Convenience method, pushing the window to the right half of the screen.
+// Returns the window instance.
+Window.prototype.toRightHalf = function() {
+  return this.toGrid( 0.5, 0, 0.5, 1 );
+};
+
+// Convenience method, pushing the window to the bottom half of the screen.
+// Returns the window instance.
+Window.prototype.toBottomHalf = function() {
+  return this.toGrid( 0, 0.5, 1, 0.5 );
+};
+
+// Convenience method, pushing the window to the left half of the screen.
+// Returns the window instance.
+Window.prototype.toLeftHalf = function() {
+  return this.toGrid( 0, 0, 0.5, 1 );
+};
