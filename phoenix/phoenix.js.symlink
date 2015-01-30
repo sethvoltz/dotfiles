@@ -1,15 +1,16 @@
 // Settings
 
 var altCmd = ['alt', 'cmd'],
+    mash = ['ctrl', 'alt', 'cmd'],
     padding = 0;
 
 // Keyboard shortcuts
 
-api.bind('left', altCmd, function() { Window.focusedWindow().toLeftHalf(); });
-api.bind('right', altCmd, function() { Window.focusedWindow().toRightHalf(); });
-api.bind('up', altCmd, function() { Window.focusedWindow().toTopHalf(); });
-api.bind('down', altCmd, function() { Window.focusedWindow().toBottomHalf(); });
-api.bind('f', altCmd, function() { Window.focusedWindow().toFullScreen(); });
+api.bind('left', mash, function() { Window.focusedWindow().toLeftHalf(); });
+api.bind('right', mash, function() { Window.focusedWindow().toRightHalf(); });
+api.bind('up', mash, function() { Window.focusedWindow().toTopHalf(); });
+api.bind('down', mash, function() { Window.focusedWindow().toBottomHalf(); });
+api.bind('f', mash, function() { Window.focusedWindow().toFullScreen(); });
 
 // Adjust window size
 // https://gist.github.com/teetrinkers/9435065
