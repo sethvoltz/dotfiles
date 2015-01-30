@@ -1,16 +1,20 @@
 // Settings
 
-var altCmd = ['alt', 'cmd'],
-    mash = ['ctrl', 'alt', 'cmd'],
+var altCmd  = ['alt', 'cmd'],
+    mash    = ['ctrl', 'alt', 'cmd'],
+    allIn   = ['shift', 'ctrl', 'alt', 'cmd']
     padding = 0;
 
 // Keyboard shortcuts
 
-api.bind('left', mash, function() { Window.focusedWindow().toLeftHalf(); });
+api.bind('left',  mash, function() { Window.focusedWindow().toLeftHalf(); });
 api.bind('right', mash, function() { Window.focusedWindow().toRightHalf(); });
-api.bind('up', mash, function() { Window.focusedWindow().toTopHalf(); });
-api.bind('down', mash, function() { Window.focusedWindow().toBottomHalf(); });
-api.bind('f', mash, function() { Window.focusedWindow().toFullScreen(); });
+api.bind('up',    mash, function() { Window.focusedWindow().toTopHalf(); });
+api.bind('down',  mash, function() { Window.focusedWindow().toBottomHalf(); });
+api.bind('f',     mash, function() { Window.focusedWindow().toFullScreen(); });
+
+api.bind('left',  allIn, leftOneMonitor);
+api.bind('right',  allIn, rightOneMonitor);
 
 // Adjust window size
 // https://gist.github.com/teetrinkers/9435065
@@ -82,3 +86,53 @@ Window.prototype.toBottomHalf = function() {
 Window.prototype.toLeftHalf = function() {
   return this.toGrid( 0, 0, 0.5, 1 );
 };
+
+// Move windows between monitors
+// https://github.com/jakemcc/dotfiles/blob/master/home/.phoenix.js
+
+function moveToScreen(win, screen) {
+  if (!screen) {
+    return;
+  }
+
+  var frame = win.frame();
+  var oldScreenRect = win.screen().frameWithoutDockOrMenu();
+  var newScreenRect = screen.frameWithoutDockOrMenu();
+
+  var xRatio = newScreenRect.width / oldScreenRect.width;
+  var yRatio = newScreenRect.height / oldScreenRect.height;
+
+  win.setFrame({
+    x: (Math.round(frame.x - oldScreenRect.x) * xRatio) + newScreenRect.x,
+    y: (Math.round(frame.y - oldScreenRect.y) * yRatio) + newScreenRect.y,
+    width: Math.round(frame.width * xRatio),
+    height: Math.round(frame.height * yRatio)
+  });
+}
+
+function circularLookup(array, index) {
+  if (index < 0)
+    return array[array.length + (index % array.length)];
+  return array[index % array.length];
+}
+
+function rotateMonitors(offset) {
+  var win = Window.focusedWindow();
+  var currentScreen = win.screen();
+  var screens = [currentScreen];
+  for (var x = currentScreen.previousScreen(); x != win.screen(); x = x.previousScreen()) {
+    screens.push(x);
+  }
+
+  screens = _(screens).sortBy(function(s) { return s.frameWithoutDockOrMenu().x; });
+  var currentIndex = _(screens).indexOf(currentScreen);
+  moveToScreen(win, circularLookup(screens, currentIndex + offset));
+}
+
+function leftOneMonitor() {
+  rotateMonitors(-1);
+}
+
+function rightOneMonitor() {
+  rotateMonitors(1);
+}
