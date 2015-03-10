@@ -1,0 +1,2 @@
+composer.symlink/*
+!composer.symlink/composer.json
