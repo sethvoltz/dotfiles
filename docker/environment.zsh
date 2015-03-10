@@ -1,2 +1,2 @@
 # export DOCKER_HOST=tcp://localhost:2375
-$(boot2docker shellinit 2> /dev/null)
+eval `boot2docker shellinit 2> /dev/null`
