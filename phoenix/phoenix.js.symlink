@@ -14,7 +14,7 @@ api.bind('down',  mash, function() { Window.focusedWindow().toBottomHalf(); });
 api.bind('f',     mash, function() { Window.focusedWindow().toFullScreen(); });
 
 api.bind('left',  allIn, leftOneMonitor);
-api.bind('right',  allIn, rightOneMonitor);
+api.bind('right', allIn, rightOneMonitor);
 
 // Adjust window size
 // https://gist.github.com/teetrinkers/9435065
