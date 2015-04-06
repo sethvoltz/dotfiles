@@ -1,2 +1,3 @@
 # export POW_RVM_PATH=/usr/local/rvm/scripts/rvm
+export POW_EXT_DOMAINS=ngrok.com
 export PATH=$(rbenv root)/shims:$(brew --prefix rbenv)/bin:$PATH
