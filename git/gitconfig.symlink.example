@@ -8,8 +8,8 @@
 # install this to the correct location by running the project's main `rake`
 # task.
 [user]
-        name = Seth Voltz
-        email = your@email.com
+        name = AUTHORNAME
+        email = AUTHOREMAIL
 [color]
         status = auto
         branch = auto
@@ -20,11 +20,16 @@
         quicklog = log --pretty=format:\"%h %cr %cn %Cgreen%s%Creset\"
         unpushed = !GIT_CURRENT_BRANCH=$(git name-rev --name-only HEAD) && git log origin/$GIT_CURRENT_BRANCH..$GIT_CURRENT_BRANCH --oneline
         deliver = !$ZSH/git/git-deliver/deliver.sh
+        co = checkout
+        promote = !$ZSH/bin/git-promote
+        wtf     = !$ZSH/bin/git-wtf
+        rank-contributors = !$ZSH/bin/git-rank-contributors
+        count   = !git shortlog -sn
 [gui]
         fontui = -family Monaco -size 10 -weight normal -slant roman -underline 0 -overstrike 0
         fontdiff = -family Monaco -size 10 -weight normal -slant roman -underline 0 -overstrike 0
 [core]
-        excludesfile = /Users/seth/.gitignore
+        excludesfile = ~/.gitignore
 [difftool "sourcetree"]
         cmd = opendiff \"$LOCAL\" \"$REMOTE\"
         path =
