@@ -52,6 +52,9 @@ defaults write com.apple.screencapture type -string "png"
 # Allow quitting Finder via ⌘ + Q; doing so will also hide desktop icons
 defaults write com.apple.finder QuitMenuItem -bool true
 
+# Automatically quit printer app once the print jobs complete
+defaults write com.apple.print.PrintingPrefs "Quit When Finished" -bool true
+
 # Show status bar in Finder
 defaults write com.apple.finder ShowStatusBar -bool true
 
@@ -70,8 +73,8 @@ defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
 # Show item info below desktop icons
 /usr/libexec/PlistBuddy -c "Set :DesktopViewSettings:IconViewSettings:showItemInfo true" ~/Library/Preferences/com.apple.finder.plist
 
-# Enable snap-to-grid for desktop icons
-/usr/libexec/PlistBuddy -c "Set :DesktopViewSettings:IconViewSettings:arrangeBy grid" ~/Library/Preferences/com.apple.finder.plist
+# Enable sort by name for desktop icons
+/usr/libexec/PlistBuddy -c "Set :DesktopViewSettings:IconViewSettings:arrangeBy dnam" ~/Library/Preferences/com.apple.finder.plist
 
 # Enable highlight hover effect for the grid view of a stack (Dock)
 defaults write com.apple.dock mouse-over-hilte-stack -bool true
@@ -124,6 +127,23 @@ defaults write com.apple.iTunes NSUserKeyEquivalents -dict-add "Target Search Fi
 
 # Set a really fast key repeat.
 defaults write NSGlobalDomain KeyRepeat -int 0
+
+# Hot corners
+# Possible values:
+#  0: no-op
+#  2: Mission Control
+#  3: Show application windows
+#  4: Desktop
+#  5: Start screen saver
+#  6: Disable screen saver
+#  7: Dashboard
+# 10: Put display to sleep
+# 11: Launchpad
+# 12: Notification Center
+
+# Top right screen corner → Put display to sleep
+defaults write com.apple.dock wvous-tr-corner -int 10
+defaults write com.apple.dock wvous-tr-modifier -int 0
 
 # Set the Finder prefs for showing a few different volumes on the Desktop.
 defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool true
