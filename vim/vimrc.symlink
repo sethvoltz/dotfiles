@@ -26,7 +26,7 @@ Bundle 'michaeljsmith/vim-indent-object'
 Bundle 'ddollar/nerdcommenter'
 Bundle 'ervandew/supertab'
 Bundle 'tsaleh/vim-align'
-Bundle 'scrooloose/syntastic'
+" Bundle 'scrooloose/syntastic'
 Bundle 'tpope/vim-surround'
 Bundle 'godlygeek/tabular'
 " Bundle 'msanders/snipmate.vim'
@@ -45,7 +45,7 @@ Bundle 'majutsushi/tagbar'
 " Search & Files
 Bundle 'bufexplorer.zip'
 Bundle 'mileszs/ack.vim'
-Bundle 'wincent/Command-T'
+" Bundle 'wincent/Command-T'
 Bundle 'sjl/gundo.vim'
 
 " Languages
@@ -55,7 +55,7 @@ Bundle 'tpope/vim-cucumber'
 Bundle 'tpope/vim-rails'
 Bundle 'timcharper/textile.vim'
 Bundle 'pangloss/vim-javascript'
-Bundle 'taq/vim-rspec'
+" Bundle 'taq/vim-rspec'
 Bundle 'kchmck/vim-coffee-script'
 Bundle 'ajf/puppet-vim'
 " Bundle 'bdd/vim-scala'
@@ -98,13 +98,13 @@ set hidden
 
 " =------------------------------------------------------------------= Core Whitespace Settings =--=
 
-set autoindent    " 
-set smartindent   " 
-set smarttab      " 
+set autoindent    "
+set smartindent   "
+set smarttab      "
 set shiftwidth=2  " Tabs are two columns wide
 set softtabstop=2 " Ditto
 set tabstop=2     " Ditto
-set expandtab     " 
+set expandtab     "
 set textwidth=100 " I like long lines and no other coder can deny.
 set nowrap        " But not be default.
 
