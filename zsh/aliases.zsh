@@ -1,7 +1,7 @@
 alias reload!='. ~/.zshrc'
 
-alias ls="ls -a"
-alias ll="ls -lGh"
+alias ls="exa -a"
+alias ll="exa -algh"
 alias ducks='du -cksh * | sort -rn | head -11' # Lists the size of all the folders and files
 alias top='top -o cpu'
 alias cd..="cd .."
