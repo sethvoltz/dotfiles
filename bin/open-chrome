@@ -1,0 +1,164 @@
+#!/usr/bin/env bash
+
+# open-chrome
+#
+# Use this script on OS X to launch a new instance of Google Chrome in one of a
+# variety of useful preset modes
+#
+# Kudos to https://gist.github.com/stuartsierra/6220797
+
+script_name=$(basename $0)
+
+# Permanent directory to store the user-data directory of your profiles to live
+profile_base_dir="$HOME/.chrome-profiles"
+
+# Temporary directory in which to create new user-data directories for temporary
+# Chrome instances.
+tmp_dir="/tmp"
+
+set -e
+
+function usage () {
+  echo "Usage: $script_name action"
+  echo "   actions:"
+  echo "      * explain          - Explain how this all works"
+  echo "      * default          - Open chrome as normal"
+  echo "      * list             - Show a list of all saved profile names"
+  echo "      * create [profile] - Create a new profile by name"
+  echo "      * delete [profile] - Destroy a chrome profile"
+  echo "      * js-profile       - Disable V8 optimizations to profile code"
+  echo "      * [profile]        - Launch chrome with the given profile"
+  exit 1
+}
+
+function explain () {
+  echo 'How this thing works:'
+  echo
+  echo 'The first time you create a new profile, it will launch a new Google'
+  echo 'Chrome instance with a permanent user-data directory. Perform any'
+  echo 'initial setup you want to keep on for that profile, such as adding'
+  echo 'bookmarks and extensions. Then quit this Chrome instance with Command-Q'
+  echo 'or by selecting "Quit" from the "Chrome" menu. (The red "close" button'
+  echo 'is not sufficient.)'
+  echo
+  echo 'AFTER that, every time you run the same profile, it will launch a new'
+  echo 'Google Chrome instance with a temporary user-data directory copied'
+  echo 'from the one you set up the first time you created the profile. Every'
+  echo 'new instance of Google Chrome launched with that profile will be'
+  echo 'completely isolated from the others.'
+}
+
+function list () {
+  if [[ -e "$profile_base_dir" ]]; then
+    echo "Chrome Profiles:"
+    listing=$(find $profile_base_dir -mindepth 1 -maxdepth 1 -type d)
+    for line in $listing; do
+      echo "   * $(basename $line)"
+    done
+  else
+    echo "No profiles have been created yet. Create one with"
+    echo "   $script_name create [profile]"
+  fi
+}
+
+function check_create () {
+  case $1 in
+    list | create | delete | js-profile | default )
+      echo "Can't create a profile with a reserved name!"
+      usage
+      ;;
+    * ) create $1 ;;
+  esac
+}
+
+function create () {
+  if [[ -z $1 ]]; then
+    echo "Please specify the profile name"
+    usage
+  fi
+
+  profile_dir="$profile_base_dir/$1"
+
+  if [[ -e "$profile_dir" ]]; then
+    echo "That profile already exists!"
+    exit 1;
+  else
+    use_profile $1
+  fi
+}
+
+function delete () {
+  if [[ -z $1 ]]; then
+    echo "Please specify the profile name"
+    usage
+  fi
+
+  profile_dir="$profile_base_dir/$1"
+
+  if [[ -e "$profile_dir" ]]; then
+    rm -rf $profile_dir
+  else
+    echo "No profile with that name exists!"
+    exit 1
+  fi
+}
+
+function js_profile {
+  data_dir="$tmp_dir/chrome-temp-profile"
+  launch "--user-data-dir=$tmp_dir --no-first-run --js-flags=\"-nocrankshaft --noopt\""
+}
+
+function use_profile () {
+  timestamp=`date +%Y%m%d%H%M%S`
+  profile_dir="$profile_base_dir/$1"
+
+  if [[ -e "$profile_dir" ]]; then
+      user_dir="$tmp_dir/chrome-$timestamp-$RANDOM"
+      cp -r "$profile_dir" "$user_dir"
+      exec open -na "Google Chrome" --args "--user-data-dir=$user_dir"
+  else
+      exec open -na "Google Chrome" --args "--user-data-dir=$profile_dir"
+  fi
+}
+
+function launch () {
+  exec open -na "Google Chrome" --args $1
+}
+
+if [[ -z "$1" ]]; then
+  usage
+fi
+
+case $1 in
+  explain    ) explain ;;
+  list       ) list ;;
+  create     ) check_create $2 ;;
+  delete     ) delete $2 ;;
+  js-profile ) js_profile ;;
+  default    ) launch ;;
+  *          ) use_profile $1 ;;
+esac
+
+# The MIT License (MIT)
+#
+# Copyright (c) 2015 Seth Voltz
+#
+# Permission is hereby granted, free of charge, to any person
+# obtaining a copy of this software and associated documentation files
+# (the "Software"), to deal in the Software without restriction,
+# including without limitation the rights to use, copy, modify, merge,
+# publish, distribute, sublicense, and/or sell copies of the Software,
+# and to permit persons to whom the Software is furnished to do so,
+# subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be
+# included in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+# BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+# ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+# CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
