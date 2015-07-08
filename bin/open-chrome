@@ -89,6 +89,22 @@ function create () {
   fi
 }
 
+function edit () {
+  if [[ -z $1 ]]; then
+    echo "Please specify the profile name"
+    usage
+  fi
+
+  profile_dir="$profile_base_dir/$1"
+
+  if [[ -e "$profile_dir" ]]; then
+    launch "--user-data-dir=$profile_dir"
+  else
+    echo "No profile with that name exists!"
+    exit 1
+  fi
+}
+
 function delete () {
   if [[ -z $1 ]]; then
     echo "Please specify the profile name"
@@ -135,6 +151,7 @@ case $1 in
   explain    ) explain ;;
   list       ) list ;;
   create     ) check_create $2 ;;
+  edit       ) edit $2 ;;
   delete     ) delete $2 ;;
   js-profile ) js_profile ;;
   default    ) launch ;;
