@@ -50,8 +50,10 @@ function explain () {
 
 function list () {
   if [[ -e "$profile_base_dir" ]]; then
-    echo "Chrome Profiles:"
     listing=$(find $profile_base_dir -mindepth 1 -maxdepth 1 -type d)
+  fi
+  if [[ -e "$listing" ]]; then
+    echo "Chrome Profiles:"
     for line in $listing; do
       echo "   * $(basename $line)"
     done
