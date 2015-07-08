@@ -117,9 +117,9 @@ function use_profile () {
   if [[ -e "$profile_dir" ]]; then
       user_dir="$tmp_dir/chrome-$timestamp-$RANDOM"
       cp -r "$profile_dir" "$user_dir"
-      exec open -na "Google Chrome" --args "--user-data-dir=$user_dir"
+      launch "--user-data-dir=$user_dir"
   else
-      exec open -na "Google Chrome" --args "--user-data-dir=$profile_dir"
+      launch "--user-data-dir=$profile_dir"
   fi
 }
 
