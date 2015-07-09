@@ -25,6 +25,7 @@ function usage () {
   echo "      * default          - Open chrome as normal"
   echo "      * list             - Show a list of all saved profile names"
   echo "      * create [profile] - Create a new profile by name"
+  echo "      * edit [profile]   - Edit the base profile for a chrome instance"
   echo "      * delete [profile] - Destroy a chrome profile"
   echo "      * js-profile       - Disable V8 optimizations to profile code"
   echo "      * [profile]        - Launch chrome with the given profile"
