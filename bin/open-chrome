@@ -66,7 +66,7 @@ function list () {
 
 function check_create () {
   case $1 in
-    list | create | delete | js-profile | default )
+    explain | list | create | edit | delete | js-profile | default )
       echo "Can't create a profile with a reserved name!"
       usage
       ;;
