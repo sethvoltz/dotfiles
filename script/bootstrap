@@ -135,10 +135,31 @@ install_dotfiles () {
     dst="$HOME/.$(basename "${src%.*}")"
     link_file "$src" "$dst"
   done
+
+  success 'dotfiles installed'
+}
+
+install_configfiles () {
+  info 'installing config files'
+
+  local overwrite_all=false backup_all=false skip_all=false
+
+  if [ ! -e "$HOME/.config" ]; then
+    mkdir "$HOME/.config"
+  fi
+
+  for src in $(find "$DOTFILES_ROOT/" -maxdepth 2 -name '*.config')
+  do
+    dst="$HOME/.config/$(basename "${src%.*}")"
+    link_file "$src" "$dst"
+  done
+
+  success 'config files installed'
 }
 
 setup_gitconfig
 install_dotfiles
+install_configfiles
 
 # If we're on a Mac, let's install and setup homebrew.
 if [ "$(uname -s)" == "Darwin" ]
