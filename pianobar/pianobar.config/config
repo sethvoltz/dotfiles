@@ -6,7 +6,7 @@ password_command = echo $PANDORA_PASSWORD
 #control_proxy = http://127.0.0.1:9090/
 
 # Misc
-event_command = /Users/yourusername/bin/pianobar-notify.rb
+event_command = /usr/bin/env pianobar-notify
 #fifo = /tmp/pianobar
 #sort = quickmix_10_name_az
 #love_icon = [+]
