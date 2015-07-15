@@ -1,18 +1,17 @@
-        .     .        .         
-        |     |   ,- o |         
-      ,-| ,-. |-  |  . | ,-. ,-. 
-      | | | | |   |- | | |-' `-. 
-    o `-' `-' `-' |  ' ' `-' `-' 
-                 -'              
+        .     .        .
+        |     |   ,- o |
+      ,-| ,-. |-  |  . | ,-. ,-.
+      | | | | |   |- | | |-' `-.
+    o `-' `-' `-' |  ' ' `-' `-'
+                 -'
 
-    # Please have a recent Ruby, RubyGems and Rake installed
     git clone git://github.com/sethvoltz/dotfiles ~/.dotfiles
     cd ~/.dotfiles
-    rake install
+    script/bootstrap
 
 # .dotfiles
 
-The install rake task will symlink the appropriate files in `.dotfiles` to your home directory.
+The install script will symlink the appropriate files in `.dotfiles` to your home directory.
 Everything is configured and tweaked within `~/.dotfiles`, though.
 
 The main file you'll want to change right off the bat is `zsh/zshrc.symlink`, which sets up a few
@@ -26,8 +25,9 @@ information.
 
 Everything's built around topic areas. If you're adding a new area to your forked dotfiles — say,
 "Java" — you can simply add a `java` directory and put files in there. Anything with an extension of
-`.zsh` will get automatically included into your shell. Anything with an extension of `.symlink`will
-get symlinked without extension into `$HOME` when you run `rake install`.
+`.zsh` will get automatically included into your shell. Anything with an extension of `.symlink`
+will get symlinked without extension into `$HOME` when you run `script/bootstrap`. Anything with an
+extension of `.config` will be symlinked without extension into `$HOME/.config`.
 
 ## Components
 
@@ -37,9 +37,14 @@ There are a few special files in the hierarchy.
 * **topic/\*.zsh**: Any files ending in `.zsh` get loaded into your environment.
 * **topic/\*.symlink**: Any files ending in `*.symlink` get symlinked into your `$HOME`. This is so
   you can keep all of those versioned in your dotfiles but still keep those autoloaded files in your
-  home directory. These get symlinked in when you run `rake install`.
+  home directory. These get symlinked in when you run `script/bootstrap`.
+* **topic/\*.config**: Any files ending in `*.config` get symlinked into `$HOME/.config`. This is so
+  you can keep all of those versioned in your dotfiles but still keep those autoloaded files in your
+  home directory. These get symlinked in when you run `script/bootstrap`.
 * **topic/\*.completion.sh**: Any files ending in `completion.sh` get loaded last so that they get
   loaded after we set up zsh autocomplete functions.
+* **topic/install.sh**: Any file named `install.sh` will be run during the installation phase of
+  `script/bootstrap`, or manually at any time with `script/install`.
 
 ## Add-ons
 
@@ -63,3 +68,7 @@ project](https://github.com/holman/dotfiles/) on his repository.
 
 I forked [Zach Holman](http://github.com/holman)'s excellent
 [dotfiles](http://github.com/holman/dotfiles) and tweaked for all my needs.
+
+Where possible, I have attributed scripts found around the Internet to their original authors
+through comments at the top of the file, or next to some day-saving code I found. Check those
+authors out for more of their wonderful work.
