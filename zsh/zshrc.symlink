@@ -27,6 +27,10 @@ fi
 autoload -U compinit
 compinit
 
+# Automatically escape URL characters while typing (does not fix history or paste)
+autoload -U url-quote-magic
+zle -N self-insert url-quote-magic
+
 # load every completion after autocomplete loads
 for config_file ($ZSH/**/completion.sh~*/backups/*) source $config_file
 
@@ -37,6 +41,8 @@ fi
 
 export TIMEFMT="%U user %S system %P cpu %*E total, running %J"
 REPORTTIME=5
+
+eval "$(thefuck-alias)"
 
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
