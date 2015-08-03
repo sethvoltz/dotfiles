@@ -1,29 +1,6 @@
 # User
 user = pandora@designgods.net
-password_command = echo $PANDORA_PASSWORD
-
-# Proxy (for those who are not living in the USA)
-#control_proxy = http://127.0.0.1:9090/
-
-# Misc
-# event_command = /Users/svoltz/.dotfiles/bin/pianobar-notify
-#fifo = /tmp/pianobar
-#sort = quickmix_10_name_az
-#love_icon = [+]
-#ban_icon = [-]
-#volume = 0
-#ca_bundle = /etc/ssl/certs/ca-certificates.crt
-
-# Format strings
-#format_nowplaying_song = [32m%t[0m by [34m%a[0m on %l[31m%r[0m%@%s
-#format_nowplaying_station = Station [35m%n[0m
-#format_list_song = %i) %a - %t%r
+password_command = lpass show --password pandora.com
 
 # high-quality audio (192k mp3, for Pandora One subscribers only!)
 audio_quality = high
-#rpc_host = internal-tuner.pandora.com
-#partner_user = pandora one
-#partner_password = TVCKIBGS9AO9TSYLNNFUML0743LH82D
-#device = D01
-#encrypt_password = 2%3WCL*JU$MP]4
-#decrypt_password = U#IO$RZPAB%VX2
