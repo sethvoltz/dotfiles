@@ -13,6 +13,12 @@ defaults write com.apple.dashboard mcx-disabled -boolean YES
 # Disable press-and-hold for keys in favor of key repeat
 defaults write -g ApplePressAndHoldEnabled -bool false
 
+# Set a really fast key repeat.
+defaults write NSGlobalDomain KeyRepeat -int 0
+
+# Use plain text mode for new TextEdit documents
+defaults write com.apple.TextEdit RichText -int 0
+
 # Use AirDrop over every interface. Srsly this should be a default.
 defaults write com.apple.NetworkBrowser BrowseAllInterfaces 1
 
@@ -127,9 +133,6 @@ defaults write com.apple.iTunes NSUserKeyEquivalents -dict-add "Target Search Fi
 
 # Reset Launchpad
 # [ -e ~/Library/Application\ Support/Dock/*.db ] && rm ~/Library/Application\ Support/Dock/*.db
-
-# Set a really fast key repeat.
-defaults write NSGlobalDomain KeyRepeat -int 0
 
 # Hot corners
 # Possible values:
