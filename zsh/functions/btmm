@@ -1,0 +1,1 @@
+echo show Setup:/Network/BackToMyMac | scutil | awk -F" " "/$UID/{print \$NF}"
