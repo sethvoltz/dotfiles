@@ -1,1 +1,1 @@
-echo show Setup:/Network/BackToMyMac | scutil | awk -F" " "/$UID/{print \$NF}"
+echo show Setup:/Network/BackToMyMac | scutil | awk -F" " "/$UID/{print \$NF}" | sed 's/\.$//'
