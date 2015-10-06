@@ -1,5 +1,11 @@
 #!/bin/sh
 
+# Ensure OS X
+if [ ! $(which sw_vers) ]; then
+  >&2 echo "This command is designed for Mac OS X"
+  exit 1
+fi
+
 version_component() {
   printf "%s" "$1" |
     sed -e "s/\./"$'\t'"/g" -e "s/-/"$'\t'"/" |
