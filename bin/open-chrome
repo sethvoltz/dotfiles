@@ -141,7 +141,11 @@ function use_profile () {
 }
 
 function launch () {
-  exec open -na "Google Chrome" --args $1
+  exec open -na "Google Chrome" --args --allow-running-insecure-content $1
+}
+
+function launch_default () {
+  exec open -na "Google Chrome"
 }
 
 if [[ -z "$1" ]]; then
@@ -155,7 +159,7 @@ case $1 in
   edit       ) edit $2 ;;
   delete     ) delete $2 ;;
   js-profile ) js_profile ;;
-  default    ) launch ;;
+  default    ) launch_default ;;
   *          ) use_profile $1 ;;
 esac
 
