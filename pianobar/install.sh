@@ -6,7 +6,7 @@ if [ ! $(which brew) ]; then
 fi
 
 if [ ! $(which pianobar) ]; then
-  echo "  Installing rbenv for you."
+  echo "  Installing pianobar for you."
   brew install pianobar > /tmp/pianobar-install.log
 fi
 
