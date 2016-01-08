@@ -2,7 +2,7 @@
 
 var altCmd  = ['alt', 'cmd'],
     mash    = ['ctrl', 'alt', 'cmd'],
-    untra   = ['shift', 'ctrl', 'alt', 'cmd']
+    ultra   = ['shift', 'ctrl', 'alt', 'cmd']
     padding = 0;
 
 // Keyboard shortcuts
@@ -12,9 +12,9 @@ api.bind('right', mash, function() { Window.focusedWindow().toRightHalf(); });
 api.bind('up',    mash, function() { Window.focusedWindow().toTopHalf(); });
 api.bind('down',  mash, function() { Window.focusedWindow().toBottomHalf(); });
 
-api.bind('f',     untra, function() { Window.focusedWindow().toFullScreen(); });
-api.bind('left',  untra, leftOneMonitor);
-api.bind('right', untra, rightOneMonitor);
+api.bind('f',     ultra, function() { Window.focusedWindow().toFullScreen(); });
+api.bind('left',  ultra, leftOneMonitor);
+api.bind('right', ultra, rightOneMonitor);
 
 // Adjust window size
 // https://gist.github.com/teetrinkers/9435065
