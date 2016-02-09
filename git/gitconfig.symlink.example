@@ -10,11 +10,39 @@
 [user]
   name = AUTHORNAME
   email = AUTHOREMAIL
+
+# so much color
 [color]
   status = auto
   branch = auto
   diff = auto
   interactive = auto
+	ui = always
+
+[color "diff"]
+	meta = yellow bold
+	commit = green bold
+	frag = magenta bold
+	old = red bold
+	new = green bold
+	whitespace = red reverse
+
+[color "diff-highlight"]
+	oldNormal = red bold
+	oldHighlight = "red bold 52"
+	newNormal = "green bold"
+	newHighlight = "green bold 22"
+
+[color "branch"]
+	current = yellow reverse
+	local = yellow
+	remote = green
+
+[color "status"]
+	added = yellow
+	changed = green
+	untracked = cyan
+
 [alias]
   stat = status
   quicklog = log --pretty=format:\"%h %cr %cn %Cgreen%s%Creset\"
@@ -25,17 +53,22 @@
   wtf     = !$ZSH/bin/git-wtf
   rank-contributors = !$ZSH/bin/git-rank-contributors
   count   = !git shortlog -sn
+
 [gui]
   fontui = -family Monaco -size 10 -weight normal -slant roman -underline 0 -overstrike 0
   fontdiff = -family Monaco -size 10 -weight normal -slant roman -underline 0 -overstrike 0
+
 [core]
   excludesfile = ~/.gitignore
+
 [difftool "sourcetree"]
   cmd = opendiff \"$LOCAL\" \"$REMOTE\"
   path =
+
 [mergetool "sourcetree"]
   cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
   trustExitCode = true
   keepBackup = false
+
 [push]
   default = simple
