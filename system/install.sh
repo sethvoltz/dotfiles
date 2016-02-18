@@ -11,8 +11,8 @@ if [ ! $(brew tap | grep 'homebrew/dupes') ]; then
 fi
 
 # CLI applications to install
-cli_apps=(coreutils spark git mercurial wtf ack grc htop-osx iftop mtr nmap p0f trafshow wtf ngrep wget tree ctags graphviz jq)
-cli_exec=(gsort     spark git hg        wtf ack grc htop     iftop mtr nmap p0f trafshow wtf ngrep wget tree ctags dot      jq)
+cli_apps=(coreutils spark git mercurial wtf ack grc htop iftop mtr nmap p0f trafshow wtf ngrep wget tree ctags graphviz jq)
+cli_exec=(gsort     spark git hg        wtf ack grc htop iftop mtr nmap p0f trafshow wtf ngrep wget tree ctags dot      jq)
 
 for (( i = 0; i < ${#cli_apps[*]}; i++ )) do
   if [ ! $(which ${cli_exec[i]}) ]; then
