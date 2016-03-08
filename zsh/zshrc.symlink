@@ -50,3 +50,5 @@ export PATH="/usr/local/heroku/bin:$PATH"
 # Ruby Development Environment.
 export RBENV_ROOT=/usr/local/opt/rbenv
 if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
