@@ -43,6 +43,7 @@ export TIMEFMT="%U user %S system %P cpu %*E total, running %J"
 REPORTTIME=5
 
 eval "$(thefuck --alias)"
+eval `/usr/libexec/path_helper -s`
 
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
