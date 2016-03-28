@@ -11,8 +11,8 @@ if [ ! $(brew tap | grep 'homebrew/dupes') ]; then
 fi
 
 # CLI applications to install
-cli_apps=(coreutils spark git mercurial wtf ack grc htop iftop mtr nmap p0f trafshow wtf ngrep wget tree ctags graphviz jq)
-cli_exec=(gsort     spark git hg        wtf ack grc htop iftop mtr nmap p0f trafshow wtf ngrep wget tree ctags dot      jq)
+cli_apps=(coreutils spark git mercurial wtf ack grc htop iftop mtr nmap p0f trafshow wtf ngrep wget tree ctags graphviz jq brightness)
+cli_exec=(gsort     spark git hg        wtf ack grc htop iftop mtr nmap p0f trafshow wtf ngrep wget tree ctags dot      jq brightness)
 
 for (( i = 0; i < ${#cli_apps[*]}; i++ )) do
   if [ ! $(which ${cli_exec[i]}) ]; then
@@ -31,6 +31,18 @@ if [ $iftop_path ]; then
   sudo chmod u+s $iftop_path
   echo
 fi
+
+# Cask applications to install
+cask_apps=(controlplane)
+cask_exec=(controlplane)
+
+for (( i = 0; i < ${#cask_apps[*]}; i++ )) do
+  if [ ! $(brew cask list ${cask_exec[i]}) ]; then
+    app=${cli_apps[i]}
+    echo "  Installing $app for you."
+    brew cask install $app > /tmp/$app-cask-install.log
+  fi
+done
 
 # Python applications to install
 python_apps=(httpie)
