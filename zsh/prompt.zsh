@@ -141,7 +141,7 @@ $GRADIENT\
 %$PR_PWDLEN<...<%~%<<${(e)PR_FILLBAR}$(rb_prompt)$(py_prompt)\
 %{$reset_color%}\
 
-%F{$START_COLOR}╙─%(?.$PR_GREEN●.$PR_RED◯ %?) \
+%F{$START_COLOR}╙─%(?.$PR_GREEN.$PR_RED🔥 %?) \
 $(scm_prompt)\
 %(?.%F{022}»%F{034}»%F{046}».%F{052}»%F{124}»%F{196}»)\
 %{$reset_color%}%f%k '
