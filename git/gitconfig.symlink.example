@@ -53,6 +53,8 @@
   wtf     = !$ZSH/bin/git-wtf
   rank-contributors = !$ZSH/bin/git-rank-contributors
   count   = !git shortlog -sn
+  dig = "!f() { git log --oneline -- $1  | awk -- '{print $1}' | xargs -n 1 -I{} bash -c \"git log --oneline -1 {} ; git diff --name-status {}^ {} \"; }; f"
+  files = "!f() { git diff --name-status $1^ $1; }; f"
 
 [gui]
   fontui = -family Monaco -size 10 -weight normal -slant roman -underline 0 -overstrike 0
