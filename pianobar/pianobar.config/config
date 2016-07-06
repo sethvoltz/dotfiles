@@ -6,4 +6,4 @@ password_command = one-pass show --password pandora.com
 # high-quality audio (192k mp3, for Pandora One subscribers only!)
 audio_quality = high
 
-event_command = /Users/svoltz/.config/pianobar/tabname.sh
+event_command = ~/.config/pianobar/multi-command.sh
