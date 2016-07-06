@@ -7,9 +7,7 @@ alias gpfl='gp --force-with-lease'
 
 # Log & diff
 alias glog="git log --graph --pretty=format:'%Cred%h%Creset %an: %s - %Creset %C(yellow)%d%Creset %Cgreen(%cr)%Creset' --abbrev-commit --date=relative"
-# alias gd='git difftool -y -x "colordiff -y -W $COLUMNS" | less -rXF'
-# alias gd='git diff | cdiff -s -w 0'
-alias gd='git diff --color | `brew --prefix git`/share/git-core/contrib/diff-highlight/diff-highlight'
+alias gd='git diff-fancy'
 
 # Repo & branch lifecycle
 alias gco='git checkout'
