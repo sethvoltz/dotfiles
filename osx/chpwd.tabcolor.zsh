@@ -9,7 +9,7 @@ update_tab_chpwd() {
   # If the tab-color file exists
   if [ ! -z "$color_file" ]; then
     # Ensure contents contain the hex code
-    color=`cat $color_file/.tab-color| egrep '#[0-9a-f]{6}'`
+    color=`cat $color_file/.tab-color| egrep '#[0-9a-fA-F]{6}'`
     if [ -n "$color" ]; then
       # Extract just the color code
       color=${(MS)color##\#[0-9a-zA-Z][0-9a-zA-Z][0-9a-zA-Z][0-9a-zA-Z][0-9a-zA-Z][0-9a-zA-Z]}
