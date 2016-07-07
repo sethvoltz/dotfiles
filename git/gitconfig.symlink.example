@@ -55,7 +55,7 @@
   count   = !git shortlog -sn
   dig = "!f() { git log --oneline -- $1  | awk -- '{print $1}' | xargs -n 1 -I{} bash -c \"git log --oneline -1 {} ; git diff --name-status {}^ {} \"; }; f"
   files = "!f() { git diff --name-status $1^ $1; }; f"
-  diff-fancy = "!f() { git diff --color \"$@\" | `brew --prefix git`/share/git-core/contrib/diff-highlight/diff-highlight; }; f"
+  diff-fancy = "!f() { git diff --color \"$@\" | `brew --prefix git`/share/git-core/contrib/diff-highlight/diff-highlight | less -r; }; f"
 
 [gui]
   fontui = -family Monaco -size 10 -weight normal -slant roman -underline 0 -overstrike 0
