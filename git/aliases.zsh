@@ -1,6 +1,6 @@
 # Pull & push
-alias gl='git pull --prune'
-alias glr='gl --rebase'
+alias gl='git up --prune'
+alias glr='git reup --prune'
 alias gp='git push origin HEAD'
 alias gpu='git push --set-upstream origin $(git rev-parse --abbrev-ref HEAD)'
 alias gpfl='gp --force-with-lease'
