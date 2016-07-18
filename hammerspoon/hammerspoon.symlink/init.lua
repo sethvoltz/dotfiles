@@ -1,6 +1,6 @@
--- Hammerspoon Config File
-
-require "monitor-monitor"
+-- Tools by Topic
+require "modules/monitor-monitor"
+require "modules/caffeine"
 
 -- Fancy auto-reload thing
 function reloadConfig(files)
