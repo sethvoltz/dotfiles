@@ -31,3 +31,16 @@ end
 hs.screen.watcher.newWithActiveScreen(handleLayoutChange):start()
 handleLayoutChange(true) -- set the initial screen
 print('Monitor-Monitor loaded')
+
+-- Run this from the Hammerspoon console to get a listing of display IDs
+function listAllScreens ()
+  local primaryId = hs.screen.primaryScreen():id()
+  for _, screen in pairs(hs.screen.allScreens()) do
+    local screenId = screen:id()
+    print(
+      "id: " .. screenId ..
+      " \"" .. screen:name() .. "\"" ..
+      (screenId == primaryId and " (primary)" or "")
+    )
+  end
+end
