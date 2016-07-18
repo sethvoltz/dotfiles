@@ -1,6 +1,7 @@
 -- Tools by Topic
 require "modules/monitor-monitor"
 require "modules/caffeine"
+require "modules/audio-device"
 
 -- Fancy auto-reload thing
 function reloadConfig(files)
@@ -15,4 +16,8 @@ function reloadConfig(files)
     end
 end
 hs.pathwatcher.new(os.getenv("HOME") .. "/.hammerspoon/", reloadConfig):start()
-hs.alert.show("Config loaded")
+hs.notify.new({
+  title="Hammerspoon",
+  informativeText="Configuration Loaded",
+  ""
+}):send()
