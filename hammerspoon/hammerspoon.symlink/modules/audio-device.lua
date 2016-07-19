@@ -1,23 +1,18 @@
 -- Define audio device names for headphone/speaker switching
-local headphoneDevice = "VIA Technologies" -- USB sound card
-local speakerDevice = "AppleHDAEngineOutput" -- Built-in output
+local usbAudioSearch = "VIA Technologies" -- USB sound card
+local internalAudioSearch = "AppleHDAEngineOutput" -- Built-in output
 
 -- Toggle between speaker and headphone sound devices (useful if you have multiple USB soundcards that are always connected)
-function toggleAudioOutput()
+function setDefaultAudio()
   local current = hs.audiodevice.defaultOutputDevice()
-  local speakers = findOutputByPartialUID(speakerDevice)
-  local headphones = findOutputByPartialUID(headphoneDevice)
+  local usbAudio = findOutputByPartialUID(usbAudioSearch)
+  local internalAudio = findOutputByPartialUID(internalAudioSearch)
 
-  -- if not speakers or not headphones then
-  --   hs.notify.new({title="Hammerspoon", informativeText="ERROR: Some audio devices missing", ""}):send()
-  --   return
-  -- end
-
-  -- if current:name() == speakers:name() then
-  --   headphones:setDefaultOutputDevice()
-  -- else
-  --   speakers:setDefaultOutputDevice()
-  -- end
+  if usbAudio and current:name() ~= usbAudio:name() then
+    usbAudio:setDefaultOutputDevice()
+  else
+    internalAudio:setDefaultOutputDevice()
+  end
 
   hs.notify.new({
     title='Hammerspoon',
@@ -32,3 +27,10 @@ function findOutputByPartialUID(uid)
     end
   end
 end
+
+function handleLayoutChange()
+  setDefaultAudio()
+end
+
+hs.screen.watcher.new(handleLayoutChange):start()
+handleLayoutChange()
