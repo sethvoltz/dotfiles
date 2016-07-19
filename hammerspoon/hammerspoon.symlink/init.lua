@@ -2,6 +2,7 @@
 require "modules/monitor-monitor"
 require "modules/caffeine"
 require "modules/audio-device"
+require "modules/screen-settings"
 
 -- Fancy auto-reload thing
 function reloadConfig(files)
