@@ -1,17 +1,13 @@
 -- Define audio device names for headphone/speaker switching
 local usbAudioSearch = "VIA Technologies" -- USB sound card
-local internalAudioSearch = "AppleHDAEngineOutput" -- Built-in output
 
 -- Toggle between speaker and headphone sound devices (useful if you have multiple USB soundcards that are always connected)
 function setDefaultAudio()
   local current = hs.audiodevice.defaultOutputDevice()
   local usbAudio = findOutputByPartialUID(usbAudioSearch)
-  local internalAudio = findOutputByPartialUID(internalAudioSearch)
 
   if usbAudio and current:name() ~= usbAudio:name() then
     usbAudio:setDefaultOutputDevice()
-  else
-    internalAudio:setDefaultOutputDevice()
   end
 
   hs.notify.new({
