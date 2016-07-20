@@ -33,8 +33,8 @@ if [ $iftop_path ]; then
 fi
 
 # Cask applications to install
-cask_apps=()
-cask_exec=()
+cask_apps=(hammerspoon)
+cask_exec=(hammerspoon)
 
 for (( i = 0; i < ${#cask_apps[*]}; i++ )) do
   if [ ! $(brew cask list ${cask_exec[i]}) ]; then
