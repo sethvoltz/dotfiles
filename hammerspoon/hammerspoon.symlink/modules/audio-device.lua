@@ -24,9 +24,5 @@ function findOutputByPartialUID(uid)
   end
 end
 
-function handleLayoutChange()
-  setDefaultAudio()
-end
-
-hs.screen.watcher.new(handleLayoutChange):start()
-handleLayoutChange()
+hs.usb.watcher.new(setDefaultAudio):start()
+setDefaultAudio()
