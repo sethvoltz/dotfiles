@@ -14,4 +14,3 @@ w.minusSet_(NSSet.setWithArray_(wl2))
 print '\nList of windows that moved:'
 print w
 print '\n'
-

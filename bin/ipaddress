@@ -1,5 +1,22 @@
 #!/usr/bin/env bash
 
+function usage {
+  returnCode=$1
+  usage="Usage: [interface] [title]"
+  if [ "$returnCode" -gt 0 ]; then
+    >&2 echo "$usage"
+  else
+    echo "$usage"
+  fi
+  exit $errorCode
+}
+
+if [ "$1" = "-h" -o "$1" = "--help" ]; then
+  usage 0
+elif [ "$#" -lt 2 ]; then
+  usage 1
+fi
+
 myiface=`ifconfig $1 | grep "inet " | grep -v 127.0.0.1 | awk '{print $2}'`
 
 if [ "$myiface" != "" ]

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-INTERFACE=en1
+INTERFACE=en0
 OUI="${ZSH}/oui-prefix.txt"
 OUI_LEN=19004
 

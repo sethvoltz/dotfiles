@@ -6,13 +6,7 @@
 # to make sure you're on the latest and greatest.
 # Modified from https://github.com/holman/dotfiles/blob/master/bin/dot
 
-export ZSH=$HOME/.dotfiles
-
-# Set OS X defaults
-$ZSH/osx/set-defaults.sh
-
-# Upgrade homebrew
-# brew update
+export ZSH=${ZSH:=$HOME/.dotfiles}
 
 # Install homebrew packages
-$ZSH/homebrew/install.sh 2>&1
+$ZSH/script/bootstrap && $ZSH/script/install

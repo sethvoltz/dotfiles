@@ -1,4 +1,4 @@
-#! /usr/bin/python
+#!/usr/bin/python
 
 """
 Fetches weather reports from Yahoo!
@@ -50,12 +50,12 @@ def get_weather(zip_code, days):
 
   # Hold the forecast in a hash.
   forecasts = []
-  
+
   # Display degree symbol
   deg = '\xb0'.decode('latin-1')
   # degree_symbol = unichr(176).decode("utf-8")
   degree_symbol = u'\u00b0'
- 
+
 
   # Walk the DOM in order to find the forecast nodes.
   for i, node in enumerate(
@@ -87,7 +87,7 @@ def get_weather(zip_code, days):
       'region': ylocation.getAttribute('region'),
       'deg': deg
   }
-  
+
   return weather_data
 
 def create_report(weather_data, options):
@@ -104,7 +104,7 @@ def create_report(weather_data, options):
   """
 
   report = []
-  
+
   if options.location:
       if options.verbose:
           # Add the location header.
@@ -121,7 +121,7 @@ def create_report(weather_data, options):
 
       # Add the current weather
       currstr = "%(current_temp)s%(units)s"  % weather_data
-      report.append(currstr)      
+      report.append(currstr)
 
   if options.more:
 	# show a tad more info
@@ -143,9 +143,9 @@ def create_report(weather_data, options):
 
     # Add the forecasts.
     for forecast in weather_data['forecasts']:
-      
+
         forecast['units'] = weather_data['units']
-      
+
         forecast_str = """\
 %(day)s
 %(low)s%(units)s | %(high)s%(units)s
@@ -155,7 +155,7 @@ def create_report(weather_data, options):
         report.append(forecast_str)
 
   report_str = "\n".join(report)
-  
+
   return report_str
 
 def create_cli_parser():
@@ -169,27 +169,27 @@ Arguments:
   ZIPCODE: The ZIP code for the region of interest.
 """
   )
-  
+
   usage = "\n".join(usage)
-  
+
   cli_parser = OptionParser(usage)
-  
+
   # Add the CLI options
   cli_parser.add_option('-c', '--nocurr', action='store_true',
       help="Suppress reporting the current weather conditions"
   )
-  
+
   cli_parser.add_option('-f', '--forecast', action='store', type='int',
       help="Show the forecast for DAYS days", metavar="DAYS")
-  
+
   cli_parser.add_option('-l', '--location', action='store_true',
       help="Give the location of the weather"
   )
-  
+
   cli_parser.add_option('-v', '--verbose', action='store_true',
       help="Print the weather section headers"
   )
-  
+
   cli_parser.add_option('-m', '--more', action='store_true',
       help="Show more info"
   )
@@ -197,7 +197,7 @@ Arguments:
   cli_parser.add_option('-n', '--now', action='store_true',
       help="Show current conditions (string)"
   )
-  
+
   cli_parser.set_defaults(forecast=0)
 
   return cli_parser
@@ -206,7 +206,7 @@ def main(argv):
 
   # Create the command line parser.
   cli_parser = create_cli_parser()
-  
+
   # Get the options and arguments.
   opts, args = cli_parser.parse_args(argv)
 
@@ -216,10 +216,10 @@ def main(argv):
 
   # Check the zip code
   zip_code = args[0]
-  
+
   if len(zip_code) != 5 or not zip_code.isdigit():
       cli_parser.error("ZIP code must be 5 digits")
-  
+
   if opts.forecast > DAYS_LIMIT or opts.forecast < 0:
      cli_parser.error("Days to forecast must be between 0 and %d" % DAYS_LIMIT)
 

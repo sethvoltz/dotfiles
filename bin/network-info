@@ -11,10 +11,10 @@ output[:wifi] = Hash[`#{wifi_command}`.split("\n").collect { |l| l.split(': ').m
 output[:external_ip], _ = Open3.capture3 "dig +short myip.opendns.com @resolver1.opendns.com"
 output[:external_ip] = output[:external_ip].empty? ? nil : output[:external_ip].strip
 
-output[:ethernet_ip] = `ifconfig en0 | grep "inet " | grep -v 127.0.0.1 | awk '{print $2}'`.strip
+output[:ethernet_ip] = `ifconfig en1 | grep "inet " | grep -v 127.0.0.1 | awk '{print $2}'`.strip
 output[:ethernet_ip] = nil if output[:ethernet_ip].empty?
 
-output[:wireless_ip] = `ifconfig en1 | grep "inet " | grep -v 127.0.0.1 | awk '{print $2}'`.strip
+output[:wireless_ip] = `ifconfig en0 | grep "inet " | grep -v 127.0.0.1 | awk '{print $2}'`.strip
 output[:wireless_ip] = nil if output[:wireless_ip].empty?
 
 puts output.to_json
