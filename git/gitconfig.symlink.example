@@ -47,11 +47,7 @@
   stat = status
   quicklog = log --pretty=format:\"%h %cr %cn %Cgreen%s%Creset\"
   unpushed = !GIT_CURRENT_BRANCH=$(git name-rev --name-only HEAD) && git log origin/$GIT_CURRENT_BRANCH..$GIT_CURRENT_BRANCH --oneline
-  deliver = !$ZSH/git/git-deliver/deliver.sh
   co = checkout
-  promote = !$ZSH/bin/git-promote
-  wtf     = !$ZSH/bin/git-wtf
-  rank-contributors = !$ZSH/bin/git-rank-contributors
   count   = !git shortlog -sn
   dig = "!f() { git log --oneline -- $1  | awk -- '{print $1}' | xargs -n 1 -I{} bash -c \"git log --oneline -1 {} ; git diff --name-status {}^ {} \"; }; f"
   files = "!f() { git diff --name-status $1^ $1; }; f"
