@@ -68,7 +68,7 @@ fi
 song_name="$artist - $title $like"
 
 case "$1" in
-  songstart)
+  songstart|songplay)
     icon_file="$blank_icon"
 
 	  if [[ ! -e "$icon" ]]; then
