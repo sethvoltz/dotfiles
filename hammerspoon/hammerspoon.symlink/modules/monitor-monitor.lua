@@ -1,10 +1,9 @@
 -- Detect layout change
-function handleLayoutChange(layout)
-  if layout then
-    local screenId = hs.window.focusedWindow():screen():id()
-    setActiveScreen(screenId)
-    print('current display ' .. screenId)
-  end
+function handleLayoutChange()
+  -- Always send the screenId, even on real layout changes (could be add/remove display)
+  local screenId = hs.window.focusedWindow():screen():id()
+  setActiveScreen(screenId)
+  print('current display ' .. screenId)
 end
 
 function setActiveScreen(screenId)
