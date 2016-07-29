@@ -3,6 +3,7 @@ local mash = {"ctrl", "alt", "cmd"}
 
 -- Global shortcut to reload Hammerspoon
 hs.hotkey.bind(hyper, "r", hs.reload)
+hs.hotkey.bind(hyper, "c", hs.toggleConsole)
 
 -- Move windows around current screen
 hs.hotkey.bind(mash, "left",   function() window:leftHalf()   end);
