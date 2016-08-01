@@ -1,7 +1,15 @@
+lastScreenId = -1
+
 -- Detect layout change
 function handleLayoutChange()
   -- Always send the screenId, even on real layout changes (could be add/remove display)
-  local screenId = hs.window.focusedWindow():screen():id()
+  local focusedWindow = hs.window.focusedWindow()
+  if not focusedWindow then return end
+
+  local screenId = focusedWindow:screen():id()
+  if screenId == lastScreenId then return end
+
+  lastScreenId = screenId
   setActiveScreen(screenId)
   print('current display ' .. screenId)
 end
@@ -27,7 +35,9 @@ function getSerialOutputDevice()
   return result:match("^%s*(.-)%s*$")
 end
 
+-- Watchers
 hs.screen.watcher.newWithActiveScreen(handleLayoutChange):start()
+hs.spaces.watcher.new(handleLayoutChange):start()
 handleLayoutChange(true) -- set the initial screen
 
 -- Run this from the Hammerspoon console to get a listing of display IDs
