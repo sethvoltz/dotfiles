@@ -1,5 +1,5 @@
-local hyper = {"shift", "cmd", "alt", "ctrl"}
-local mash = {"ctrl", "alt", "cmd"}
+local hyper = { "shift", "cmd", "alt", "ctrl" }
+local mash = { "ctrl", "alt", "cmd" }
 
 -- Global shortcut to reload Hammerspoon
 hs.hotkey.bind(hyper, "r", hs.reload)
