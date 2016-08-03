@@ -30,6 +30,7 @@ end
 
 -- ----------------------------------------------------= Virtual Indicators =--=
 
+-- Based heavily on https://git.io/v6kZN
 function updateVirtualScreenIndicator(screen)
   clearIndicator()
 
