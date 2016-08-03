@@ -26,6 +26,10 @@ local function currentScreenFrame()
   return hs.window.focusedWindow():screen():frame()
 end
 
+local function currentScreenFullFrame()
+  return hs.window.focusedWindow():screen():fullFrame()
+end
+
 function window:maximize ()
   hs.window.focusedWindow():maximize()
 end
@@ -42,20 +46,20 @@ end
 
 function window:leftHalf ()
   local s = currentScreenFrame()
-  self:move({ x = 0, y = 0, w = (s.w / 2), h = s.h })
+  self:move({ x = s.x, y = s.y, w = (s.w / 2), h = s.h })
 end
 
 function window:rightHalf ()
   local s = currentScreenFrame()
-  self:move({ x = (s.w / 2), y = 0, w = (s.w / 2), h = s.h })
+  self:move({ x = (s.w / 2), y = s.y, w = (s.w / 2), h = s.h })
 end
 
 function window:topHalf ()
   local s = currentScreenFrame()
-  self:move({ x = 0, y = 0, w = s.w, h = (s.h / 2) })
+  self:move({ x = 0, y = s.y, w = s.w, h = (s.h / 2) })
 end
 
 function window:bottomHalf ()
   local s = currentScreenFrame()
-  self:move({ x = 0, y = (s.h / 2), w = s.w, h = (s.h / 2) })
+  self:move({ x = 0, y = (s.h / 2) + s.y, w = s.w, h = (s.h / 2) })
 end
