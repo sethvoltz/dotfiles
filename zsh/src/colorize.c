@@ -15,7 +15,7 @@
 #include <sys/select.h>
 #include <sys/types.h>
 
-#define BUFFSIZE 512
+#define BUFFSIZE 1024
 
 static volatile sig_atomic_t usr1;
 
