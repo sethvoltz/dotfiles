@@ -50,10 +50,8 @@ function drawScreenClock(screen)
     height
   ), clock)
 
-  indicator:setFillColor(indicatorColor)
-    :setFill(true)
+  indicator
     :setLevel(hs.drawing.windowLevels.overlay)
-    :setStroke(false)
     :setBehavior(hs.drawing.windowBehaviors.canJoinAllSpaces)
     :show()
 
