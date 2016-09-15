@@ -76,3 +76,11 @@ I forked [Zach Holman](http://github.com/holman)'s excellent
 Where possible, I have attributed scripts found around the Internet to their original authors
 through comments at the top of the file, or next to some day-saving code I found. Check those
 authors out for more of their wonderful work.
+
+## Thoughts
+
+Use this somewhere for something...
+
+```
+⠇⠏⠋⠙⠹⠸⠼⠴⠦⠧
+```
