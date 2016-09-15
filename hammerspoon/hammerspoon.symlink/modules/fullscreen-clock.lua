@@ -16,6 +16,8 @@ local clockStyle = {
   color = indicatorColor,
 }
 
+-- -------------------------------------------------------= Change Handlers =--=
+
 function updateClocks()
   clearIndicators()
 
@@ -32,6 +34,8 @@ function updateClocks()
     drawScreenClock(screen)
   end
 end
+
+-- ------------------------------------------------------------= Indicators =--=
 
 function drawScreenClock(screen)
   local screeng = screen:fullFrame()
@@ -62,7 +66,9 @@ function clearIndicators()
    end
 end
 
+-- --------------------------------------------------------------= Watchers =--=
+
 hs.spaces.watcher.new(updateClocks):start()
 hs.application.watcher.new(updateClocks):start()
-hs.timer.new(30, updateClocks):start()
+hs.timer.new(15, updateClocks):start()
 updateClocks()
