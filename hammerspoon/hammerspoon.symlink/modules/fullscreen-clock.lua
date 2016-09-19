@@ -1,10 +1,4 @@
 local indicators = {}
-local indicatorColor = hs.drawing.color.asRGB({
-  red = 0.3,
-  green = 0.3,
-  blue = 0.3,
-  alpha = 0.2
-})
 local clockStyle = {
   font = {
       name = "Futura",
@@ -13,7 +7,12 @@ local clockStyle = {
   paragraphStyle = {
       alignment = "right",
   },
-  color = indicatorColor,
+  color = hs.drawing.color.asRGB({
+    red = 0.4,
+    green = 0.4,
+    blue = 0.4,
+    alpha = 0.4
+  }),
 }
 
 -- -------------------------------------------------------= Change Handlers =--=
