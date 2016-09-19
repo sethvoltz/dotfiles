@@ -55,4 +55,4 @@ if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
 # Finally, set up stderr redirection through colorize to make it red
-exec 2>>(colorize `tput bold; tput setaf 1` `tput sgr0` > /dev/tty &)
+#exec 2>>(colorize `tput bold; tput setaf 1` `tput sgr0` > /dev/tty &)
