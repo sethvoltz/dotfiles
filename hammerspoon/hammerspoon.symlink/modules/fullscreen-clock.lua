@@ -65,7 +65,7 @@ end
 
 -- --------------------------------------------------------------= Watchers =--=
 
-hs.spaces.watcher.new(updateClocks):start()
-hs.application.watcher.new(updateClocks):start()
-hs.timer.new(hs.timer.seconds(15), updateClocks):start()
+_clockSpaceWatcher = hs.spaces.watcher.new(updateClocks):start()
+_clockAppWatcher   = hs.application.watcher.new(updateClocks):start()
+_clockTimer        = hs.timer.new(hs.timer.seconds(15), updateClocks):start()
 updateClocks()

@@ -93,9 +93,9 @@ end
 
 -- --------------------------------------------------------------= Watchers =--=
 
-hs.screen.watcher.newWithActiveScreen(handleLayoutChange):start()
-hs.spaces.watcher.new(handleLayoutChange):start()
-hs.application.watcher.new(handleLayoutChange):start()
+_monitorScreenWatcher = hs.screen.watcher.newWithActiveScreen(handleLayoutChange):start()
+_monitorSpaceWatcher  = hs.spaces.watcher.new(handleLayoutChange):start()
+_monitorAppWatcher    = hs.application.watcher.new(handleLayoutChange):start()
 handleLayoutChange() -- set the initial screen
 
 -- Run this from the Hammerspoon console to get a listing of display IDs

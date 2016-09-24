@@ -17,5 +17,5 @@ function handleLayoutChange()
   end
 end
 
-hs.screen.watcher.new(handleLayoutChange):start()
+_screenScreenWatcher = hs.screen.watcher.new(handleLayoutChange):start()
 handleLayoutChange()
