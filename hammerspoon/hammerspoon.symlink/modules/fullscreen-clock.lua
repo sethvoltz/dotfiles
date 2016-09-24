@@ -67,5 +67,5 @@ end
 
 hs.spaces.watcher.new(updateClocks):start()
 hs.application.watcher.new(updateClocks):start()
-hs.timer.new(15, updateClocks):start()
+hs.timer.new(hs.timer.seconds(15), updateClocks):start()
 updateClocks()
