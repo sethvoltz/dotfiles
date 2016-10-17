@@ -1,0 +1,11 @@
+#!/bin/bash
+# Kudos: @ramses0
+
+COLS=${COLS:-$1}
+if [ "" = "$COLS" ] ; then COLS=`tput cols`; fi
+if [ "" = "$COLS" ] ; then COLS=80; fi
+if [ "" = "$CHAR" ] ; then CHAR=━; fi
+
+LINE=""
+for (( x=0 ; x<$COLS ; x++ ));  do LINE="${LINE}${CHAR}" ; done
+printf '\e[0;31m%s\e[0m\n' $LINE
