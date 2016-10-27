@@ -1,10 +1,8 @@
 local indicators = {}
-local indicatorColor = hs.drawing.color.asRGB({
-  red = 0.4,
-  green = 0.4,
-  blue = 0.4,
-  alpha = 0.4
-})
+local indicatorColor = hs.drawing.color.asRGB({ red = 0.4, green = 0.4, blue = 0.4, alpha = 0.4 })
+local chargingColor = hs.drawing.color.asRGB({ red = 0.7, green = 0.3, blue = 0.0, alpha = 0.4 })
+local chargedColor = hs.drawing.color.asRGB({ red = 0.0, green = 0.6, blue = 0.1, alpha = 0.4 })
+
 local clockStyle = {
   font = {
       name = "Futura",
@@ -80,7 +78,6 @@ function drawScreenBattery(screen)
   indicatorOutline
     :setLevel(hs.drawing.windowLevels.overlay)
     :setBehavior(hs.drawing.windowBehaviors.canJoinAllSpaces)
-    :setStrokeColor(indicatorColor)
     :setStrokeWidth(strokeWidth)
     :setFill(false)
     :show()
@@ -95,9 +92,19 @@ function drawScreenBattery(screen)
   indicatorFill
     :setLevel(hs.drawing.windowLevels.overlay)
     :setBehavior(hs.drawing.windowBehaviors.canJoinAllSpaces)
-    :setFillColor(indicatorColor)
     :setStroke(false)
     :show()
+
+  if hs.battery.isCharging() then
+    indicatorOutline:setStrokeColor(chargingColor)
+    indicatorFill:setFillColor(chargingColor)
+  elseif hs.battery.isFinishingCharge() == true then
+    indicatorOutline:setStrokeColor(chargedColor)
+    indicatorFill:setFillColor(chargedColor)
+  else
+    indicatorOutline:setStrokeColor(indicatorColor)
+    indicatorFill:setFillColor(indicatorColor)
+  end
 
   table.insert(indicators, indicatorOutline)
   table.insert(indicators, indicatorFill)
