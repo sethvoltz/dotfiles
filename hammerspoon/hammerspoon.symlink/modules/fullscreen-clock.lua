@@ -2,6 +2,7 @@ local indicators = {}
 local indicatorColor = hs.drawing.color.asRGB({ red = 0.4, green = 0.4, blue = 0.4, alpha = 0.4 })
 local chargingColor = hs.drawing.color.asRGB({ red = 0.7, green = 0.3, blue = 0.0, alpha = 0.4 })
 local chargedColor = hs.drawing.color.asRGB({ red = 0.0, green = 0.6, blue = 0.1, alpha = 0.4 })
+local dangerColor = hs.drawing.color.asRGB({ red = 0.9, green = 0.1, blue = 0.1, alpha = 0.4 })
 
 local clockStyle = {
   font = {
@@ -101,6 +102,9 @@ function drawScreenBattery(screen)
   elseif hs.battery.isFinishingCharge() == true then
     indicatorOutline:setStrokeColor(chargedColor)
     indicatorFill:setFillColor(chargedColor)
+  elseif hs.battery.percentage() <= 10 then
+    indicatorOutline:setStrokeColor(dangerColor)
+    indicatorFill:setFillColor(dangerColor)
   else
     indicatorOutline:setStrokeColor(indicatorColor)
     indicatorFill:setFillColor(indicatorColor)
