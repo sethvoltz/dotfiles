@@ -53,6 +53,14 @@
   files = "!f() { git diff --name-status $1^ $1; }; f"
   diff-fancy = "!f() { git diff --color \"$@\" | `brew --prefix git`/share/git-core/contrib/diff-highlight/diff-highlight | less -r; }; f"
 
+  # Usage: git addw
+  # only add non-whitespace changes to a commit (???? under trial now)
+  addw = !sh -c 'git diff -U0 -w --no-color "$@" | git apply --cached --ignore-whitespace --unidiff-zero' -
+
+  # Usage: git addb
+  # only add whitespace changes to a commit (???? under trial now)
+  addb = "!f() { git add -A ; git diff --cached -w | git apply --cached -R; } f"
+
 [gui]
   fontui = -family Monaco -size 10 -weight normal -slant roman -underline 0 -overstrike 0
   fontdiff = -family Monaco -size 10 -weight normal -slant roman -underline 0 -overstrike 0
