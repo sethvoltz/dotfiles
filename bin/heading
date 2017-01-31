@@ -1,0 +1,14 @@
+#!/bin/bash
+
+message=$*
+message_len=${#message}
+
+columns=$(tput cols)
+if [ "" = "$columns" ] ; then columns=80; fi
+if [ "" = "$character" ] ; then character=─; fi
+
+suffix_len=$(( columns - message_len - 4 ))
+
+printf -v prefix "${character}%.0s" $(seq 1 2)
+printf -v suffix "${character}%.0s" $(seq 1 "$suffix_len")
+printf '\e[0;31m%s\e[0m\n' "$prefix $message $suffix"
