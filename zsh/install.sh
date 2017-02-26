@@ -23,5 +23,5 @@ fi
 
 if [ ! $(which thefuck) ]; then
   echo "  Installing thefuck for you."
-  brew cask install thefuck > /tmp/thefuck-install.log
+  brew install thefuck > /tmp/thefuck-install.log
 fi
