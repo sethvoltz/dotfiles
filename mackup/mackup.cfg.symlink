@@ -1,0 +1,21 @@
+[storage]
+engine = dropbox
+
+[applications_to_ignore]
+aws
+bash
+ctags
+git
+gnupg
+hammerspoon
+karabiner
+karabiner-elements
+mackup
+mercurial
+messages
+rails
+ruby
+ssh
+tmux
+vim
+zsh
