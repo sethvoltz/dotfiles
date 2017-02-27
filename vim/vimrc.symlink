@@ -38,7 +38,9 @@ Bundle 'scrooloose/nerdtree'
 Bundle 'jistr/vim-nerdtree-tabs'
 Bundle 'vim-scripts/spacehi.vim'
 Bundle 'nathanaelkane/vim-indent-guides'
-Bundle 'Lokaltog/vim-powerline'
+" Bundle 'Lokaltog/vim-powerline'
+Bundle 'vim-airline/vim-airline'
+Bundle 'vim-airline/vim-airline-themes'
 Bundle 'majutsushi/tagbar'
 " Bundle 'vim-scripts/ZoomWin'
 
@@ -70,6 +72,19 @@ Bundle 'altercation/vim-colors-solarized'
 
 " load the plugin and indent settings for the detected filetype
 filetype plugin indent on " required!
+
+
+" =--------------------------------------------------------------------------= Airline Settings =--=
+
+let g:airline_powerline_fonts = 1
+if !exists('g:airline_symbols')
+      let g:airline_symbols = {}
+endif
+let g:airline_symbols.space = "\ua0"
+  let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#show_buffers = 0
+let g:airline_theme = 'molokai'
+
 
 " =--------------------------------------------------------------------------= General Settings =--=
 
