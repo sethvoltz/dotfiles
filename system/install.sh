@@ -33,12 +33,10 @@ if [ $iftop_path ]; then
 fi
 
 # Cask applications to install
-cask_apps=()
-cask_exec=()
+cask_apps=(java bartender alfred istat-menus flux skitch adobe-creative-cloud atom bettertouchtool)
 
-for (( i = 0; i < ${#cask_apps[*]}; i++ )) do
-  if [ ! $(brew cask list ${cask_exec[i]}) ]; then
-    app=${cli_apps[i]}
+for app in $cask_apps; do
+  if [ $(brew cask list $app > /dev/null) ]; then
     echo "  Installing $app for you."
     brew cask install $app > /tmp/$app-cask-install.log
   fi
