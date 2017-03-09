@@ -3,7 +3,7 @@
 # Note: Please ensure the following variables are exposed in .localrc
 #   DDNS_ROUTE53_ZONE_ID
 #   DDNS_ROUTE53_RECORD_SET
-#   DDNS_INTERFACE
+#   DDNS_INTERFACE (optional)
 # Additionally, the AWS CLI will need to be configured with a profile called 'personal'
 
 # Expand Path
@@ -16,12 +16,15 @@ if [ ! $(which aws) ]; then
   source ${ddns_path}/../aws/install.sh
 fi
 
-# Copy networkchange.plist and ddns-update.sh to the correct places
-ln -sf ${ddns_path}/ifup.ddns.plist ~/Library/LaunchAgents
+# Generate LaunchAgent for this user
+log_path=${HOME}/Library/Logs/ifup.ddns
+mkdir -p ${log_path}
 
-mkdir -p /Users/Shared/bin
-ln -sf ${ddns_path}/ddns-update.sh /Users/Shared/bin/ddns-update.sh
+sed -e "s,{{DDNS_PATH}},${ddns_path},g" \
+    -e "s,{{USER_LOG_PATH}},${log_path},g" \
+    "${ddns_path}/ifup.ddns.plist" \
+    > "${HOME}/Library/LaunchAgents/ifup.ddns.plist"
 
 # Start it up
-launchctl load ~/Library/LaunchAgents/ifup.ddns.plist
+launchctl load ${HOME}/Library/LaunchAgents/ifup.ddns.plist
 launchctl start ifup.ddns

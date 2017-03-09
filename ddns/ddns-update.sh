@@ -1,8 +1,15 @@
 #!/bin/bash
 
-# If DDNS_INTERFACE is not set, exit
+# Fix PATH for local context
+export PATH="/usr/local/bin:$PATH"
+
+if [[ -a ~/.localrc ]]; then
+  source ~/.localrc
+fi
+
+# If DDNS_INTERFACE is not set, get default interface
 if [ -z "$DDNS_INTERFACE" ]; then
-  exit 0;
+  DDNS_INTERFACE=$(echo show State:/Network/Global/IPv4 | scutil | awk -F" " "/PrimaryInterface/{print \$NF}" | sed 's/\.$//')
 fi
 
 # If DDNS_INTERFACE has no IPv4 address, exit
@@ -13,4 +20,4 @@ fi
 
 # Run the script
 export AWS_DEFAULT_PROFILE=personal
-~/.dotfiles/ddns/ddns-route53.sh -i "${ip_address}"
+~/.dotfiles/ddns/ddns-route53.sh --ip "${ip_address}"
