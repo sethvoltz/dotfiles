@@ -1,0 +1,148 @@
+#!/bin/bash
+
+# Original script from https://github.com/mthssdrbrg/ddns-route53
+
+declare -r DATE_FORMAT="%Y-%m-%d %H:%M:%S"
+declare -r VERSION="2.0.0"
+declare ttl=${DDNS_ROUTE53_TTL:-300}
+declare record_type="${DDNS_ROUTE53_TYPE:-A}"
+declare comment="${DDNS_ROUTE53_COMMENT:-Updated at $(date +"$DATE_FORMAT")}"
+declare zone_id="$DDNS_ROUTE53_ZONE_ID"
+declare record_set="$DDNS_ROUTE53_RECORD_SET"
+declare handler_script="$DDNS_ROUTE53_SCRIPT"
+declare old_ip ip
+
+function errlog() {
+  echo "$@" >&2
+}
+
+function log() {
+  echo "$@"
+}
+
+function usage() {
+  cat <<HELP
+Usage: $(basename "$0") [OPTIONS]
+
+Dynamic DNS updater using Amazon Route53.
+
+Options:
+  -z, --zone-id=ZONE_ID         Amazon Route53 hosted zone ID (required)
+  -r, --record-set=RECORD_SET   Amazon Route53 record set name (required)
+  -t, --ttl=SECONDS             TTL for DNS record
+  -y, --type=A                  DNS record type
+  -i, --ip=IP_ADDRESS           Force usage of IP address
+  -s, --script=PATH             Path to script to execute on change
+  -h, --help                    You're looking at it
+  -v, --version                 Print version and exit
+HELP
+}
+
+function valid-ip() {
+  local ip=$1 octets
+  if [[ "$ip" =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
+    IFS='.' read -r -a octets <<< "$ip"
+    for octet in $octets; do
+      (( octet <= 255 )) || return 1
+    done
+  fi
+  return 0
+}
+
+function fetch-current-ip() {
+  aws route53 list-resource-record-sets \
+    --hosted-zone-id "$zone_id" \
+    --output text \
+    --query "ResourceRecordSets[?Name == '$record_set.' && Type == '$record_type'].ResourceRecords[0].Value | [0] || ''"
+}
+
+function init-args() {
+  while (( $# > 0 )); do
+    case "$1" in
+      -z|--zone-id) zone_id="$2"; shift ;;
+      -r|--record-set) record_set="$2"; shift ;;
+      -i|--ip) ip="$2"; shift ;;
+      -t|--ttl) ttl="$2"; shift ;;
+      -y|--type) record_type="$2"; shift ;;
+      -s|--script) handler_script="$2"; shift ;;
+      -h|--help) usage; exit 0 ;;
+      -v|--version) echo "$VERSION"; exit 0 ;;
+      *) errlog "Unknown option: $1"; usage; exit 1 ;;
+    esac
+    shift
+  done
+  if [[ -z "$ip" ]]; then
+    ip="$(dig +short myip.opendns.com @resolver1.opendns.com)"
+  fi
+  old_ip="$(fetch-current-ip 2> /dev/null)"
+  return 0
+}
+
+function validate-args() {
+  if [[ -z "$zone_id" ]]; then
+    errlog "Missing -z or --zone-id or \$DDNS_ROUTE53_ZONE_ID"
+    return 1
+  elif [[ -z "$record_set" ]]; then
+    errlog "Missing -r or --record-set or \$DDNS_ROUTE53_RECORD_SET"
+    return 1
+  elif [[ -n "$handler_script" && ! -x "$handler_script" ]]; then
+    errlog "Script at '$handler_script' is not executable"
+    return 1
+  elif [[ -z "$ip" ]]; then
+    errlog "Unable to determine current IP address"
+    return 1
+  fi
+  return 0
+}
+
+function update-dns-entry() {
+  local ip=$1 output success batch
+  read -r -d '' batch << EOF
+{
+  "Comment": "$comment",
+  "Changes": [
+    {
+      "Action": "UPSERT",
+      "ResourceRecordSet": {
+        "ResourceRecords": [{"Value": "$ip"}],
+        "Name": "$record_set",
+        "Type": "$record_type",
+        "TTL": $ttl
+      }
+    }
+  ]
+}
+EOF
+  output="$(aws route53 change-resource-record-sets --hosted-zone-id "$zone_id" --change-batch "$batch" 2>&1)"
+  success=$?
+  if (( success == 0 )); then
+    log "$output"
+  else
+    errlog "Failed to update DNS entry:"
+    errlog "$output"
+  fi
+  return $success
+}
+
+function run-handler-script() {
+  local old_ip=$1 new_ip=$2
+  [[ -n "$handler_script" ]] && "$handler_script" "$old_ip" "$new_ip"
+}
+
+function main() {
+  init-args "$@"
+  validate-args || exit 1
+  if ! valid-ip "$ip"; then
+    log "Invalid IP address: '$ip'"
+    exit 1
+  fi
+  if [[ "$old_ip" != "$ip" ]]; then
+    log "IP changed from '$old_ip' to '$ip', updating entry"
+    update-dns-entry "$ip" && run-handler-script "$old_ip" "$ip"
+  else
+    log "Current IP == $ip"
+  fi
+  exit 0
+}
+
+main "$@"
