@@ -14,7 +14,8 @@ fi
 # If DDNS_INTERFACE is not set, get default interface
 if [ -z "$DDNS_INTERFACE" ]; then
   echo "  - No DDNS interface override specified, looking for current default..."
-  DDNS_INTERFACE=$(echo show State:/Network/Global/IPv4 | scutil | awk -F" " "/PrimaryInterface/{print \$NF}" | sed 's/\.$//')
+  # DDNS_INTERFACE=$(echo show State:/Network/Global/IPv4 | scutil | awk -F" " "/PrimaryInterface/{print \$NF}" | sed 's/\.$//')
+  DDNS_INTERFACE=$(echo $(route get 8.8.8.8 2>&1 | grep interface | cut -d : -f 2))
 fi
 echo "  - Using interface '${DDNS_INTERFACE}'"
 
