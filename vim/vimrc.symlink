@@ -11,68 +11,70 @@ set updatetime=2000 " Set the updatetime value to 2 seconds instead of 4 for mor
 " =------------------------------------------------------------------------------------= Vundle =--=
 " Manage bundled plugins via Vundle for consolidated management within this file
 
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
+" set rtp+=~/.vim/bundle/Vundle.vim
+" call vundle#begin()
+call plug#begin('~/.vim/plugged')
 
 " let Vundle manage Vundle
 " required!
-Plugin 'VundleVim/Vundle.vim'
+Plug 'VundleVim/Vundle.vim'
 
 " Editing
-Plugin 'tpope/vim-git'
-Plugin 'tpope/vim-fugitive'
-Plugin 'tpope/vim-unimpaired'
-Plugin 'tpope/vim-endwise'
-Plugin 'michaeljsmith/vim-indent-object'
-Plugin 'ddollar/nerdcommenter'
-Plugin 'ervandew/supertab'
-Plugin 'tsaleh/vim-align'
-" Plugin 'scrooloose/syntastic'
-Plugin 'tpope/vim-surround'
-Plugin 'godlygeek/tabular'
-" Plugin 'msanders/snipmate.vim'
-" Plugin 'mattn/gist-vim'
-" Plugin 'vim-scripts/searchfold.vim'
+Plug 'tpope/vim-git'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-endwise'
+Plug 'michaeljsmith/vim-indent-object'
+Plug 'ddollar/nerdcommenter'
+Plug 'ervandew/supertab'
+Plug 'tsaleh/vim-align'
+" Plug 'scrooloose/syntastic'
+Plug 'tpope/vim-surround'
+Plug 'godlygeek/tabular'
+" Plug 'msanders/snipmate.vim'
+" Plug 'mattn/gist-vim'
+" Plug 'vim-scripts/searchfold.vim'
 
 " UI Additions
-Plugin 'scrooloose/nerdtree'
-Plugin 'jistr/vim-nerdtree-tabs'
-Plugin 'vim-scripts/spacehi.vim'
-Plugin 'nathanaelkane/vim-indent-guides'
-" Plugin 'Lokaltog/vim-powerline'
-Plugin 'vim-airline/vim-airline'
-Plugin 'vim-airline/vim-airline-themes'
-Plugin 'majutsushi/tagbar'
-" Plugin 'vim-scripts/ZoomWin'
+Plug 'scrooloose/nerdtree'
+Plug 'jistr/vim-nerdtree-tabs'
+Plug 'vim-scripts/spacehi.vim'
+Plug 'nathanaelkane/vim-indent-guides'
+" Plug 'Lokaltog/vim-powerline'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'majutsushi/tagbar'
+" Plug 'vim-scripts/ZoomWin'
 
 " Search & Files
-Plugin 'bufexplorer.zip'
-Plugin 'mileszs/ack.vim'
-" Plugin 'wincent/Command-T'
-Plugin 'sjl/gundo.vim'
+Plug 'bufexplorer.zip'
+Plug 'mileszs/ack.vim'
+" Plug 'wincent/Command-T'
+" Plug 'ctrlpvim/ctrlp.vim'
+Plug 'sjl/gundo.vim'
 
 " Languages
-Plugin 'vim-ruby/vim-ruby'
-Plugin 'tpope/vim-haml'
-Plugin 'tpope/vim-cucumber'
-Plugin 'tpope/vim-rails'
-Plugin 'timcharper/textile.vim'
-Plugin 'pangloss/vim-javascript'
-" Plugin 'taq/vim-rspec'
-Plugin 'kchmck/vim-coffee-script'
-Plugin 'ajf/puppet-vim'
-" Plugin 'bdd/vim-scala'
-" Plugin 'tpope/vim-markdown'
-Plugin 'kirbysayshi/vim-markdown'
-" Plugin 'xezv/vim-squirrel'
-Plugin 'vim-scripts/squirrel.vim'
+Plug 'vim-ruby/vim-ruby'
+Plug 'tpope/vim-haml'
+Plug 'tpope/vim-cucumber'
+Plug 'tpope/vim-rails'
+Plug 'timcharper/textile.vim'
+Plug 'pangloss/vim-javascript'
+" Plug 'taq/vim-rspec'
+Plug 'kchmck/vim-coffee-script'
+Plug 'ajf/puppet-vim'
+" Plug 'bdd/vim-scala'
+" Plug 'tpope/vim-markdown'
+Plug 'kirbysayshi/vim-markdown'
+" Plug 'xezv/vim-squirrel'
+Plug 'vim-scripts/squirrel.vim'
 
 " Themes
-Plugin 'chriskempson/vim-tomorrow-theme'
-Plugin 'altercation/vim-colors-solarized'
+Plug 'chriskempson/vim-tomorrow-theme'
+Plug 'altercation/vim-colors-solarized'
 
 " load the plugin and indent settings for the detected filetype
-call vundle#end()
+call plug#end()
 filetype plugin indent on " required!
 
 

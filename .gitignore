@@ -1,6 +1,6 @@
 vim/vim.symlink/.netrwhist
 vim/vim.symlink/backups
-vim/vim.symlink/bundle
+vim/vim.symlink/plugged
 docker/boot2docker.symlink/.vagrant
 git/gitconfig.symlink
 mediatomb/mediatomb.symlink/mediatomb.db
