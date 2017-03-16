@@ -8,16 +8,10 @@ let mapleader = ","
 
 set updatetime=2000 " Set the updatetime value to 2 seconds instead of 4 for more responsive scripts
 
-" =------------------------------------------------------------------------------------= Vundle =--=
-" Manage bundled plugins via Vundle for consolidated management within this file
+" =----------------------------------------------------------------------------------= Vim Plug =--=
+" Manage bundled plugins via Vim Plug for consolidated management within this file
 
-" set rtp+=~/.vim/bundle/Vundle.vim
-" call vundle#begin()
 call plug#begin('~/.vim/plugged')
-
-" let Vundle manage Vundle
-" required!
-Plug 'VundleVim/Vundle.vim'
 
 " Editing
 Plug 'tpope/vim-git'
@@ -31,7 +25,6 @@ Plug 'tsaleh/vim-align'
 " Plug 'scrooloose/syntastic'
 Plug 'tpope/vim-surround'
 Plug 'godlygeek/tabular'
-" Plug 'msanders/snipmate.vim'
 " Plug 'mattn/gist-vim'
 " Plug 'vim-scripts/searchfold.vim'
 
@@ -40,34 +33,25 @@ Plug 'scrooloose/nerdtree'
 Plug 'jistr/vim-nerdtree-tabs'
 Plug 'vim-scripts/spacehi.vim'
 Plug 'nathanaelkane/vim-indent-guides'
-" Plug 'Lokaltog/vim-powerline'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'majutsushi/tagbar'
-" Plug 'vim-scripts/ZoomWin'
 
 " Search & Files
 Plug 'bufexplorer.zip'
 Plug 'mileszs/ack.vim'
-" Plug 'wincent/Command-T'
-" Plug 'ctrlpvim/ctrlp.vim'
+Plug '/usr/local/opt/fzf'
+Plug 'junegunn/fzf.vim'
 Plug 'sjl/gundo.vim'
 
 " Languages
 Plug 'vim-ruby/vim-ruby'
-Plug 'tpope/vim-haml'
-Plug 'tpope/vim-cucumber'
 Plug 'tpope/vim-rails'
 Plug 'timcharper/textile.vim'
 Plug 'pangloss/vim-javascript'
-" Plug 'taq/vim-rspec'
-Plug 'kchmck/vim-coffee-script'
 Plug 'ajf/puppet-vim'
 " Plug 'bdd/vim-scala'
-" Plug 'tpope/vim-markdown'
-Plug 'kirbysayshi/vim-markdown'
-" Plug 'xezv/vim-squirrel'
-Plug 'vim-scripts/squirrel.vim'
+Plug 'tpope/vim-markdown'
 
 " Themes
 Plug 'chriskempson/vim-tomorrow-theme'
@@ -217,12 +201,7 @@ set modeline
 set modelines=10
 
 " Default color scheme
-if has("gui_running")
-	" color Tomorrow-Night
-  color Tomorrow-Night-Bright
-else
-	color Tomorrow-Night-Bright
-endif
+color Tomorrow-Night-Bright
 
 " Set column marker for long lines. I like 100 cols.
 highlight OverLength ctermbg=darkgray ctermfg=white guibg=#2d2d2d
@@ -231,10 +210,8 @@ match OverLength /\%>101v.\+/
 set colorcolumn=101
 
 " Line Highlighting
-if has("gui_running")
-	set cursorline
-	" highlight CursorLine guibg=#3d3d3d
-endif
+set cursorline
+" highlight CursorLine guibg=#3d3d3d
 
 " Directories for swp files
 set backupdir=~/.vim/backup
