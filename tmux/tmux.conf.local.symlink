@@ -240,3 +240,5 @@ set -g history-limit 100000
 
 # move status line to top
 #set -g status-position top
+
+set-option -g default-command "which reattach-to-user-namespace > /dev/null && reattach-to-user-namespace -l $SHELL || $SHELL -l"
