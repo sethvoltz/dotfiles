@@ -31,7 +31,9 @@ function updateClocks()
   -- iterate unique for drawScreenClock
   for screen, _ in pairs(screens) do
     drawScreenClock(screen)
-    drawScreenBattery(screen)
+    if hasBattery() then
+      drawScreenBattery(screen)
+    end
   end
 end
 
@@ -42,7 +44,7 @@ function drawScreenClock(screen)
   local clock = hs.styledtext.new(os.date("%H:%M"), clockStyle)
   local width = 180
   local height = 60
-  local xOffset = 25
+  local xOffset = hasBattery() and 25 or 5
   local yOffset = -6
 
   indicator = hs.drawing.text(hs.geometry.rect(
@@ -118,6 +120,10 @@ function clearIndicators()
    for _, indicator in pairs(indicators) do
       indicator:delete()
    end
+end
+
+function hasBattery()
+  return hs.battery.percentage() ~= nil
 end
 
 -- --------------------------------------------------------------= Watchers =--=
