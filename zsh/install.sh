@@ -16,10 +16,10 @@ if [ ! $(which vcprompt) ]; then
   brew install --HEAD vcprompt > /tmp/vcprompt-install.log
 fi
 
-# if [ ! $(which exa) ]; then
-#   echo "  Installing exa for you."
-#   brew cask install exa > /tmp/exa-install.log
-# fi
+if [ ! $(which exa) ]; then
+  echo "  Installing exa for you."
+  brew install exa > /tmp/exa-install.log
+fi
 
 if [ ! $(which thefuck) ]; then
   echo "  Installing thefuck for you."
