@@ -81,7 +81,7 @@ end
 
 function getSerialOutputDevice()
   local command = "ioreg -c IOSerialBSDClient -r -t " ..
-    "| awk 'f;/Photon/{f=1};/IOCalloutDevice/{exit}' " ..
+    "| awk 'f;/com_silabs_driver_CP210xVCPDriver/{f=1};/IOCalloutDevice/{exit}' " ..
     "| sed -n 's/.*\"\\(\\/dev\\/.*\\)\".*/\\1/p'"
   local handle = io.popen(command)
   local result = handle:read("*a")
