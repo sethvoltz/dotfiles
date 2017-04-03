@@ -27,6 +27,7 @@ Plug 'tpope/vim-surround'
 Plug 'godlygeek/tabular'
 " Plug 'mattn/gist-vim'
 " Plug 'vim-scripts/searchfold.vim'
+Plug 'bkad/CamelCaseMotion'
 
 " UI Additions
 Plug 'scrooloose/nerdtree'
