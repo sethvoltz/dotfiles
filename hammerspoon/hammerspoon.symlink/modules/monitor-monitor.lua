@@ -1,3 +1,5 @@
+local serial = require("hs._asm.serial")
+
 local lastScreenId = -1
 local usePhysicalIndicator = true
 local useVirtualIndicator = true
@@ -73,10 +75,16 @@ function updatePhysicalScreenIndicator(screenId)
   local devicePath = getSerialOutputDevice()
   if devicePath == "" then return end
 
-  local file = assert(io.open(devicePath, "w"))
-  file:write("set " .. screenId .. "\n")
-  file:flush()
-  file:close()
+  port = serial.port("/dev/cu.SLAB_USBtoUART"):baud(115200):open()
+  if port:isOpen() then
+    port:write("set " .. screenId .. "\n")
+    port:flushBuffer()
+    port:close()
+  end
+  -- local file = assert(io.open(devicePath, "w"))
+  -- file:write("set " .. screenId .. "\n")
+  -- file:flush()
+  -- file:close()
 end
 
 function getSerialOutputDevice()
