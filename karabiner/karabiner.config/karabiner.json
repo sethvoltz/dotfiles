@@ -35,10 +35,12 @@
             "name": "Mac Pro",
             "selected": true,
             "simple_modifications": {
-                "caps_lock": "escape",
                 "f11": "rewind",
                 "f12": "fastforward",
                 "f13": "play_or_pause"
+            },
+            "one_to_many_mappings": {
+                "caps_lock": [ "left_command", "left_option", "left_control", "left_shift" ]
             },
             "virtual_hid_keyboard": {
                 "caps_lock_delay_milliseconds": 0,
