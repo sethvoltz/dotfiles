@@ -28,6 +28,7 @@ Plug 'godlygeek/tabular'
 " Plug 'mattn/gist-vim'
 " Plug 'vim-scripts/searchfold.vim'
 Plug 'bkad/CamelCaseMotion'
+Plug 'chrisbra/vim-diff-enhanced'
 
 " UI Additions
 Plug 'scrooloose/nerdtree'
