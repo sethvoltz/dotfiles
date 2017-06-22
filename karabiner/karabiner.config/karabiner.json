@@ -6,6 +6,41 @@
     },
     "profiles": [
         {
+            "complex_modifications": {
+                "rules": [
+                    {
+                        "manipulators": [
+                            {
+                                "description": "Change caps_lock to command+control+option+shift.",
+                                "from": {
+                                    "key_code": "caps_lock",
+                                    "modifiers": {
+                                        "optional": [
+                                            "any"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "left_shift",
+                                        "modifiers": [
+                                            "left_command",
+                                            "left_control",
+                                            "left_option"
+                                        ]
+                                    }
+                                ],
+                                "to_if_alone": [
+                                    {
+                                        "key_code": "escape"
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    }
+                ]
+            },
             "devices": [
                 {
                     "disable_built_in_keyboard_if_exists": false,
@@ -14,6 +49,16 @@
                         "is_pointing_device": false,
                         "product_id": 516,
                         "vendor_id": 1452
+                    },
+                    "ignore": false
+                },
+                {
+                    "disable_built_in_keyboard_if_exists": false,
+                    "identifiers": {
+                        "is_keyboard": true,
+                        "is_pointing_device": false,
+                        "product_id": 36,
+                        "vendor_id": 1241
                     },
                     "ignore": false
                 }
@@ -35,19 +80,57 @@
             "name": "Mac Pro",
             "selected": true,
             "simple_modifications": {
-                "f11": "rewind",
-                "f12": "fastforward",
-                "f13": "play_or_pause"
+                "application": "right_option",
+                "f10": "rewind",
+                "f11": "fastforward",
+                "f12": "play_or_pause",
+                "left_command": "left_option",
+                "left_option": "left_command",
+                "right_option": "right_command"
             },
-            "one_to_many_mappings": {
-                "caps_lock": [ "left_command", "left_option", "left_control", "left_shift" ]
-            },
+            "standalone_keys": {},
             "virtual_hid_keyboard": {
                 "caps_lock_delay_milliseconds": 0,
-                "keyboard_type": "ansi"
+                "keyboard_type": "ansi",
+                "standalone_keys_delay_milliseconds": 200
             }
         },
         {
+            "complex_modifications": {
+                "rules": [
+                    {
+                        "manipulators": [
+                            {
+                                "description": "Change caps_lock to command+control+option+shift.",
+                                "from": {
+                                    "key_code": "caps_lock",
+                                    "modifiers": {
+                                        "optional": [
+                                            "any"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "left_shift",
+                                        "modifiers": [
+                                            "left_command",
+                                            "left_control",
+                                            "left_option"
+                                        ]
+                                    }
+                                ],
+                                "to_if_alone": [
+                                    {
+                                        "key_code": "escape"
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    }
+                ]
+            },
             "devices": [],
             "fn_function_keys": {
                 "f1": "display_brightness_decrement",
@@ -65,12 +148,12 @@
             },
             "name": "Laptop",
             "selected": false,
-            "simple_modifications": {
-                "caps_lock": "escape"
-            },
+            "simple_modifications": {},
+            "standalone_keys": {},
             "virtual_hid_keyboard": {
                 "caps_lock_delay_milliseconds": 0,
-                "keyboard_type": "ansi"
+                "keyboard_type": "ansi",
+                "standalone_keys_delay_milliseconds": 200
             }
         }
     ]
