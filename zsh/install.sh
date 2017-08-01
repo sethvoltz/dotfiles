@@ -20,8 +20,3 @@ if [ ! $(which exa) ]; then
   echo "  Installing exa for you."
   brew install exa > /tmp/exa-install.log
 fi
-
-if [ ! $(which thefuck) ]; then
-  echo "  Installing thefuck for you."
-  brew install thefuck > /tmp/thefuck-install.log
-fi
