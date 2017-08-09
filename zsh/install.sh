@@ -20,3 +20,20 @@ if [ ! $(which exa) ]; then
   echo "  Installing exa for you."
   brew install exa > /tmp/exa-install.log
 fi
+
+# stderred library
+# NOTE: See ./stderr.zsh for info
+# if [[ ! -f ~/Development/DotfilesBuild/stderred/build/libstderred.dylib ]]; then
+#   echo "  Installing stderred for you."
+#   mkdir -p ~/Development/DotfilesBuild > /tmp/stderred-install.log
+#   cd ~/Development/DotfilesBuild
+#   if [ -d stderred ]; then
+#     cd stderred
+#     git pull >> /tmp/stderred-install.log
+#   else
+#     git clone https://github.com/sickill/stderred.git >> /tmp/stderred-install.log
+#     cd stderred
+#   fi
+#   make clean >> /tmp/stderred-install.log 2>&1
+#   make >> /tmp/stderred-install.log 2>&1
+# fi
