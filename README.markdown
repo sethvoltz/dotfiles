@@ -45,6 +45,8 @@ There are a few special files in the hierarchy.
 * **topic/\*.config**: Any files ending in `*.config` get symlinked into `$HOME/.config`. This is so
   you can keep all of those versioned in your dotfiles but still keep those autoloaded files in your
   home directory. These get symlinked in when you run `script/bootstrap`.
+* **topic/\*.path**: Any files ending in `*.path` get loaded after path cleanup has been performed
+  to ensure they have priority control over order.
 * **topic/\*.completion.sh**: Any files ending in `completion.sh` get loaded last so that they get
   loaded after we set up zsh autocomplete functions.
 * **topic/install.sh**: Any file named `install.sh` will be run during the installation phase of
