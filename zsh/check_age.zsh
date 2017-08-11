@@ -4,8 +4,6 @@ if [ $ZSH ]; then
   let grace_period="86400" # 86400 = 24 hours
   if [ "$repo_age" -gt "$grace_period" ]; then
     echo "ZSH repo is out of date (older than $grace_period seconds)... updating"
-    pushd $ZSH
-    git pull --prune
-    popd
+    $ZSH/script/update
   fi
 fi

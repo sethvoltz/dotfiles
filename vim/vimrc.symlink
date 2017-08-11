@@ -40,7 +40,6 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'majutsushi/tagbar'
 
 " Search & Files
-Plug 'bufexplorer.zip'
 Plug 'mileszs/ack.vim'
 Plug '/usr/local/opt/fzf'
 Plug 'junegunn/fzf.vim'

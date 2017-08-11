@@ -24,7 +24,7 @@ done
 
 # Update permissions if needed
 iftop_path=$(which iftop)
-if [ $iftop_path ]; then
+if [ $iftop_path ] && [ ! $(find -L $iftop_path -user root -perm -4000) ]; then
   echo "  Updating iftop to run set UID root, you may be asked for your password..."
   printf "  " # indent password prompt, if any
   sudo chown root:wheel $iftop_path
@@ -36,7 +36,7 @@ fi
 cask_apps=(java bartender alfred istat-menus flux skitch adobe-creative-cloud atom bettertouchtool)
 
 for app in $cask_apps; do
-  if [ $(brew cask list $app > /dev/null) ]; then
+  if [ $(brew cask ls --versions $app > /dev/null 2>&1) ]; then
     echo "  Installing $app for you."
     brew cask install $app > /tmp/$app-cask-install.log
   fi

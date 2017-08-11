@@ -1,0 +1,3 @@
+if [ -d $HOME/.composer/vendor/bin ]; then
+  path=('$HOME/.composer/vendor/bin' $path)
+fi

@@ -45,7 +45,10 @@ REPORTTIME=5
 eval `/usr/libexec/path_helper -s`
 
 ### Added by the Heroku Toolbelt
-export PATH="/usr/local/heroku/bin:$PATH"
+# export PATH="/usr/local/heroku/bin:$PATH"
+
+# source every .path file in this rep -- path updates should come last
+for config_file ($ZSH/**/*.path~*/backups/*) source $config_file
 
 # Ruby Development Environment.
 export RBENV_ROOT=/usr/local/opt/rbenv
