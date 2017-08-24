@@ -19,7 +19,7 @@ done
 
 set -- "$@"
 
-pushd $ZSH
+pushd $ZSH > /dev/null
 
 git_update() {
   git pull --rebase --prune
@@ -40,8 +40,6 @@ if [ -z "$DRY_RUN" ]; then
     git stash pop
   fi
 fi
-
-pushd $ZSH
 
 case $PLATFORM in
   darwin)
@@ -69,4 +67,4 @@ if command -v vim > /dev/null 2>&1; then
   fi
 fi
 
-popd
+popd > /dev/null
