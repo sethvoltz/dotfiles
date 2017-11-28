@@ -21,6 +21,11 @@ if [ ! $(which exa) ]; then
   brew install exa > /tmp/exa-install.log
 fi
 
+if [ ! -f ~/.iterm2_shell_integration.zsh ]; then
+  echo "  Installing iTerm shell integrations"
+  curl -L https://iterm2.com/shell_integration/zsh -o ~/.iterm2_shell_integration.zsh
+fi
+
 # stderred library
 # NOTE: See ./stderr.zsh for info
 # if [[ ! -f ~/Development/DotfilesBuild/stderred/build/libstderred.dylib ]]; then
