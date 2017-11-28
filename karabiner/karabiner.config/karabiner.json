@@ -7,6 +7,10 @@
     "profiles": [
         {
             "complex_modifications": {
+                "parameters": {
+                    "basic.to_delayed_action_delay_milliseconds": 500,
+                    "basic.to_if_alone_timeout_milliseconds": 1000
+                },
                 "rules": [
                     {
                         "manipulators": [
@@ -44,50 +48,132 @@
             "devices": [
                 {
                     "disable_built_in_keyboard_if_exists": false,
+                    "fn_function_keys": [],
                     "identifiers": {
                         "is_keyboard": true,
                         "is_pointing_device": false,
                         "product_id": 516,
                         "vendor_id": 1452
                     },
-                    "ignore": false
+                    "ignore": false,
+                    "manipulate_caps_lock_led": true,
+                    "simple_modifications": []
                 },
                 {
                     "disable_built_in_keyboard_if_exists": false,
+                    "fn_function_keys": [],
                     "identifiers": {
                         "is_keyboard": true,
                         "is_pointing_device": false,
                         "product_id": 36,
                         "vendor_id": 1241
                     },
-                    "ignore": false
+                    "ignore": false,
+                    "manipulate_caps_lock_led": false,
+                    "simple_modifications": []
                 }
             ],
-            "fn_function_keys": {
-                "f1": "display_brightness_decrement",
-                "f10": "mute",
-                "f11": "volume_decrement",
-                "f12": "volume_increment",
-                "f2": "display_brightness_increment",
-                "f3": "mission_control",
-                "f4": "launchpad",
-                "f5": "illumination_decrement",
-                "f6": "illumination_increment",
-                "f7": "rewind",
-                "f8": "play_or_pause",
-                "f9": "fastforward"
-            },
+            "fn_function_keys": [
+                {
+                    "from": {
+                        "key_code": "f1"
+                    },
+                    "to": {
+                        "key_code": "display_brightness_decrement"
+                    }
+                },
+                {
+                    "from": {
+                        "key_code": "f2"
+                    },
+                    "to": {
+                        "key_code": "display_brightness_increment"
+                    }
+                },
+                {
+                    "from": {
+                        "key_code": "f3"
+                    },
+                    "to": {
+                        "key_code": "mission_control"
+                    }
+                },
+                {
+                    "from": {
+                        "key_code": "f4"
+                    },
+                    "to": {
+                        "key_code": "launchpad"
+                    }
+                },
+                {
+                    "from": {
+                        "key_code": "f5"
+                    },
+                    "to": {
+                        "key_code": "illumination_decrement"
+                    }
+                },
+                {
+                    "from": {
+                        "key_code": "f6"
+                    },
+                    "to": {
+                        "key_code": "illumination_increment"
+                    }
+                },
+                {
+                    "from": {
+                        "key_code": "f7"
+                    },
+                    "to": {
+                        "key_code": "rewind"
+                    }
+                },
+                {
+                    "from": {
+                        "key_code": "f8"
+                    },
+                    "to": {
+                        "key_code": "play_or_pause"
+                    }
+                },
+                {
+                    "from": {
+                        "key_code": "f9"
+                    },
+                    "to": {
+                        "key_code": "fastforward"
+                    }
+                },
+                {
+                    "from": {
+                        "key_code": "f10"
+                    },
+                    "to": {
+                        "key_code": "mute"
+                    }
+                },
+                {
+                    "from": {
+                        "key_code": "f11"
+                    },
+                    "to": {
+                        "key_code": "volume_decrement"
+                    }
+                },
+                {
+                    "from": {
+                        "key_code": "f12"
+                    },
+                    "to": {
+                        "key_code": "volume_increment"
+                    }
+                }
+            ],
             "name": "Mac Pro",
             "selected": true,
-            "simple_modifications": {
-                "application": "right_option",
-                "f10": "rewind",
-                "f11": "fastforward",
-                "f12": "play_or_pause",
-                "left_command": "left_option",
-                "left_option": "left_command",
-                "right_option": "right_command"
-            },
+            "simple_modifications": [],
             "standalone_keys": {},
             "virtual_hid_keyboard": {
                 "caps_lock_delay_milliseconds": 0,
@@ -97,6 +183,10 @@
         },
         {
             "complex_modifications": {
+                "parameters": {
+                    "basic.to_delayed_action_delay_milliseconds": 500,
+                    "basic.to_if_alone_timeout_milliseconds": 1000
+                },
                 "rules": [
                     {
                         "manipulators": [
@@ -132,23 +222,107 @@
                 ]
             },
             "devices": [],
-            "fn_function_keys": {
-                "f1": "display_brightness_decrement",
-                "f10": "mute",
-                "f11": "volume_decrement",
-                "f12": "volume_increment",
-                "f2": "display_brightness_increment",
-                "f3": "mission_control",
-                "f4": "launchpad",
-                "f5": "illumination_decrement",
-                "f6": "illumination_increment",
-                "f7": "rewind",
-                "f8": "play_or_pause",
-                "f9": "fastforward"
-            },
+            "fn_function_keys": [
+                {
+                    "from": {
+                        "key_code": "f1"
+                    },
+                    "to": {
+                        "key_code": "display_brightness_decrement"
+                    }
+                },
+                {
+                    "from": {
+                        "key_code": "f2"
+                    },
+                    "to": {
+                        "key_code": "display_brightness_increment"
+                    }
+                },
+                {
+                    "from": {
+                        "key_code": "f3"
+                    },
+                    "to": {
+                        "key_code": "mission_control"
+                    }
+                },
+                {
+                    "from": {
+                        "key_code": "f4"
+                    },
+                    "to": {
+                        "key_code": "launchpad"
+                    }
+                },
+                {
+                    "from": {
+                        "key_code": "f5"
+                    },
+                    "to": {
+                        "key_code": "illumination_decrement"
+                    }
+                },
+                {
+                    "from": {
+                        "key_code": "f6"
+                    },
+                    "to": {
+                        "key_code": "illumination_increment"
+                    }
+                },
+                {
+                    "from": {
+                        "key_code": "f7"
+                    },
+                    "to": {
+                        "key_code": "rewind"
+                    }
+                },
+                {
+                    "from": {
+                        "key_code": "f8"
+                    },
+                    "to": {
+                        "key_code": "play_or_pause"
+                    }
+                },
+                {
+                    "from": {
+                        "key_code": "f9"
+                    },
+                    "to": {
+                        "key_code": "fastforward"
+                    }
+                },
+                {
+                    "from": {
+                        "key_code": "f10"
+                    },
+                    "to": {
+                        "key_code": "mute"
+                    }
+                },
+                {
+                    "from": {
+                        "key_code": "f11"
+                    },
+                    "to": {
+                        "key_code": "volume_decrement"
+                    }
+                },
+                {
+                    "from": {
+                        "key_code": "f12"
+                    },
+                    "to": {
+                        "key_code": "volume_increment"
+                    }
+                }
+            ],
             "name": "Laptop",
             "selected": false,
-            "simple_modifications": {},
+            "simple_modifications": [],
             "standalone_keys": {},
             "virtual_hid_keyboard": {
                 "caps_lock_delay_milliseconds": 0,
