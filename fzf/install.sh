@@ -12,3 +12,8 @@ if [ ! $(which fzf) ]; then
   echo "  Running post-install setup."
   /usr/local/opt/fzf/install
 fi
+
+if [ ! -f ~/.fzf.zsh ]; then
+  echo "  Running fzf post-install for you."
+  `brew --prefix fzf`/install
+fi

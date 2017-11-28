@@ -58,5 +58,3 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 
 # Finally, set up stderr redirection through colorize to make it red
 #exec 2>>(colorize `tput bold; tput setaf 1` `tput sgr0` > /dev/tty &)
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
