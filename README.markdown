@@ -47,8 +47,8 @@ There are a few special files in the hierarchy.
   home directory. These get symlinked in when you run `script/bootstrap`.
 * **topic/\*.path**: Any files ending in `*.path` get loaded after path cleanup has been performed
   to ensure they have priority control over order.
-* **topic/\*.completion.sh**: Any files ending in `completion.sh` get loaded last so that they get
-  loaded after we set up zsh autocomplete functions.
+* **topic/completion.sh**: Any files named `completion.sh` get loaded last so that they get loaded
+  after we set up zsh autocomplete functions.
 * **topic/install.sh**: Any file named `install.sh` will be run during the installation phase of
   `script/bootstrap`, or manually at any time with `script/install`.
 
