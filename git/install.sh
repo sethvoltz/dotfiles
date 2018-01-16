@@ -1,12 +1,16 @@
 #!/bin/sh
 
+# Ensure homebrew
+if [ ! $(which brew) ]; then
+  source $(dirname -- "$0")/../homebrew/install.sh
+fi
+
 if [ ! $(which git) ]; then
   echo "  Installing git for you."
   brew install git > /tmp/git-install.log
 fi
 
-if [ ! $(which cdiff | grep '/usr/local') ]; then
-  source $(dirname -- "$0")/../python/install.sh
-  echo "  Installing cdiff for you."
-  pip install --upgrade cdiff > /tmp/cdiff-install.log
+if [ ! $(which diff-so-fancy) ]; then
+  echo "  Installing diff-so-fancy for you."
+  brew install diff-so-fancy > /tmp/diff-so-fancy-install.log
 fi

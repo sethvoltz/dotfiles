@@ -20,8 +20,8 @@
 	ui = always
 
 [color "diff"]
-	meta = yellow bold
-	commit = green bold
+	meta = yellow
+	commit = yellow bold
 	frag = magenta bold
 	old = red bold
 	new = green bold
@@ -51,7 +51,7 @@
   count   = !git shortlog -sn
   dig = "!f() { git log --oneline -- $1  | awk -- '{print $1}' | xargs -n 1 -I{} bash -c \"git log --oneline -1 {} ; git diff --name-status {}^ {} \"; }; f"
   files = "!f() { git diff --name-status $1^ $1; }; f"
-  diff-fancy = "!f() { git diff --color \"$@\" | `brew --prefix git`/share/git-core/contrib/diff-highlight/diff-highlight | less -r; }; f"
+  # diff-fancy = "!f() { git diff --color \"$@\" | `brew --prefix git`/share/git-core/contrib/diff-highlight/diff-highlight | less -r; }; f"
 
   # Usage: git addw
   # only add non-whitespace changes to a commit (???? under trial now)
@@ -67,6 +67,7 @@
 
 [core]
   excludesfile = ~/.gitignore
+  pager = diff-so-fancy | less --tabs=4 -RFX
 
 [difftool "sourcetree"]
   cmd = opendiff \"$LOCAL\" \"$REMOTE\"
