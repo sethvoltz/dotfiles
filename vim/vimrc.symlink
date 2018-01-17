@@ -229,6 +229,10 @@ function! s:setupMarkup()
 	map <buffer> <Leader>p :Hammer<CR>
 endfunction
 
+" =--------------------------------------------------------------------------------= Pasteboard =--=
+vmap <C-x> :!pbcopy<CR>
+vmap <C-c> :w !pbcopy<CR><CR>
+
 " =---------------------------------------------------------------------------= MacVIM Behavior =--=
 " MacVIM shift+arrow-keys behavior (required in .vimrc)
 " http://enethrie.com/2011/06/16/use-set-selectmode-to-disable-select-mode-in-vim-2
