@@ -3,7 +3,12 @@
 Another way of getting the default interface is through `osquery`. This gives you the IP at the same time without a need to call `ifconfig`:
 
 ```
-osqueryi --json "select destination, id.interface, routes.type from interface_details as id, interface_addresses as ia, routes where id.interface = ia.interface and routes.destination = ia.address and routes.type = 'static';" | jq -r ".[]"
+osqueryi --json << EOQUERY | jq -r ".[].interface"
+select destination, id.interface, routes.type
+from interface_details as id, interface_addresses as ia, routes
+where id.interface = ia.interface and routes.destination = ia.address
+and routes.type = 'static';
+EOQUERY
 ```
 
 Other methods are:
