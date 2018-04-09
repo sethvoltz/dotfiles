@@ -1,3 +1,6 @@
+# Hub master override
+alias git=hub
+
 # Pull & push
 alias gl='git up --prune'
 alias glr='git reup --prune'

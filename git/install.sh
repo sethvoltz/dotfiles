@@ -14,3 +14,8 @@ if [ ! $(which diff-so-fancy) ]; then
   echo "  Installing diff-so-fancy for you."
   brew install diff-so-fancy > /tmp/diff-so-fancy-install.log
 fi
+
+if [ ! $(which hub) ]; then
+  echo "  Installing hub for you."
+  brew install hub > /tmp/hub-install.log
+fi
