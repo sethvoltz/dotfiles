@@ -5,6 +5,7 @@ engine = dropbox
 aws
 bash
 ctags
+docker
 git
 gnupg
 hammerspoon
@@ -13,6 +14,7 @@ karabiner-elements
 mackup
 mercurial
 messages
+npm
 php
 rails
 ruby
