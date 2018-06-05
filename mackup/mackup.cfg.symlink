@@ -1,24 +1,20 @@
 [storage]
-engine = dropbox
+engine = icloud
+directory = Settings/Mackup
 
-[applications_to_ignore]
-aws
-bash
-ctags
-docker
-git
-gnupg
-hammerspoon
-karabiner
-karabiner-elements
-mackup
-mercurial
-messages
-npm
-php
-rails
-ruby
-ssh
-tmux
-vim
-zsh
+[applications_to_sync]
+atom
+terminal
+bartender
+bettertouchtool
+colorsync
+dash
+flux
+htop
+istat-menus-5
+iterm2
+sketch
+sourcetree
+ubersicht
+vscode
+
