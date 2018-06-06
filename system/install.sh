@@ -33,7 +33,8 @@ if [ $iftop_path ] && [ ! $(find -L $iftop_path -user root -perm -4000) ]; then
 fi
 
 # Cask applications to install
-cask_apps=(java bartender alfred istat-menus flux skitch adobe-creative-cloud atom bettertouchtool)
+#cask_apps=(java bartender alfred istat-menus flux skitch adobe-creative-cloud atom bettertouchtool)
+cask_apps=(bartender alfred istat-menus flux skitch visual-studio-code bettertouchtool ubersicht)
 
 for app in $cask_apps; do
   if [ $(brew cask ls --versions $app > /dev/null 2>&1) ]; then
