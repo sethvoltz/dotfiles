@@ -1,4 +1,4 @@
-export NVM_DIR="$HOME/.nvm"
+export NVM_DIR=$(realpath "$HOME/.nvm")
 [ -s "$(brew --prefix nvm)/nvm.sh" ] && \. "$(brew --prefix nvm)/nvm.sh"
 
 autoload -U add-zsh-hook

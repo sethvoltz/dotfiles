@@ -1,3 +1,12 @@
+# Ensure homebrew
+if [ ! $(which brew) ]; then
+  source $(dirname -- "$0")/../homebrew/install.sh
+fi
+
 if [ ! $(which nvm) ]; then
-  curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.8/install.sh | bash
+  brew install nvm > /tmp/nvm-install.log
+fi
+
+if [ ! $(which yarn) ]; then
+  brew install yarn --without-node > /tmp/yarn-install.log
 fi
