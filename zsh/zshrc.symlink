@@ -13,6 +13,10 @@ source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
 ZSH_HIGHLIGHT_STYLES[globbing]='fg=cyan'
 
+# `brew install zsh-autosuggestions`
+# https://github.com/zsh-users/zsh-autosuggestions
+source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+
 # source every .zsh file in this rep
 for config_file ($ZSH/**/*.zsh~*/backups/*) source $config_file
 
