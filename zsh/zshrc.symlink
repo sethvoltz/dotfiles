@@ -22,8 +22,7 @@ for config_file ($ZSH/**/*.zsh~*/backups/*) source $config_file
 
 # use .localrc for SUPER SECRET CRAP that you don't
 # want in your public, versioned repo.
-if [[ -a ~/.localrc ]]
-then
+if [[ -a ~/.localrc ]]; then
   source ~/.localrc
 fi
 
@@ -41,6 +40,11 @@ for config_file ($ZSH/**/completion.sh~*/backups/*) source $config_file
 # Python Development Environment. - Must run last after all paths are setup.
 if [ -f /usr/local/share/python/virtualenvwrapper.sh ]; then
     source /usr/local/share/python/virtualenvwrapper.sh
+fi
+
+# Z hopping around folders
+if [ -f /usr/local/etc/profile.d/z.sh ]; then
+    source /usr/local/etc/profile.d/z.sh
 fi
 
 export TIMEFMT="%U user %S system %P cpu %*E total, running %J"
