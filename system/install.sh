@@ -11,8 +11,8 @@ if [ ! $(brew tap | grep 'homebrew/dupes') ]; then
 fi
 
 # CLI applications to install
-cli_apps=(coreutils spark ack htop iftop mtr nmap p0f trafshow ngrep wget tree ctags graphviz jq grv rg)
-cli_exec=(gsort     spark ack htop iftop mtr nmap p0f trafshow ngrep wget tree ctags dot      jq grv rg)
+cli_apps=(coreutils spark ack htop iftop mtr nmap p0f trafshow ngrep wget tree ctags graphviz jq grv rg z)
+cli_exec=(gsort     spark ack htop iftop mtr nmap p0f trafshow ngrep wget tree ctags dot      jq grv rg z)
 
 for (( i = 0; i < ${#cli_apps[*]}; i++ )) do
   if [ ! $(which ${cli_exec[i]}) ]; then
@@ -21,6 +21,9 @@ for (( i = 0; i < ${#cli_apps[*]}; i++ )) do
     brew install $app > /tmp/$app-install.log
   fi
 done
+
+# GNU `sed`, overwriting the built-in `sed`
+brew install gnu-sed --with-default-names > /tmp/sed-install.log
 
 # Update permissions if needed
 iftop_path=$(which iftop)
@@ -33,8 +36,25 @@ if [ $iftop_path ] && [ ! $(find -L $iftop_path -user root -perm -4000) ]; then
 fi
 
 # Cask applications to install
-#cask_apps=(java bartender alfred istat-menus flux skitch adobe-creative-cloud atom bettertouchtool)
-cask_apps=(bartender alfred istat-menus flux skitch visual-studio-code bettertouchtool ubersicht)
+brew tap caskroom/fonts
+cask_apps=(
+  1password6
+  adobe-creative-cloud
+  alfred
+  bartender
+  bettertouchtool
+  dropbox
+  font-hack
+  google-chrome
+  imageoptim
+  istat-menus
+  iterm2
+  karabiner-elements
+  qmk-toolbox
+  skitch
+  ubersicht
+  visual-studio-code
+)
 
 for app in $cask_apps; do
   if [ $(brew cask ls --versions $app > /dev/null 2>&1) ]; then
@@ -42,3 +62,6 @@ for app in $cask_apps; do
     brew cask install $app > /tmp/$app-cask-install.log
   fi
 done
+
+# Clean up your room!
+brew cleanup
