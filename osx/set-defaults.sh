@@ -7,6 +7,12 @@
 #
 # Run ./set-defaults.sh and you'll be good to go.
 
+sudo dscl . -mcxset /Computers/localhost com.apple.screensaver idleTime always -int 0
+defaults -currentHost write com.apple.screensaver idleTime 0 # disable screensaver
+sudo pmset -a sleep 0 # disable system sleep
+sudo pmset -b displaysleep 3
+sudo pmset -c displaysleep 8
+
 # Disable the Dashboard completely
 defaults write com.apple.dashboard mcx-disabled -boolean YES
 
