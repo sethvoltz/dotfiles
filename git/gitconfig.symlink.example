@@ -26,6 +26,8 @@
 	old = red bold
 	new = green bold
 	whitespace = red reverse
+  newMoved = cyan
+  oldMoved = blue
 
 [color "diff-highlight"]
 	oldNormal = red bold
@@ -69,6 +71,13 @@
   excludesfile = ~/.gitignore
   pager = diff-so-fancy | less --tabs=4 -RFX
 
+[diff]
+	compactionHeuristic = true
+
+  # Show blocks of moved text of at least 20 alphanumeric characters differently than adds/deletes
+  # https://blog.github.com/2018-04-05-git-217-released/
+  colorMoved = zebra
+
 [difftool "sourcetree"]
   cmd = opendiff \"$LOCAL\" \"$REMOTE\"
   path =
@@ -79,4 +88,11 @@
   keepBackup = false
 
 [push]
-  default = simple
+  default = current
+  followTags = true
+
+[stash]
+	showPatch = true
+
+[log]
+	date = relative
