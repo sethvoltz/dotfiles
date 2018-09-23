@@ -6,6 +6,9 @@
 #   DDNS_INTERFACE (optional)
 # Additionally, the AWS CLI will need to be configured with a profile called 'personal'
 
+# Skip install
+exit 0
+
 # Expand Path
 pushd $(dirname -- "$0") > /dev/null
   ddns_path=$(pwd)
