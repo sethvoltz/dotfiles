@@ -4,37 +4,6 @@ autoload zsh/terminfo
 # https://github.com/ehrenmurdick/config/blob/master/zsh/prompt.zsh
 # https://github.com/holman/dotfiles/blob/master/zsh/prompt.zsh
 
-unpushed () {
-  /usr/bin/env git cherry -v @{upstream} 2>/dev/null
-}
-
-need_push () {
-  if [[ $(unpushed) == "" ]]
-  then
-    echo ""
-  else
-    echo "with %{$fg_bold[magenta]%}unpushed%{$reset_color%} "
-  fi
-}
-
-rb_prompt(){
-  if $(which rbenv &> /dev/null)
-  then
-    # echo "‹$(rbenv version | awk '{print $1}')› "
-    echo "ruby: $(rbenv version | awk '{print $1}') "
-  else
-    echo ""
-  fi
-}
-
-# Note: Add the following the $WORKON_HOME/postactivate
-#   PS1="$_OLD_VIRTUAL_PS1"
-py_prompt(){
-  if (($+VIRTUAL_ENV)); then
-    echo "python: $(basename $VIRTUAL_ENV) "
-  fi
-}
-
 scm_prompt(){
   vcprompt -f '(%n:%b%m%u) '
 }
@@ -60,24 +29,13 @@ function precmd {
   # Be sure to put in placeholders for all styling characters as well as dynamic attributes.
   # Template: ${#${(%):-____()}} where ____ is replaced with the contents.
 
-  # local promptsize=${#${(%):-.%! [%n@%m......]()}}
-  local rb_pr="$(rb_prompt)"
-  local py_pr="$(py_prompt)"
   local promptsize=${#${(%):-[%n@%m]......%~}}
-  local rightsize=${#${(%):-$rb_pr$py_pr}}
+  local rightsize=0
 
   if [[ "$promptsize + $rightsize" -gt $TERMWIDTH ]]; then
     ((PR_PWDLEN=$TERMWIDTH - $promptsize))
   else
     PR_FILLBAR="\${(l.(($TERMWIDTH - ($promptsize + $rightsize))).. .)}"
-  fi
-}
-
-setopt extended_glob
-preexec () {
-  if [[ "$TERM" == "screen" ]]; then
-    local CMD=${1[(wr)^(*=*|sudo|-*)]}
-    echo -n "\ek$CMD\e\\"
   fi
 }
 
@@ -138,7 +96,7 @@ setprompt () {
   PROMPT='$PR_STITLE${(e)PR_TITLEBAR}\
 %F{black}%K{$START_COLOR}[%n@%m] \
 $GRADIENT\
-%$PR_PWDLEN<...<%~%<<${(e)PR_FILLBAR}$(rb_prompt)$(py_prompt)\
+%$PR_PWDLEN<...<%~%<<${(e)PR_FILLBAR}\
 %{$reset_color%}\
 
 %F{$START_COLOR}╙─%(?.$PR_GREEN.$PR_RED🔥 %?) \

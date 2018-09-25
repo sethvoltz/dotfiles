@@ -1,3 +1,5 @@
+zmodload zsh/zprof
+
 # shortcut to this dotfiles path is $ZSH
 export ZSH=$HOME/.dotfiles
 
@@ -27,8 +29,12 @@ if [[ -a ~/.localrc ]]; then
 fi
 
 # initialize autocomplete here, otherwise functions won't be loaded
-autoload -U compinit
-compinit -i
+autoload -Uz compinit
+if [ $(date +'%j') != $(stat -f '%Sm' -t '%j' ~/.zcompdump) ]; then
+  compinit
+else
+  compinit -C
+fi
 
 # Automatically escape URL characters while typing (does not fix history or paste)
 # autoload -U url-quote-magic

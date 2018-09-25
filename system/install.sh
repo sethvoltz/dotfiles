@@ -1,4 +1,13 @@
-#!/bin/sh
+#!/bin/bash
+
+# Ensure SSH keys from Keychain are used and added to ssh-agent
+# See: https://openradar.appspot.com/27348363
+# See: https://developer.apple.com/library/archive/technotes/tn2449/_index.html
+# TODO: Make this automatically detected and added
+# touch ~/.ssh/config 
+# Host *
+#     AddKeysToAgent yes
+#     UseKeychain yes
 
 # Ensure homebrew
 if [ ! $(which brew) ]; then
