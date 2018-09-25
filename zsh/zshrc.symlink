@@ -1,4 +1,5 @@
-zmodload zsh/zprof
+# Uncomment to enable profiling, then view results with `zprof`
+# zmodload zsh/zprof
 
 # shortcut to this dotfiles path is $ZSH
 export ZSH=$HOME/.dotfiles
