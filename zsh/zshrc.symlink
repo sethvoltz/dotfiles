@@ -32,7 +32,7 @@ fi
 # initialize autocomplete here, otherwise functions won't be loaded
 autoload -Uz compinit
 if [ $(date +'%j') != $(stat -f '%Sm' -t '%j' ~/.zcompdump) ]; then
-  compinit
+  compinit -i
 else
   compinit -C
 fi
