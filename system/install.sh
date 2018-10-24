@@ -55,6 +55,7 @@ cask_apps=(
   dropbox
   font-hack
   google-chrome
+  highsierramediakeyenabler
   imageoptim
   istat-menus
   iterm2
