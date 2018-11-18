@@ -46,6 +46,8 @@ fi
 
 # Cask applications to install
 brew tap caskroom/fonts
+brew tap buo/cask-upgrade
+brew tap dteoh/sqa
 cask_apps=(
   1password6
   adobe-creative-cloud
@@ -62,6 +64,7 @@ cask_apps=(
   karabiner-elements
   qmk-toolbox
   skitch
+  slowquitapps
   ubersicht
   visual-studio-code
 )
