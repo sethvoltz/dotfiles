@@ -119,7 +119,7 @@ function updatePhysicalScreenIndicator(screenId)
   local devicePath = getSerialOutputDevice()
   if devicePath == "" then return end
 
-  port = serial.port("/dev/cu.SLAB_USBtoUART"):baud(115200):open()
+  port = serial.port(devicePath):baud(115200):open()
   if port:isOpen() then
     port:write("set " .. screenId .. "\n")
     port:flushBuffer()
