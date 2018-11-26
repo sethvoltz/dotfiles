@@ -8,6 +8,7 @@ hs.hotkey.bind(hyper, "c", hs.toggleConsole)
 -- Helpful globals
 hs.hotkey.bind(hyper, 'n', function() hs.task.new("/usr/bin/open", nil, {os.getenv("HOME")}):start() end)
 hs.hotkey.bind(hyper, 'd', function() mouseHighlight() end)
+hs.hotkey.bind(hyper, 'w', function() mouseMoveCurrentApp() end)
 
 -- Move windows around current screen
 hs.hotkey.bind(mash, "left",   function() window:leftHalf()   end);
@@ -64,34 +65,65 @@ function window:bottomHalf ()
   self:move({ x = 0, y = (s.h / 2) + s.y, w = s.w, h = (s.h / 2) })
 end
 
+function mouseMoveCurrentApp()
+  hs.mouse.setAbsolutePosition(hs.geometry.rectMidPoint(currentFrame()))
+  mouseHighlight()
+end
+
 -- Kudos to https://git.io/v6kcO
 function mouseHighlight()
   if mouseCircle then
+    mouseCircleOuter:delete()
     mouseCircle:delete()
     if mouseCircleTimer then
       mouseCircleTimer:stop()
     end
   end
+
   mousepoint = hs.mouse.getAbsolutePosition()
+  mouseCircleOuter = hs.drawing.circle(hs.geometry.rect(
+    mousepoint.x - 42,
+    mousepoint.y - 42,
+    84,
+    84
+  ))
   mouseCircle = hs.drawing.circle(hs.geometry.rect(
     mousepoint.x - 40,
     mousepoint.y - 40,
     80,
     80
   ))
+
+  mouseCircleOuter:setStrokeColor(hs.drawing.color.asRGB({
+    red = 1,
+    green = 1,
+    blue = 1,
+    alpha = 0.75
+  }))
   mouseCircle:setStrokeColor(hs.drawing.color.asRGB({
     red = 1,
-    green = 0,
+    green = 0.31,
     blue = 0,
     alpha = 1
   }))
+
+  mouseCircleOuter:setFill(false)
+  mouseCircleOuter:setStrokeWidth(9)
+  mouseCircleOuter:bringToFront(true)
+  mouseCircleOuter:show(0.25)
+
   mouseCircle:setFill(false)
   mouseCircle:setStrokeWidth(5)
   mouseCircle:bringToFront(true)
   mouseCircle:show(0.5)
 
   mouseCircleTimer = hs.timer.doAfter(1.5, function()
+    mouseCircleOuter:hide(0.125)
     mouseCircle:hide(0.25)
-    hs.timer.doAfter(0.6, function() mouseCircle:delete() end)
+
+    hs.timer.doAfter(0.6, function()
+      mouseCircleOuter:delete()
+      mouseCircle:delete()
+    end)
   end)
 end
