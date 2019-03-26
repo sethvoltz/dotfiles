@@ -52,8 +52,10 @@ function handleAppEvent(element, event, watcher, info)
   if event == hs.uielement.watcher.windowCreated then
     watchWindow(element)
   elseif event == hs.uielement.watcher.focusedWindowChanged then
-    handleMonitorMonitorChange()
-    updateVirtualScreenIndicator(element:screen(), element)
+    if element:isWindow() or element:isApplication() then
+      handleMonitorMonitorChange()
+      updateVirtualScreenIndicator(element:screen(), element)
+    end
   end
 end
 
