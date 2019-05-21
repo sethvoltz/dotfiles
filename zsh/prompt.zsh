@@ -53,11 +53,11 @@ scm_prompt(){
   fi
 
   local -a GIT_INFO
-  GIT_INFO+=( "\033[38;5;245m⎇" )
+  GIT_INFO+=( "%{\033[38;5;245m%}⎇" )
   [ -n "$GIT_STATUS" ] && GIT_INFO+=( "$GIT_STATUS" )
   [[ ${#DIVERGENCES[@]} -ne 0 ]] && GIT_INFO+=( "${(j::)DIVERGENCES}" )
   [[ ${#FLAGS[@]} -ne 0 ]] && GIT_INFO+=( "${(j::)FLAGS}" )
-  GIT_INFO+=( "\033[38;5;250m$GIT_LOCATION%{$reset_color%}" )
+  GIT_INFO+=( "%{\033[38;5;250m%}$GIT_LOCATION%{$reset_color%}" )
 
   echo "${(j: :)GIT_INFO} "
 }
