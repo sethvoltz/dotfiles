@@ -1,7 +1,7 @@
 local serial = require("hs._asm.serial")
 
 local lastScreenId = -1
-local usePhysicalIndicator = true
+local usePhysicalIndicator = false
 local useVirtualIndicator = true
 
 local currentIndicator = nil
