@@ -75,3 +75,5 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 #exec 2>>(colorize `tput bold; tput setaf 1` `tput sgr0` > /dev/tty &)
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+[ -d /usr/local/opt/curl-openssl/bin ] && export PATH="/usr/local/opt/curl-openssl/bin:$PATH"

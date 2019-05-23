@@ -22,9 +22,6 @@ alias fuck='sudo $(fc -ln -1)'
 
 alias help=run-help
 
-# Enhanced WHOIS lookup
-# alias whois="whois -h whois-servers.net"
-
 # Flush Directory Service cache
 alias flush="dscacheutil -flushcache"
 
