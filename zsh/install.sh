@@ -11,11 +11,6 @@ if [ ! $(which zsh | grep '/usr/local') ]; then
   brew install zsh zsh-completions zsh-syntax-highlighting zsh-lovers
 fi
 
-if [ ! $(which vcprompt) ]; then
-  echo "  Installing vcprompt for you."
-  brew install --HEAD vcprompt > /tmp/vcprompt-install.log
-fi
-
 if [ ! $(which exa) ]; then
   echo "  Installing exa for you."
   brew install exa > /tmp/exa-install.log

@@ -5,8 +5,6 @@ autoload zsh/terminfo
 # https://github.com/holman/dotfiles/blob/master/zsh/prompt.zsh
 
 scm_prompt(){
-  # vcprompt -f '(%n:%b%m%u) '
-
   # https://joshdick.net/2017/06/08/my_git_prompt_for_zsh_revisited.html
   # https://jonasjacek.github.io/colors/
   # Exit if not inside a Git repository
