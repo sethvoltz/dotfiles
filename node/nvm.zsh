@@ -19,24 +19,7 @@ load-nvmrc() {
 add-zsh-hook chpwd load-nvmrc
 # load-nvmrc
 
-# Defer initialization of nvm until nvm, node or a node-dependent command is
-# run. Ensure this block is only run once if .bashrc gets sourced multiple times
-# by checking whether __init_nvm is a function.
-if [ -s "$HOME/.nvm/nvm.sh" ] && [ ! "$(whence -w __init_nvm)" = function ]; then
-  # export NVM_DIR="$HOME/.nvm"
-  export NVM_DIR=$(realpath "$HOME/.nvm")
-  [ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"
-
-  declare -a __node_commands=('nvm' 'node' 'npm' 'yarn' 'gulp' 'grunt' 'webpack' 'topgun')
-
-  function __init_nvm() {
-    for i in "${__node_commands[@]}"; do unalias $i; done
-    . "$NVM_DIR"/nvm.sh
-    unset __node_commands
-    unset -f __init_nvm
-    add-zsh-hook chpwd load-nvmrc
-    load-nvmrc
-  }
-
-  for i in "${__node_commands[@]}"; do alias $i='__init_nvm && '$i; done
-fi
+export NVM_DIR="$HOME/.nvm"
+nvm_prefix=$(brew --prefix nvm)
+[ -s "${nvm_prefix}/nvm.sh" ] && . "${nvm_prefix}/nvm.sh" 
+[ -s "${nvm_prefix}/etc/bash_completion" ] && . "${nvm_prefix}/etc/bash_completion"
