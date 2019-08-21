@@ -64,12 +64,12 @@ end
 
 function drawScreenBattery(screen)
   local screeng = screen:fullFrame()
+  local strokeWidth = 1 * screen:currentMode().scale
   local width = 10
   local height = 42
-  local fillHeight = height * hs.battery.percentage() / 100.0
+  local fillHeight = math.max((height - (2 * strokeWidth)) * hs.battery.percentage() / 100.0, 1)
   local xOffset = 10
   local yOffset = 9
-  local strokeWidth = 1 * screen:currentMode().scale
 
   indicatorOutline = hs.drawing.rectangle(hs.geometry.rect(
     screeng.x + screeng.w - width - xOffset,
@@ -87,9 +87,9 @@ function drawScreenBattery(screen)
 
   indicatorFill = hs.drawing.rectangle(hs.geometry.rect(
     screeng.x + screeng.w - width - xOffset + strokeWidth,
-    screeng.y + yOffset + strokeWidth + (height - fillHeight),
+    screeng.y + yOffset + height - fillHeight - strokeWidth,
     width - (2 * strokeWidth),
-    fillHeight - (2 * strokeWidth)
+    fillHeight
   ))
 
   indicatorFill
