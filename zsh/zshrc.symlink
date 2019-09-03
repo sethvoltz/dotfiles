@@ -77,10 +77,3 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 [ -d /usr/local/opt/curl-openssl/bin ] && export PATH="/usr/local/opt/curl-openssl/bin:$PATH"
-
-# tabtab source for serverless package
-# uninstall by removing these lines or running `tabtab uninstall serverless`
-[[ -f /Users/seth/.config/yarn/global/node_modules/tabtab/.completions/serverless.zsh ]] && . /Users/seth/.config/yarn/global/node_modules/tabtab/.completions/serverless.zsh
-# tabtab source for sls package
-# uninstall by removing these lines or running `tabtab uninstall sls`
-[[ -f /Users/seth/.config/yarn/global/node_modules/tabtab/.completions/sls.zsh ]] && . /Users/seth/.config/yarn/global/node_modules/tabtab/.completions/sls.zsh
