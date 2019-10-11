@@ -90,19 +90,18 @@ function updateVirtualScreenIndicator(screen, window)
     width = screeng.w
   end
 
-  indicator = hs.drawing.rectangle(hs.geometry.rect(
-    left,
-    screeng.y,
-    width,
-    height
-  ))
-
-  indicator:setFillColor(indicatorColor)
-    :setFill(true)
-    :setLevel(hs.drawing.windowLevels.overlay)
-    :setStroke(false)
-    :setBehavior(hs.drawing.windowBehaviors.canJoinAllSpaces)
-    :show()
+  indicator = hs.canvas.new{
+    x = left,
+    y = screeng.y,
+    w = width,
+    h = height
+  }:appendElements(
+    {
+      action = "fill",
+      type = "rectangle",
+      fillColor = indicatorColor
+    }
+  ):show()
 
   currentIndicator = indicator
 end

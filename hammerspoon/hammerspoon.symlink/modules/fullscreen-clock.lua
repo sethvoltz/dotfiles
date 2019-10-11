@@ -47,18 +47,19 @@ function drawScreenClock(screen)
   local xOffset = hasBattery() and 25 or 5
   local yOffset = -6
 
-  indicator = hs.drawing.text(hs.geometry.rect(
-    screeng.x + screeng.w - width - xOffset,
-    screeng.y + yOffset,
-    width,
-    height
-  ), clock)
-
-  indicator
-    :setLevel(hs.drawing.windowLevels.overlay)
-    :setBehavior(hs.drawing.windowBehaviors.canJoinAllSpaces)
-    :show()
-
+  indicator = hs.canvas.new{
+    x = screeng.x + screeng.w - width - xOffset,
+    y = screeng.y + yOffset,
+    w = width,
+    h = height,
+  }:appendElements(
+    {
+      action = "build",
+      type = "text",
+      text = clock
+    }
+  ):show()
+  
   table.insert(indicators, indicator)
 end
 
@@ -71,54 +72,48 @@ function drawScreenBattery(screen)
   local xOffset = 10
   local yOffset = 9
 
-  indicatorOutline = hs.drawing.rectangle(hs.geometry.rect(
-    screeng.x + screeng.w - width - xOffset,
-    screeng.y + yOffset,
-    width,
-    height
-  ))
-
-  indicatorOutline
-    :setLevel(hs.drawing.windowLevels.overlay)
-    :setBehavior(hs.drawing.windowBehaviors.canJoinAllSpaces)
-    :setStrokeWidth(strokeWidth)
-    :setFill(false)
-    :show()
-
-  indicatorFill = hs.drawing.rectangle(hs.geometry.rect(
-    screeng.x + screeng.w - width - xOffset + strokeWidth,
-    screeng.y + yOffset + height - fillHeight - strokeWidth,
-    width - (2 * strokeWidth),
-    fillHeight
-  ))
-
-  indicatorFill
-    :setLevel(hs.drawing.windowLevels.overlay)
-    :setBehavior(hs.drawing.windowBehaviors.canJoinAllSpaces)
-    :setStroke(false)
-    :show()
-
+  local currentColor = indicatorColor
+  
   if hs.battery.isCharging() then
-    indicatorOutline:setStrokeColor(chargingColor)
-    indicatorFill:setFillColor(chargingColor)
+    currentColor = chargingColor
   elseif hs.battery.isFinishingCharge() == true then
-    indicatorOutline:setStrokeColor(chargedColor)
-    indicatorFill:setFillColor(chargedColor)
+    currentColor = chargedColor
   elseif hs.battery.percentage() <= 10 then
-    indicatorOutline:setStrokeColor(dangerColor)
-    indicatorFill:setFillColor(dangerColor)
-  else
-    indicatorOutline:setStrokeColor(indicatorColor)
-    indicatorFill:setFillColor(indicatorColor)
+    currentColor = dangerColor
   end
 
-  table.insert(indicators, indicatorOutline)
-  table.insert(indicators, indicatorFill)
+  indicator = hs.canvas.new{
+    x = screeng.x + screeng.w - width - xOffset,
+    y = screeng.y + yOffset,
+    w = width,
+    h = height
+  }:appendElements(
+    {
+      action = "stroke",
+      type = "rectangle",
+      padding = 0,
+      strokeColor = currentColor,
+      strokeWidth = strokeWidth,
+    }, {
+      action = "fill",
+      type = "rectangle",
+      frame = {
+        x = strokeWidth,
+        y = height - fillHeight - strokeWidth,
+        w = width - (2 * strokeWidth),
+        h = fillHeight
+      },
+      fillColor = currentColor
+    }
+  ):show()
+
+  table.insert(indicators, indicator)
 end
 
 function clearIndicators()
-   for _, indicator in pairs(indicators) do
+   for key, indicator in pairs(indicators) do
       indicator:delete()
+      indicators[key] = nil
    end
 end
 
