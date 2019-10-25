@@ -58,7 +58,12 @@ function drawScreenClock(screen)
       type = "text",
       text = clock
     }
-  ):show()
+  )
+  
+  indicator
+    :level(hs.canvas.windowLevels.cursor)
+    :behavior(hs.canvas.windowBehaviors.canJoinAllSpaces)
+    :show()
   
   table.insert(indicators, indicator)
 end
@@ -105,7 +110,12 @@ function drawScreenBattery(screen)
       },
       fillColor = currentColor
     }
-  ):show()
+  )
+  
+  indicator
+    :level(hs.canvas.windowLevels.cursor)
+    :behavior(hs.canvas.windowBehaviors.canJoinAllSpaces)
+    :show()
 
   table.insert(indicators, indicator)
 end

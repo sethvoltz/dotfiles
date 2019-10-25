@@ -101,7 +101,12 @@ function updateVirtualScreenIndicator(screen, window)
       type = "rectangle",
       fillColor = indicatorColor
     }
-  ):show()
+  )
+
+  indicator
+    :level(hs.canvas.windowLevels.cursor)
+    :behavior(hs.canvas.windowBehaviors.canJoinAllSpaces)
+    :show()
 
   currentIndicator = indicator
 end
