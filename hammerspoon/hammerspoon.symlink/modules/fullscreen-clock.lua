@@ -1,5 +1,6 @@
 local indicators = {}
-local indicatorColor = hs.drawing.color.asRGB({ red = 0.4, green = 0.4, blue = 0.4, alpha = 0.4 })
+local indicatorColor = hs.drawing.color.asRGB({ red = 0.5, green = 0.5, blue = 0.5, alpha = 0.4 })
+local dateColor = hs.drawing.color.asRGB({ red = 0.6, green = 0.6, blue = 0.6, alpha = 0.4 })
 local chargingColor = hs.drawing.color.asRGB({ red = 0.7, green = 0.3, blue = 0.0, alpha = 0.4 })
 local chargedColor = hs.drawing.color.asRGB({ red = 0.0, green = 0.6, blue = 0.1, alpha = 0.4 })
 local dangerColor = hs.drawing.color.asRGB({ red = 0.9, green = 0.1, blue = 0.1, alpha = 0.4 })
@@ -13,6 +14,28 @@ local clockStyle = {
       alignment = "right",
   },
   color = indicatorColor,
+}
+
+local monthStyle = {
+  font = {
+      name = "Futura Condensed Medium",
+      size = 21
+  },
+  paragraphStyle = {
+      alignment = "center",
+  },
+  color = dateColor,
+}
+
+local dayStyle = {
+  font = {
+      name = "Futura Condensed ExtraBold",
+      size = 27
+  },
+  paragraphStyle = {
+      alignment = "center",
+  },
+  color = dateColor,
 }
 
 -- -------------------------------------------------------= Change Handlers =--=
@@ -42,7 +65,9 @@ end
 function drawScreenClock(screen)
   local screeng = screen:fullFrame()
   local clock = hs.styledtext.new(os.date("%H:%M"), clockStyle)
-  local width = 180
+  local month = hs.styledtext.new(os.date("%b"), monthStyle):upper()
+  local day = hs.styledtext.new(os.date("%d"), dayStyle)
+  local width = 200
   local height = 60
   local xOffset = hasBattery() and 25 or 5
   local yOffset = -6
@@ -57,6 +82,28 @@ function drawScreenClock(screen)
       action = "build",
       type = "text",
       text = clock
+    },
+    {
+      action = "build",
+      type = "text",
+      text = month,
+      frame = {
+        x = width - 154 - xOffset,
+        y = 10,
+        w = 40,
+        h = height
+      }
+    },
+    {
+      action = "build",
+      type = "text",
+      text = day,
+      frame = {
+        x = width - 155 - xOffset,
+        y = 29,
+        w = 40,
+        h = height
+      }
     }
   )
   
