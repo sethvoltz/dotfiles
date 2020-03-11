@@ -1,4 +1,3 @@
 #!/usr/bin/env bash
 
-scp $(realpath ~/.tmux.conf) $1:~/.tmux.conf
-scp $(realpath ~/.tmux.conf.local) $1:~/.tmux.conf.local
+scp ~/.tmux.conf ~/.tmux.conf.local $1:~
