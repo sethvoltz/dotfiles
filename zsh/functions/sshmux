@@ -1,1 +1,1 @@
-ssh -t $@ "tmux -CC attach || tmux -CC new";
+ssh -t $@ "tmux -CC attach";

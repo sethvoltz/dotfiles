@@ -90,10 +90,6 @@ bind m run "cut -c3- ~/.tmux.conf | sh -s _toggle_mouse"
 bind U run "cut -c3- ~/.tmux.conf | sh -s _urlview #{pane_id}"
 
 
-# copy to Mac OSX pasteboard
-# if -b 'command -v reattach-to-user-namespace > /dev/null 2>&1' 'bind y run "tmux save-buffer - | reattach-to-user-namespace pbcopy"'
-
-
 # -- user defined overrides ----------------------------------------------------
 
 if '[ -f ~/.tmux.conf.local ]' 'source ~/.tmux.conf.local'
