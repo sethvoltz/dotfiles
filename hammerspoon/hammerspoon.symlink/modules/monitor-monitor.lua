@@ -1,7 +1,7 @@
-local serial = require("hs._asm.serial")
+-- local serial = require("hs._asm.serial")
 
 local lastScreenId = -1
-local usePhysicalIndicator = false
+-- local usePhysicalIndicator = false
 local useVirtualIndicator = true
 
 local currentIndicator = nil
@@ -26,7 +26,7 @@ function handleMonitorMonitorChange()
   if screenId == lastScreenId then return end
   lastScreenId = screenId
 
-  if usePhysicalIndicator then updatePhysicalScreenIndicator(screenId) end
+  -- if usePhysicalIndicator then updatePhysicalScreenIndicator(screenId) end
   print('Display changed to ' .. screenId)
 end
 
@@ -121,29 +121,28 @@ end
 
 -- -----------------------------------------------------------------------= Physical Indicators =--=
 
-function updatePhysicalScreenIndicator(screenId)
-  local devicePath = getSerialOutputDevice()
-  if devicePath == "" then return end
+-- function updatePhysicalScreenIndicator(screenId)
+--   local devicePath = getSerialOutputDevice()
+--   if devicePath == "" then return end
 
-  port = serial.port(devicePath):baud(115200):open()
-  if port:isOpen() then
-    port:write("set " .. screenId .. "\n")
-    port:flushBuffer()
-    port:close()
-  end
-end
+--   port = serial.port(devicePath):baud(115200):open()
+--   if port:isOpen() then
+--     port:write("set " .. screenId .. "\n")
+--     port:flushBuffer()
+--     port:close()
+--   end
+-- end
 
-function getSerialOutputDevice()
-  local command = "ioreg -c IOSerialBSDClient -r -t " ..
-    "| awk 'f;/com_silabs_driver_CP210xVCPDriver/{f=1};/IOCalloutDevice/{exit}' " ..
-    "| sed -n 's/.*\"\\(\\/dev\\/.*\\)\".*/\\1/p'"
-  local handle = io.popen(command)
-  local result = handle:read("*a")
-  handle:close()
-  -- Strip whitespace - https://www.rosettacode.org/wiki/Strip_whitespace_from_a_string/Top_and_tail#Lua
-  return result:match("^%s*(.-)%s*$")
-end
-
+-- function getSerialOutputDevice()
+--   local command = "ioreg -c IOSerialBSDClient -r -t " ..
+--     "| awk 'f;/com_silabs_driver_CP210xVCPDriver/{f=1};/IOCalloutDevice/{exit}' " ..
+--     "| sed -n 's/.*\"\\(\\/dev\\/.*\\)\".*/\\1/p'"
+--   local handle = io.popen(command)
+--   local result = handle:read("*a")
+--   handle:close()
+--   -- Strip whitespace - https://www.rosettacode.org/wiki/Strip_whitespace_from_a_string/Top_and_tail#Lua
+--   return result:match("^%s*(.-)%s*$")
+-- end
 
 -- ---------------------------------------------------------------------------= Watcher Helpers =--=
 
@@ -158,7 +157,7 @@ function watchApp(app, initializing)
   if _monitorAppWatchers[app:pid()] then return end
 
   local watcher = app:newWatcher(handleAppEvent)
-  if not watcher._element.pid then return end
+  if not watcher.pid then return end
 
   _monitorAppWatchers[app:pid()] = {
     watcher = watcher,
