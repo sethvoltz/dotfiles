@@ -50,8 +50,6 @@ Plug 'vim-ruby/vim-ruby'
 Plug 'tpope/vim-rails'
 Plug 'timcharper/textile.vim'
 Plug 'pangloss/vim-javascript'
-Plug 'ajf/puppet-vim'
-" Plug 'bdd/vim-scala'
 Plug 'tpope/vim-markdown'
 
 " Themes

@@ -96,3 +96,6 @@
 
 [log]
 	date = relative
+
+[pull]
+	rebase = false
