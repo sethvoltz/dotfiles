@@ -14,25 +14,17 @@ if [ ! $(which brew) ]; then
   source $(dirname -- "$0")/../homebrew/install.sh
 fi
 
-# Ensure all taps required
-if [ ! $(brew tap | grep 'homebrew/dupes') ]; then
-  brew tap homebrew/dupes
-fi
-
 # CLI applications to install
-cli_apps=(coreutils spark ack htop iftop mtr nmap p0f trafshow ngrep wget tree ctags graphviz jq grv rg z)
-cli_exec=(gsort     spark ack htop iftop mtr nmap p0f trafshow ngrep wget tree ctags dot      jq grv rg z)
+cli_apps=(coreutils gnu-sed ack htop iftop mtr nmap p0f trafshow ngrep wget tree ctags graphviz jq grv rg z)
+cli_exec=(gsort     gsed    ack htop iftop mtr nmap p0f trafshow ngrep wget tree ctags dot      jq grv rg z)
 
 for (( i = 0; i < ${#cli_apps[*]}; i++ )) do
-  if [ ! $(which ${cli_exec[i]}) ]; then
+  if [ $(which ${cli_exec[i]} > /dev/null 2>&1) ]; then
     app=${cli_apps[i]}
     echo "  Installing $app for you."
     brew install $app > /tmp/$app-install.log
   fi
 done
-
-# GNU `sed`, overwriting the built-in `sed`
-brew install gnu-sed --with-default-names > /tmp/sed-install.log
 
 # Update permissions if needed
 iftop_path=$(which iftop)
@@ -45,36 +37,37 @@ if [ $iftop_path ] && [ ! $(find -L $iftop_path -user root -perm -4000) ]; then
 fi
 
 # Cask applications to install
-brew tap caskroom/fonts
+brew tap homebrew/cask-fonts
 brew tap buo/cask-upgrade
 brew tap dteoh/sqa
 cask_apps=(
-  1password6
+  1password
   adobe-creative-cloud
   alfred
   bartender
   bettertouchtool
   dropbox
   font-hack
-  google-chrome
-  highsierramediakeyenabler
   imageoptim
   istat-menus
   iterm2
   karabiner-elements
   qmk-toolbox
-  skitch
   slowquitapps
   ubersicht
   visual-studio-code
 )
+  # google-chrome
+  # highsierramediakeyenabler
 
-for app in $cask_apps; do
-  if [ $(brew cask ls --versions $app > /dev/null 2>&1) ]; then
+for app in ${cask_apps[@]}; do
+  brew list --cask --versions $app > /dev/null 2>&1
+  if (( $? )); then
     echo "  Installing $app for you."
-    brew cask install $app > /tmp/$app-cask-install.log
+    brew install --cask $app > /tmp/$app-cask-install.log
   fi
 done
 
 # Clean up your room!
+echo "  Cleaning up Homebrew..."
 brew cleanup

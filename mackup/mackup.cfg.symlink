@@ -3,16 +3,9 @@ engine = icloud
 directory = Settings/Mackup
 
 [applications_to_sync]
-atom
-terminal
 bartender
 colorsync
 dash
 flux
 htop
-istat-menus-5
-iterm2
-sketch
-sourcetree
-vscode
-
+terminal

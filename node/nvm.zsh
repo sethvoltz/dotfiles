@@ -19,7 +19,6 @@ load-nvmrc() {
 add-zsh-hook chpwd load-nvmrc
 # load-nvmrc
 
-export NVM_DIR="$HOME/.nvm"
-nvm_prefix=$(brew --prefix nvm)
-[ -s "${nvm_prefix}/nvm.sh" ] && . "${nvm_prefix}/nvm.sh" 
-[ -s "${nvm_prefix}/etc/bash_completion" ] && . "${nvm_prefix}/etc/bash_completion"
+# Recommended install method for NVM, not using Homebrew
+export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
