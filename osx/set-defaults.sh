@@ -7,17 +7,27 @@
 #
 # Run ./set-defaults.sh and you'll be good to go.
 
+# Close any open System Preferences panes, to prevent them from overriding
+# settings we’re about to change
+osascript -e 'tell application "System Preferences" to quit'
+
+# Disable screensaver even if your managed machine doesn't want you to - display sleep still locks
 sudo dscl . -mcxset /Computers/localhost com.apple.screensaver idleTime always -int 0
 defaults -currentHost write com.apple.screensaver idleTime 0 # disable screensaver
-sudo pmset -a sleep 0 # disable system sleep
-sudo pmset -b displaysleep 3
-sudo pmset -c displaysleep 8
+
+# Some power management settings to keep around in case things go wonky
+#sudo pmset -a sleep 0 # disable system sleep
+#sudo pmset -b displaysleep 3
+#sudo pmset -c displaysleep 8
+
+# Disable spotlight folder keyboard shortcut
+/usr/libexec/PlistBuddy -c "Set :AppleSymbolicHotKeys:65:enabled 0" ~/Library/Preferences/com.apple.symbolichotkeys.plist
+
+# Change shortcut for Emoji & Symbols
+defaults write -globalDomain NSUserKeyEquivalents -dict-add "Emoji \\U0026 Symbols" "@~\\U0020"
 
 # Disable the Dashboard completely
 defaults write com.apple.dashboard mcx-disabled -boolean YES
-
-# Disable press-and-hold for keys in favor of key repeat
-defaults write -g ApplePressAndHoldEnabled -bool false
 
 # Set a really fast key repeat.
 defaults write NSGlobalDomain KeyRepeat -int 0
@@ -34,14 +44,14 @@ defaults write com.apple.Finder FXPreferredViewStyle Nlsv
 # Show the ~/Library folder
 chflags nohidden ~/Library
 
+# Increase sound quality for Bluetooth headphones/headsets
+defaults write com.apple.BluetoothAudioAgent "Apple Bitpool Min (editable)" -int 40
+
 # Expand save panel by default
 defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
 
 # Expand print panel by default
 defaults write NSGlobalDomain PMPrintingExpandedStateForPrint -bool true
-
-# Increase window resize speed for Cocoa applications
-defaults write NSGlobalDomain NSWindowResizeTime -float 0.001
 
 # Enable full keyboard access for all controls (e.g. enable Tab in modal dialogs)
 defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
@@ -57,15 +67,6 @@ defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
 # Require password 5 seconds after sleep or screen saver begins
 defaults write com.apple.screensaver askForPassword -int 1
 defaults write com.apple.screensaver askForPasswordDelay -int 5
-
-# Save screenshots to the desktop
-defaults write com.apple.screencapture location -string "$HOME/Desktop"
-
-# Save screenshots in PNG format (other options: BMP, GIF, JPG, PDF, TIFF)
-defaults write com.apple.screencapture type -string "png"
-
-# Allow quitting Finder via ⌘ + Q; doing so will also hide desktop icons
-defaults write com.apple.finder QuitMenuItem -bool true
 
 # Automatically quit printer app once the print jobs complete
 defaults write com.apple.print.PrintingPrefs "Quit When Finished" -bool true
@@ -119,26 +120,11 @@ defaults write NSGlobalDomain WebKitDeveloperExtras -bool true
 # Make Safari’s search banners default to Contains instead of Starts With
 defaults write com.apple.Safari FindOnPageMatchesWordStartsOnly -bool false
 
-# Remove useless icons from Safari’s bookmarks bar
-# defaults write com.apple.Safari ProxiesInBookmarksBar "()"
-
 # Add a context menu item for showing the Web Inspector in web views
 defaults write NSGlobalDomain WebKitDeveloperExtras -bool true
 
 # Enable the debug menu in Address Book
 defaults write com.apple.addressbook ABShowDebugMenu -bool true
-
-# Enable the debug menu in iCal
-defaults write com.apple.iCal IncludeDebugMenu -bool true
-
-# Only use UTF-8 in Terminal.app
-defaults write com.apple.terminal StringEncodings -array 4
-
-# Make ⌘ + F focus the search input in iTunes
-defaults write com.apple.iTunes NSUserKeyEquivalents -dict-add "Target Search Field" "@F"
-
-# Reset Launchpad
-# [ -e ~/Library/Application\ Support/Dock/*.db ] && rm ~/Library/Application\ Support/Dock/*.db
 
 # Hot corners
 # Possible values:
@@ -161,9 +147,11 @@ defaults write com.apple.dock wvous-tr-modifier -int 0
 defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool true
 defaults write com.apple.finder ShowRemovableMediaOnDesktop -bool true
 
-# Prevent Time Machine from prompting to use new hard drives as backup volume
-defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
+# Use scroll gesture with modifier keys to zoom
+defaults write com.apple.universalaccess closeViewScrollWheelToggle -int 1
+defaults write com.apple.AppleMultitouchTrackpad HIDScrollZoomModifierMask -int 262144
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad HIDScrollZoomModifierMask -int 262144
 
 # Kill affected applications
-for app in Finder Dock Mail Safari iTunes iCal Address\ Book SystemUIServer; do killall "$app" > /dev/null 2>&1; done
+for app in Finder Dock Mail Safari Address\ Book SystemUIServer; do killall "$app" > /dev/null 2>&1; done
 echo "OSX Preferences Done. Note that some of these changes require a logout/restart to take effect."
