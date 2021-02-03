@@ -21,6 +21,7 @@ local monthStyle = {
       name = "Futura Condensed Medium",
       size = 21
   },
+  kerning = 3.0,
   paragraphStyle = {
       alignment = "center",
   },
@@ -88,7 +89,7 @@ function drawScreenClock(screen)
       type = "text",
       text = month,
       frame = {
-        x = width - 154 - xOffset,
+        x = width - 161 - xOffset,
         y = 10,
         w = 40,
         h = height
@@ -99,7 +100,7 @@ function drawScreenClock(screen)
       type = "text",
       text = day,
       frame = {
-        x = width - 155 - xOffset,
+        x = width - 162 - xOffset,
         y = 29,
         w = 40,
         h = height
