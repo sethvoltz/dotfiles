@@ -1,5 +1,5 @@
 # export CC=/usr/local/bin/gcc-4.2 # Only needed for old non-LLVM supporting installs?
 
 # Huzzah special ZSH mappings http://stackoverflow.com/a/18077919/772207
-# Give access to Homebrew packages like rbenv
+# Give access to Homebrew packages
 path=('/usr/local/bin' $path)

@@ -75,8 +75,8 @@ eval `/usr/libexec/path_helper -s`
 for config_file ($ZSH/**/*.path~*/backups/*) source $config_file
 
 # Ruby Development Environment.
-export RBENV_ROOT=/usr/local/opt/rbenv
-if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+# export RBENV_ROOT=/usr/local/opt/rbenv
+# if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
