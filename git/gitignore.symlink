@@ -12,7 +12,7 @@
 Desktop.ini
 
 # Thumbnail cache files
-Icon
+#Icon
 ._*
 Thumbs.db
 
