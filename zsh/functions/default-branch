@@ -1,0 +1,1 @@
+git remote show origin | awk '/HEAD/ {print $3}'
