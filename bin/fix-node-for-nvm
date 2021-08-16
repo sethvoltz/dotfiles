@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-sudo rm -rf  /usr/local/lib/node_modules
-rm /usr/local/bin/npm
-brew uninstall --force node
-brew prune

@@ -5,6 +5,6 @@ COUNT=${COUNT:-4}
 
 cat /dev/urandom \
   | base64 \
-  | tr -dc 'a-km-zA-KM-Z02-9-_!@#$%^&*+|' \
+  | tr -dc 'a-km-zA-HJ-Z02-9-_!@#$%^&*+|' \
   | fold -w $CHARS \
   | head -n $COUNT
