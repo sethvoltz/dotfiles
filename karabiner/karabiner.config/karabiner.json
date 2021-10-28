@@ -16,7 +16,7 @@
                 },
                 "rules": [
                     {
-                        "description": "CapsLock to Hyper/Escape",
+                        "description": "CAPS_LOCK : (HYPER) SHIFT+COMMAND+OPTION+CONTROL or ESCAPE (If Alone)",
                         "manipulators": [
                             {
                                 "from": {
@@ -29,11 +29,11 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "right_shift",
+                                        "key_code": "left_shift",
                                         "modifiers": [
-                                            "right_command",
-                                            "right_control",
-                                            "right_option"
+                                            "left_command",
+                                            "left_control",
+                                            "left_option"
                                         ]
                                     }
                                 ],
@@ -42,6 +42,54 @@
                                         "key_code": "escape"
                                     }
                                 ],
+                                "type": "basic"
+                            },
+                            {
+                                "description": "Avoid starting sysdiagnose with the built-in macOS shortcut cmd+shift+option+ctrl+,",
+                                "from": {
+                                    "key_code": "comma",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "command",
+                                            "shift",
+                                            "option",
+                                            "control"
+                                        ]
+                                    }
+                                },
+                                "to": [],
+                                "type": "basic"
+                            },
+                            {
+                                "description": "Avoid starting sysdiagnose with the built-in macOS shortcut cmd+shift+option+ctrl+.",
+                                "from": {
+                                    "key_code": "period",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "command",
+                                            "shift",
+                                            "option",
+                                            "control"
+                                        ]
+                                    }
+                                },
+                                "to": [],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "description": "Avoid starting sysdiagnose with the built-in macOS shortcut cmd+shift+option+ctrl+/",
+                                    "key_code": "slash",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "command",
+                                            "shift",
+                                            "option",
+                                            "control"
+                                        ]
+                                    }
+                                },
+                                "to": [],
                                 "type": "basic"
                             }
                         ]
