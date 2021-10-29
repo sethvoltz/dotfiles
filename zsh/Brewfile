@@ -1,2 +1,3 @@
 brew "zsh"
+brew "z"
 brew "exa"

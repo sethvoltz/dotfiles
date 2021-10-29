@@ -10,24 +10,20 @@ export PROJECTS=~/Development
 # Before we do any fancy globbing, be sure extendedglob is enabled
 setopt extendedglob
 
+HOMEBREW_PREFIX=$(brew --prefix)
+
 # `brew install zsh-syntax-highlighting`
 # https://github.com/zsh-users/zsh-syntax-highlighting
-if [ -f /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
-    source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-fi
-if [ -f /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
-    source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+if [ -f ${HOMEBREW_PREFIX}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
+    source ${HOMEBREW_PREFIX}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
 ZSH_HIGHLIGHT_STYLES[globbing]='fg=cyan'
 
 # `brew install zsh-autosuggestions`
 # https://github.com/zsh-users/zsh-autosuggestions
-if [ -f /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
-    source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-fi
-if [ -f /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
-    source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+if [ -f ${HOMEBREW_PREFIX}/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
+    source ${HOMEBREW_PREFIX}/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 fi
 
 # source every .zsh file in this rep
@@ -56,21 +52,17 @@ else
 	compinit -C;
 fi;
 
-# Automatically escape URL characters while typing (does not fix history or paste)
-# autoload -U url-quote-magic
-# zle -N self-insert url-quote-magic
-
 # load every completion after autocomplete loads
 for config_file ($ZSH/**/completion.sh~*/backups/*) source $config_file
 
 # Python Development Environment. - Must run last after all paths are setup.
-if [ -f /usr/local/share/python/virtualenvwrapper.sh ]; then
-    source /usr/local/share/python/virtualenvwrapper.sh
+if [ -f ${HOMEBREW_PREFIX}/share/python/virtualenvwrapper.sh ]; then
+    source ${HOMEBREW_PREFIX}/share/python/virtualenvwrapper.sh
 fi
 
 # Z hopping around folders
-if [ -f /usr/local/etc/profile.d/z.sh ]; then
-    source /usr/local/etc/profile.d/z.sh
+if [ -f ${HOMEBREW_PREFIX}/etc/profile.d/z.sh ]; then
+    source ${HOMEBREW_PREFIX}/etc/profile.d/z.sh
 fi
 
 export TIMEFMT="%U user %S system %P cpu %*E total, running %J"
@@ -78,21 +70,16 @@ REPORTTIME=5
 
 eval `/usr/libexec/path_helper -s`
 
-### Added by the Heroku Toolbelt
-# export PATH="/usr/local/heroku/bin:$PATH"
-
 # source every .path file in this rep -- path updates should come last
 for config_file ($ZSH/**/*.path~*/backups/*) source $config_file
 
-# Ruby Development Environment.
-# export RBENV_ROOT=/usr/local/opt/rbenv
-# if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
-
+# Add iTerm shell integration
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
 # Finally, set up stderr redirection through colorize to make it red
 #exec 2>>(colorize `tput bold; tput setaf 1` `tput sgr0` > /dev/tty &)
 
+# Fuzzy Finder `brew install fzf`
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 [ -d /usr/local/opt/curl-openssl/bin ] && export PATH="/usr/local/opt/curl-openssl/bin:$PATH"
