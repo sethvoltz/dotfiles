@@ -18,10 +18,13 @@ fi
 echo " Checking topic apps"
 # find the Brewfiles and run them iteratively
 find . -name Brewfile -depth 2 -not -path "./system/*" | while read brewfile ; do
+  echo "  $brewfile"
   brew bundle install --file "$brewfile"
 done
 
 # find the installers and run them iteratively
+echo " Running topic installers"
 find . -name install.sh -depth 2 -not -path "./system/*" | while read installer ; do
+  echo "  $installer"
   sh -c "${installer}"
 done
