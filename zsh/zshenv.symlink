@@ -2,4 +2,4 @@
 
 # Huzzah special ZSH mappings http://stackoverflow.com/a/18077919/772207
 # Give access to Homebrew packages
-path=('/usr/local/bin' $path)
+path=('/opt/homebrew/bin' '/usr/local/bin' $path)

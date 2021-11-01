@@ -1,4 +1,6 @@
-unalias run-help
+case $(type run-help) in
+  (*alias*) unalias run-help;;
+esac
 autoload run-help
 HELPDIR=/usr/local/share/zsh/help
 
