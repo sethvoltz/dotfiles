@@ -181,7 +181,13 @@ end
 
 -- --------------------------------------------------------------= Watchers =--=
 
-_clockSpaceWatcher = hs.spaces.watcher.new(updateClocks):start()
-_clockAppWatcher   = hs.application.watcher.new(updateClocks):start()
-_clockTimer        = hs.timer.new(hs.timer.seconds(15), updateClocks):start()
-updateClocks()
+-- No need to show this on Notched Macs (need a better way)
+local handle = io.popen("sysctl -n machdep.cpu.brand_string")
+local result = handle:read("*a")
+handle:close()
+if result:match("M1 Max") == nil and result:match("M1 Pro") == nil then
+  _clockSpaceWatcher = hs.spaces.watcher.new(updateClocks):start()
+  _clockAppWatcher   = hs.application.watcher.new(updateClocks):start()
+  _clockTimer        = hs.timer.new(hs.timer.seconds(15), updateClocks):start()
+  updateClocks()
+end

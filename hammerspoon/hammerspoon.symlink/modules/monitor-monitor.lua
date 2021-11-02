@@ -1,3 +1,8 @@
+local window,screen=require'hs.window',require'hs.screen'
+local application,spaces=require'hs.application',require'hs.spaces'
+local drawing,canvas=require'hs.drawing',require'hs.canvas'
+local uielement=require'hs.uielement'
+local fnutils=require'hs.fnutils'
 -- local serial = require("hs._asm.serial")
 
 local lastScreenId = -1
@@ -6,7 +11,7 @@ local useVirtualIndicator = true
 
 local currentIndicator = nil
 local indicatorHeight = 3 -- 0..1 = percent of menubar, >1 = pixel height
-local indicatorColor = hs.drawing.color.asRGB({
+local indicatorColor = drawing.color.asRGB({
   red = 0,
   green = 1.0,
   blue = 0,
@@ -16,24 +21,24 @@ local indicatorColor = hs.drawing.color.asRGB({
 -- ----------------------------------------------------------------------------= Event Handlers =--=
 
 function handleMonitorMonitorChange()
-  local focusedWindow = hs.window.focusedWindow()
+  local focusedWindow = window.focusedWindow()
   if not focusedWindow then return end
-
+  
   local screen = focusedWindow:screen()
   local screenId = screen:id()
   if useVirtualIndicator then updateVirtualScreenIndicator(screen, focusedWindow) end
-
+  
   if screenId == lastScreenId then return end
   lastScreenId = screenId
-
+  
   -- if usePhysicalIndicator then updatePhysicalScreenIndicator(screenId) end
   print('Display changed to ' .. screenId)
 end
 
 function handleGlobalAppEvent(name, event, app)
-  if event == hs.application.watcher.launched then
+  if event == application.watcher.launched then
     watchApp(app)
-  elseif event == hs.application.watcher.terminated then
+  elseif event == application.watcher.terminated then
     -- Clean up
     local appWatcher = _monitorAppWatchers[app:pid()]
     if appWatcher then
@@ -43,15 +48,15 @@ function handleGlobalAppEvent(name, event, app)
       end
       _monitorAppWatchers[app:pid()] = nil
     end
-  elseif event == hs.application.watcher.activated then
+  elseif event == application.watcher.activated then
     handleMonitorMonitorChange()
   end
 end
 
 function handleAppEvent(element, event, watcher, info)
-  if event == hs.uielement.watcher.windowCreated then
+  if event == uielement.watcher.windowCreated then
     watchWindow(element)
-  elseif event == hs.uielement.watcher.focusedWindowChanged then
+  elseif event == uielement.watcher.focusedWindowChanged then
     if element:isWindow() or element:isApplication() then
       handleMonitorMonitorChange()
       updateVirtualScreenIndicator(element:screen(), element)
@@ -60,7 +65,7 @@ function handleAppEvent(element, event, watcher, info)
 end
 
 function handleWindowEvent(win, event, watcher, info)
-  if event == hs.uielement.watcher.elementDestroyed then
+  if event == uielement.watcher.elementDestroyed then
     watcher:stop()
     _monitorAppWatchers[info.pid].windows[info.id] = nil
   end
@@ -90,7 +95,7 @@ function updateVirtualScreenIndicator(screen, window)
     width = screeng.w
   end
 
-  indicator = hs.canvas.new{
+  indicator = canvas.new{
     x = left,
     y = screeng.y,
     w = width,
@@ -104,8 +109,8 @@ function updateVirtualScreenIndicator(screen, window)
   )
 
   indicator
-    :level(hs.canvas.windowLevels.cursor)
-    :behavior(hs.canvas.windowBehaviors.canJoinAllSpaces)
+    :level(canvas.windowLevels.cursor)
+    :behavior(canvas.windowBehaviors.canJoinAllSpaces)
     :show()
 
   currentIndicator = indicator
@@ -148,24 +153,27 @@ end
 
 -- from https://gist.github.com/cmsj/591624ef07124ad80a1c
 function attachExistingApps()
-  local apps = hs.application.runningApplications()
-  apps = hs.fnutils.filter(apps, function(app) return app:title() ~= "Hammerspoon" end)
-  hs.fnutils.each(apps, function(app) watchApp(app, true) end)
+  local apps = application.runningApplications()
+  apps = fnutils.filter(apps, function(app) return app:title() ~= "Hammerspoon" end)
+  fnutils.each(apps, function(app) watchApp(app, true) end)
 end
 
 function watchApp(app, initializing)
   if _monitorAppWatchers[app:pid()] then return end
-
+  
   local watcher = app:newWatcher(handleAppEvent)
   if not watcher.pid then return end
-
+  
   _monitorAppWatchers[app:pid()] = {
     watcher = watcher,
     windows = {}
   }
+  
+  -- kind() returns -1 if the app is prohibited from GUI components
+  if app:kind() == -1 then return end
 
-  watcher:start({ hs.uielement.watcher.focusedWindowChanged })
-
+  watcher:start({ uielement.watcher.focusedWindowChanged })
+  
   -- Watch any windows that already exist
   for i, window in pairs(app:allWindows()) do
     watchWindow(window, initializing)
@@ -183,9 +191,9 @@ function watchWindow(win, initializing)
     appWindows[win:id()] = watcher
 
     watcher:start({
-      hs.uielement.watcher.elementDestroyed,
-      hs.uielement.watcher.windowResized,
-      hs.uielement.watcher.windowMoved
+      uielement.watcher.elementDestroyed,
+      uielement.watcher.windowResized,
+      uielement.watcher.windowMoved
     })
   end
 end
@@ -196,15 +204,15 @@ end
 _monitorAppWatchers = {}
 attachExistingApps()
 
-_monitorScreenWatcher = hs.screen.watcher.newWithActiveScreen(handleMonitorMonitorChange):start()
-_monitorSpaceWatcher  = hs.spaces.watcher.new(handleMonitorMonitorChange):start()
-_monitorAppWatcher    = hs.application.watcher.new(handleGlobalAppEvent):start()
+_monitorScreenWatcher = screen.watcher.newWithActiveScreen(handleMonitorMonitorChange):start()
+_monitorSpaceWatcher  = spaces.watcher.new(handleMonitorMonitorChange):start()
+_monitorAppWatcher    = application.watcher.new(handleGlobalAppEvent):start()
 handleMonitorMonitorChange() -- set the initial screen
 
 -- Run this from the Hammerspoon console to get a listing of display IDs
 function listAllScreens ()
-  local primaryId = hs.screen.primaryScreen():id()
-  for _, screen in pairs(hs.screen.allScreens()) do
+  local primaryId = screen.primaryScreen():id()
+  for _, screen in pairs(screen.allScreens()) do
     local screenId = screen:id()
     print(
       "id: " .. screenId ..
