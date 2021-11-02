@@ -18,3 +18,10 @@ if [ $iftop_path ] && [ ! $(find -L $iftop_path -user root -perm -4000) ]; then
   sudo chmod u+s $iftop_path
   echo
 fi
+
+# Check if Backblaze manual installer has been run
+if [ ! -d /Applications/Backblaze.app ]; then
+  echo "  Backblaze installer has not been run, please manually run it here:"
+  installer_path=$(find $(brew --prefix)/Caskroom/backblaze -name "Backblaze Installer.app" -print0 | sort | tail -n 1)
+  echo "    ${installer_path}"
+fi

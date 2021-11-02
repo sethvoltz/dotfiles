@@ -9,6 +9,7 @@ mas "Deliveries",  id: 290986013
 
 cask "1password"
 cask "alfred"
+cask "backblaze"
 cask "bartender"
 cask "bettertouchtool"
 cask "datweatherdoe"
