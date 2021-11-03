@@ -10,12 +10,19 @@ local lastScreenId = -1
 local useVirtualIndicator = true
 
 local currentIndicator = nil
-local indicatorHeight = 3 -- 0..1 = percent of menubar, >1 = pixel height
-local indicatorColor = drawing.color.asRGB({
+local indicatorTopHeight = 2
+local indicatorBottomHeight = 1
+local indicatorTopColor = drawing.color.asRGB({
+  red = 0.26,
+  green = 0.58,
+  blue = 0.91,
+  alpha = 0.4
+})
+local indicatorBottomColor = drawing.color.asRGB({
   red = 0,
-  green = 1.0,
+  green = 0,
   blue = 0,
-  alpha = 0.3
+  alpha = 0.5
 })
 
 -- ----------------------------------------------------------------------------= Event Handlers =--=
@@ -80,12 +87,6 @@ function updateVirtualScreenIndicator(screen, window)
 
   local screeng = screen:fullFrame()
 
-  if indicatorHeight >= 0.0 and indicatorHeight <= 1.0 then
-    height = indicatorHeight*(screen:frame().y - screeng.y)
-  else
-    height = indicatorHeight
-  end
-
   if window:isFullScreen() then
     frame = window:frame()
     left = frame.x
@@ -99,12 +100,29 @@ function updateVirtualScreenIndicator(screen, window)
     x = left,
     y = screeng.y,
     w = width,
-    h = height
+    h = indicatorTopHeight + indicatorBottomHeight
   }:appendElements(
     {
       action = "fill",
       type = "rectangle",
-      fillColor = indicatorColor
+      frame = {
+        x = 0,
+        y = 0,
+        w = width,
+        h = indicatorTopHeight
+      },
+      fillColor = indicatorTopColor
+    },
+    {
+      action = "fill",
+      type = "rectangle",
+      frame = {
+        x = 0,
+        y = indicatorTopHeight,
+        w = width,
+        h = indicatorBottomHeight
+      },
+      fillColor = indicatorBottomColor
     }
   )
 
