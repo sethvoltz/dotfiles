@@ -58,13 +58,7 @@ esac
 
 # $(dirname "$0")/relink
 
-# Update Vim Plug
-if command -v vim > /dev/null 2>&1; then
-  if [ -z "$DRY_RUN" ]; then
-    if [ -n "$(git diff HEAD@{1}...HEAD -- vimrc)" ]; then
-      vim +PlugInstall +PlugClean +PlugUpgrade +qa
-    fi
-  fi
-fi
+echo "» Running defaults setup"
+$(dirname "$0")/../osx/set-defaults.sh
 
 popd > /dev/null

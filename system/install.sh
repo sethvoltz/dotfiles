@@ -21,7 +21,7 @@ fi
 
 # Check if Backblaze manual installer has been run
 if [ ! -d /Applications/Backblaze.app ]; then
-  echo "  Backblaze installer has not been run, please manually run it here:"
+  echo "» Backblaze installer has not been run, please manually run it here:"
   installer_path=$(find $(brew --prefix)/Caskroom/backblaze -name "Backblaze Installer.app" -print0 | sort | tail -n 1)
   echo "    ${installer_path}"
 fi
