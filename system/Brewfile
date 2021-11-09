@@ -1,3 +1,5 @@
+work_machine = File.exists?(File.expand_path("~/.workmachine"))
+
 tap "homebrew/core"
 tap "homebrew/bundle"
 tap "homebrew/cask-drivers"
@@ -9,21 +11,24 @@ mas "Deliveries",  id: 290986013
 
 cask "1password"
 cask "alfred"
-cask "backblaze"
 cask "bartender"
 cask "bettertouchtool"
 cask "datweatherdoe"
-cask "firefox"
-cask "google-chrome"
 cask "istat-menus"
 cask "karabiner-elements"
 cask "notion"
-cask "slack"
 # cask "slowquitapps"
 cask "spotify"
 cask "the-unarchiver"
 cask "ubersicht"
-cask "zoom"
+
+unless work_machine
+  cask "backblaze"
+  cask "firefox"
+  cask "google-chrome"
+  cask "slack"
+  cask "zoom"
+end
 
 brew "ack"
 brew "coreutils"
