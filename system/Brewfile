@@ -21,6 +21,7 @@ cask "notion"
 cask "spotify"
 cask "the-unarchiver"
 cask "ubersicht"
+cask "unicodechecker"
 
 unless work_machine
   cask "backblaze"
