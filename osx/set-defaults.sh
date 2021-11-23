@@ -30,7 +30,7 @@ defaults write -globalDomain NSUserKeyEquivalents -dict-add "Emoji \\U0026 Symbo
 defaults write com.apple.dashboard mcx-disabled -boolean YES
 
 # Set a really fast key repeat.
-defaults write NSGlobalDomain KeyRepeat -int 0
+#defaults write NSGlobalDomain KeyRepeat -int 0
 
 # Use plain text mode for new TextEdit documents
 defaults write com.apple.TextEdit RichText -int 0
