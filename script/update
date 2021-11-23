@@ -1,11 +1,15 @@
 #!/usr/bin/env sh
 
-set -- $(getopt n "$@")
+set -- $(getopt nf "$@")
 
 while true; do
   case $1 in
     -n)
+      echo "DRY_RUN"
       DRY_RUN=true; shift; continue
+      ;;
+    -f)
+      FAST_UPDATE=true; shift; continue
       ;;
     --)
       break
@@ -23,8 +27,6 @@ pushd $ZSH > /dev/null
 
 git_update() {
   git pull --rebase --prune
-  # git submodule sync
-  # git submodule update --init --recursive
 }
 
 if [ -z "$DRY_RUN" ]; then
@@ -41,24 +43,23 @@ if [ -z "$DRY_RUN" ]; then
   fi
 fi
 
-case $PLATFORM in
-  darwin)
-    if [ -z "$DRY_RUN" ]; then
-      if command -v rake > /dev/null 2>&1; then
-        # Install new packages
-        $ZSH/script/install
-      fi
+case $OSTYPE in
+  darwin*)
+    if [ -z "$DRY_RUN" ] && [ -z "$FAST_UPDATE" ]; then
+      echo "» Running installers"
+      # Install new packages
+      $ZSH/script/install
     fi
     ;;
-  linux)
+  linux*)
     ;;
-  cygwin)
+  bsd*)
     ;;
 esac
 
-# $(dirname "$0")/relink
-
-echo "» Running defaults setup"
-$(dirname "$0")/../osx/set-defaults.sh
+if [ -z "$DRY_RUN" ] && [ -z "$FAST_UPDATE" ]; then
+  echo "» Running defaults setup"
+  $(dirname "$0")/../osx/set-defaults.sh
+fi
 
 popd > /dev/null
