@@ -7,43 +7,13 @@
 # To set this up, rename this file to `gitconfig.symlink` and you'll be able to
 # install this to the correct location by running the project's main `rake`
 # task.
+
 [user]
   name = AUTHORNAME
   email = AUTHOREMAIL
 
-# so much color
-[color]
-  status = auto
-  branch = auto
-  diff = auto
-  interactive = auto
-	ui = always
-
-[color "diff"]
-	meta = yellow
-	commit = yellow bold
-	frag = magenta bold
-	old = red bold
-	new = green bold
-	whitespace = red reverse
-  newMoved = cyan
-  oldMoved = blue
-
-[color "diff-highlight"]
-	oldNormal = red bold
-	oldHighlight = "red bold 52"
-	newNormal = "green bold"
-	newHighlight = "green bold 22"
-
-[color "branch"]
-	current = yellow reverse
-	local = yellow
-	remote = green
-
-[color "status"]
-	added = yellow
-	changed = green
-	untracked = cyan
+[include]
+  path = .dotfiles/git/themes.gitconfig
 
 [alias]
   stat = status
@@ -69,23 +39,23 @@
 
 [core]
   excludesfile = ~/.gitignore
-  pager = diff-so-fancy | less --tabs=4 -RFX
+  pager = delta --dark
+
+[interactive]
+  diffFilter = delta --color-only
+
+[delta]
+  features = woolly-mammoth
+  navigate = true  # use n and N to move between diff sections
+  side-by-side = true
+  line-numbers = true
 
 [diff]
 	compactionHeuristic = true
+  colorMoved = default
 
-  # Show blocks of moved text of at least 20 alphanumeric characters differently than adds/deletes
-  # https://blog.github.com/2018-04-05-git-217-released/
-  colorMoved = zebra
-
-[difftool "sourcetree"]
-  cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-  path =
-
-[mergetool "sourcetree"]
-  cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-  trustExitCode = true
-  keepBackup = false
+[merge]
+  conflictstyle = diff3
 
 [push]
   default = current
@@ -99,3 +69,6 @@
 
 [pull]
 	rebase = false
+
+[init]
+	defaultBranch = main
