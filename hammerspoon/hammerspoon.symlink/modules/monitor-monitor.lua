@@ -10,19 +10,19 @@ local lastScreenId = -1
 local useVirtualIndicator = true
 
 local currentIndicator = nil
-local indicatorTopHeight = 2
+local indicatorTopHeight = 23
 local indicatorBottomHeight = 1
 local indicatorTopColor = drawing.color.asRGB({
   red = 0.26,
   green = 0.58,
   blue = 0.91,
-  alpha = 0.4
+  alpha = 0.2
 })
 local indicatorBottomColor = drawing.color.asRGB({
-  red = 0,
-  green = 0,
-  blue = 0,
-  alpha = 0.5
+  red = 0.26,
+  green = 0.58,
+  blue = 0.91,
+  alpha = 0.4
 })
 
 -- ----------------------------------------------------------------------------= Event Handlers =--=
@@ -66,7 +66,6 @@ function handleAppEvent(element, event, watcher, info)
   elseif event == uielement.watcher.focusedWindowChanged then
     if element:isWindow() or element:isApplication() then
       handleMonitorMonitorChange()
-      updateVirtualScreenIndicator(element:screen(), element)
     end
   end
 end
@@ -75,6 +74,8 @@ function handleWindowEvent(win, event, watcher, info)
   if event == uielement.watcher.elementDestroyed then
     watcher:stop()
     _monitorAppWatchers[info.pid].windows[info.id] = nil
+  else
+    handleMonitorMonitorChange()
   end
 end
 
@@ -87,14 +88,9 @@ function updateVirtualScreenIndicator(screen, window)
 
   local screeng = screen:fullFrame()
 
-  if window:isFullScreen() then
-    frame = window:frame()
-    left = frame.x
-    width = frame.w
-  else
-    left = screeng.x
-    width = screeng.w
-  end
+  frame = window:frame()
+  left = frame.x
+  width = frame.w
 
   indicator = canvas.new{
     x = left,
