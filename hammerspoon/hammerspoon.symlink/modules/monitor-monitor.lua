@@ -207,7 +207,9 @@ function watchWindow(win, initializing)
     watcher:start({
       uielement.watcher.elementDestroyed,
       uielement.watcher.windowResized,
-      uielement.watcher.windowMoved
+      uielement.watcher.windowMoved,
+      uielement.watcher.windowMinimized,
+      uielement.watcher.windowUnminimized
     })
   end
 end
