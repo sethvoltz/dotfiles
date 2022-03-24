@@ -2,73 +2,73 @@ local hyper = { "shift", "cmd", "alt", "ctrl" }
 local mash = { "ctrl", "alt", "cmd" }
 
 -- Global shortcut to reload Hammerspoon
-hs.hotkey.bind(hyper, "r", hs.reload)
-hs.hotkey.bind(hyper, "c", hs.toggleConsole)
+hs.hotkey.bind(hyper, "q", hs.reload)
+hs.hotkey.bind(hyper, "a", hs.toggleConsole)
 
 -- Helpful globals
-hs.hotkey.bind(hyper, 'n', function() hs.task.new("/usr/bin/open", nil, {os.getenv("HOME")}):start() end)
-hs.hotkey.bind(hyper, 'd', function() mouseHighlight() end)
-hs.hotkey.bind(hyper, 'w', function() mouseMoveCurrentApp() end)
+-- hs.hotkey.bind(hyper, 'n', function() hs.task.new("/usr/bin/open", nil, {os.getenv("HOME")}):start() end)
+hs.hotkey.bind(hyper, 'z', function() mouseHighlight() end)
+-- hs.hotkey.bind(hyper, 'w', function() mouseMoveCurrentApp() end)
 
 -- Move windows around current screen
-hs.hotkey.bind(mash, "left",   function() window:leftHalf()   end);
-hs.hotkey.bind(mash, "right",  function() window:rightHalf()  end);
-hs.hotkey.bind(mash, "up",     function() window:topHalf()    end);
-hs.hotkey.bind(mash, "down",   function() window:bottomHalf() end);
-hs.hotkey.bind(hyper, "f",     function() window:maximize()   end)
+-- hs.hotkey.bind(mash, "left",   function() window:leftHalf()   end);
+-- hs.hotkey.bind(mash, "right",  function() window:rightHalf()  end);
+-- hs.hotkey.bind(mash, "up",     function() window:topHalf()    end);
+-- hs.hotkey.bind(mash, "down",   function() window:bottomHalf() end);
+-- hs.hotkey.bind(hyper, "f",     function() window:maximize()   end)
 
 -- Move between screens
-hs.hotkey.bind(hyper, "left",  function() hs.window.focusedWindow():moveOneScreenWest() end)
-hs.hotkey.bind(hyper, "right", function() hs.window.focusedWindow():moveOneScreenEast() end)
+-- hs.hotkey.bind(hyper, "left",  function() hs.window.focusedWindow():moveOneScreenWest() end)
+-- hs.hotkey.bind(hyper, "right", function() hs.window.focusedWindow():moveOneScreenEast() end)
 
-window = {}
+-- window = {}
 
-local function currentFrame()
-  return hs.window.focusedWindow():frame()
-end
+-- local function currentFrame()
+--   return hs.window.focusedWindow():frame()
+-- end
 
-local function currentScreenFrame()
-  return hs.window.focusedWindow():screen():frame()
-end
+-- local function currentScreenFrame()
+--   return hs.window.focusedWindow():screen():frame()
+-- end
 
-function window:maximize ()
-  hs.window.focusedWindow():maximize()
-end
+-- function window:maximize ()
+--   hs.window.focusedWindow():maximize()
+-- end
 
-function window:move (f, window)
-  if window == nil then
-    window = hs.window.focusedWindow()
-  end
-  local oldFrame = window:frame()
-  if oldFrame ~= f then
-    window:move(hs.geometry(f.x, f.y, f.w, f.h))
-  end
-end
+-- function window:move (f, window)
+--   if window == nil then
+--     window = hs.window.focusedWindow()
+--   end
+--   local oldFrame = window:frame()
+--   if oldFrame ~= f then
+--     window:move(hs.geometry(f.x, f.y, f.w, f.h))
+--   end
+-- end
 
-function window:leftHalf ()
-  local s = currentScreenFrame()
-  self:move({ x = s.x, y = s.y, w = (s.w / 2), h = s.h })
-end
+-- function window:leftHalf ()
+--   local s = currentScreenFrame()
+--   self:move({ x = s.x, y = s.y, w = (s.w / 2), h = s.h })
+-- end
 
-function window:rightHalf ()
-  local s = currentScreenFrame()
-  self:move({ x = (s.w / 2), y = s.y, w = (s.w / 2), h = s.h })
-end
+-- function window:rightHalf ()
+--   local s = currentScreenFrame()
+--   self:move({ x = (s.w / 2), y = s.y, w = (s.w / 2), h = s.h })
+-- end
 
-function window:topHalf ()
-  local s = currentScreenFrame()
-  self:move({ x = 0, y = s.y, w = s.w, h = (s.h / 2) })
-end
+-- function window:topHalf ()
+--   local s = currentScreenFrame()
+--   self:move({ x = 0, y = s.y, w = s.w, h = (s.h / 2) })
+-- end
 
-function window:bottomHalf ()
-  local s = currentScreenFrame()
-  self:move({ x = 0, y = (s.h / 2) + s.y, w = s.w, h = (s.h / 2) })
-end
+-- function window:bottomHalf ()
+--   local s = currentScreenFrame()
+--   self:move({ x = 0, y = (s.h / 2) + s.y, w = s.w, h = (s.h / 2) })
+-- end
 
-function mouseMoveCurrentApp()
-  hs.mouse.setAbsolutePosition(hs.geometry.rectMidPoint(currentFrame()))
-  mouseHighlight()
-end
+-- function mouseMoveCurrentApp()
+--   hs.mouse.setAbsolutePosition(hs.geometry.rectMidPoint(currentFrame()))
+--   mouseHighlight()
+-- end
 
 local mouseOutlineColor = hs.drawing.color.asRGB({
   red = 1,
