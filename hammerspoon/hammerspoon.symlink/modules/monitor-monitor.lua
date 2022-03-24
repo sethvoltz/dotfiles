@@ -13,15 +13,15 @@ local currentIndicator = nil
 local indicatorTopHeight = 23
 local indicatorBottomHeight = 1
 local indicatorTopColor = drawing.color.asRGB({
-  red = 0.26,
-  green = 0.58,
-  blue = 0.91,
+  red = 0.99,
+  green = 0.76,
+  blue = 0.25,
   alpha = 0.2
 })
 local indicatorBottomColor = drawing.color.asRGB({
-  red = 0.26,
-  green = 0.58,
-  blue = 0.91,
+  red = 0.99,
+  green = 0.76,
+  blue = 0.25,
   alpha = 0.4
 })
 
