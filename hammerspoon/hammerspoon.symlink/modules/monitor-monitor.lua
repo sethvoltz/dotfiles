@@ -10,7 +10,6 @@ local lastScreenId = -1
 local useVirtualIndicator = true
 
 local currentIndicator = nil
-local indicatorTopHeight = 23
 local indicatorBottomHeight = 1
 local indicatorTopColor = drawing.color.asRGB({
   red = 0.99,
@@ -87,16 +86,22 @@ function updateVirtualScreenIndicator(screen, window)
   clearIndicator()
 
   local screeng = screen:fullFrame()
-
-  frame = window:frame()
-  left = frame.x
-  width = frame.w
+  local frame = window:frame()
+  local left = frame.x
+  local width = frame.w
+  local menubarHeight = screen:frame().y - screeng.y
+  local indicatorTopHeight = menubarHeight - indicatorBottomHeight
+  
+  if menubarHeight > 30 then
+    -- Notched Menubar
+    indicatorTopHeight = indicatorTopHeight - 1
+  end
 
   indicator = canvas.new{
     x = left,
     y = screeng.y,
     w = width,
-    h = indicatorTopHeight + indicatorBottomHeight
+    h = menubarHeight
   }:appendElements(
     {
       action = "fill",
