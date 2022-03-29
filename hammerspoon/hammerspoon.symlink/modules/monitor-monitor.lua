@@ -10,7 +10,7 @@ local lastScreenId = -1
 local useVirtualIndicator = true
 
 local currentIndicator = nil
-local indicatorBottomHeight = 1
+local indicatorBottomHeight = 2
 local indicatorTopColor = drawing.color.asRGB({
   red = 0.99,
   green = 0.76,
@@ -21,7 +21,7 @@ local indicatorBottomColor = drawing.color.asRGB({
   red = 0.99,
   green = 0.76,
   blue = 0.25,
-  alpha = 0.4
+  alpha = 0.6
 })
 
 -- ----------------------------------------------------------------------------= Event Handlers =--=
@@ -89,14 +89,9 @@ function updateVirtualScreenIndicator(screen, window)
   local frame = window:frame()
   local left = frame.x
   local width = frame.w
-  local menubarHeight = screen:frame().y - screeng.y
+  local menubarHeight = screen:frame().y - screeng.y - 1
   local indicatorTopHeight = menubarHeight - indicatorBottomHeight
   
-  if menubarHeight > 30 then
-    -- Notched Menubar
-    indicatorTopHeight = indicatorTopHeight - 1
-  end
-
   indicator = canvas.new{
     x = left,
     y = screeng.y,
