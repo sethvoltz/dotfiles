@@ -186,7 +186,10 @@ function watchApp(app, initializing)
   -- kind() returns -1 if the app is prohibited from GUI components
   if app:kind() == -1 then return end
 
-  watcher:start({ uielement.watcher.focusedWindowChanged })
+  watcher:start({
+    uielement.watcher.focusedWindowChanged,
+    uielement.watcher.mainWindowChanged
+  })
   
   -- Watch any windows that already exist
   for i, window in pairs(app:allWindows()) do
@@ -206,8 +209,9 @@ function watchWindow(win, initializing)
 
     watcher:start({
       uielement.watcher.elementDestroyed,
-      uielement.watcher.windowResized,
+      uielement.watcher.windowCreated,
       uielement.watcher.windowMoved,
+      uielement.watcher.windowResized,
       uielement.watcher.windowMinimized,
       uielement.watcher.windowUnminimized
     })
