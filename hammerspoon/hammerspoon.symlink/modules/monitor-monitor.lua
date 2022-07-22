@@ -83,7 +83,7 @@ end
 
 -- Based heavily on https://git.io/v6kZN
 function updateVirtualScreenIndicator(screen, window)
-  clearIndicator()
+  clearVirtualScreenIndicator()
 
   local screeng = screen:fullFrame()
   local frame = window:frame()
@@ -130,7 +130,7 @@ function updateVirtualScreenIndicator(screen, window)
   currentIndicator = indicator
 end
 
-function clearIndicator()
+function clearVirtualScreenIndicator()
    if currentIndicator ~= nil then
       currentIndicator:delete()
       currentIndicator = nil

@@ -13,17 +13,17 @@ local clockStyle = {
 
 -- -------------------------------------------------------= Change Handlers =--=
 
-function updateWideClocks()
-  clearWideIndicators()
+function updateWideScreenClocks()
+  clearWideScreenIndicators()
 
   for _, screen in pairs(hs.screen.allScreens()) do
-    drawScreenClock(screen)
+    drawWideScreenClock(screen)
   end
 end
 
 -- ------------------------------------------------------------= Indicators =--=
 
-function drawScreenClock(screen)
+function drawWideScreenClock(screen)
   local screeng = screen:fullFrame()
   local menubarHeight = screen:frame().y - screeng.y - 1
 
@@ -64,7 +64,7 @@ function drawScreenClock(screen)
   table.insert(widescreenIndicators, wideIndicator)
 end
 
-function clearWideIndicators()
+function clearWideScreenIndicators()
    for key, wideIndicator in pairs(widescreenIndicators) do
       wideIndicator:delete()
       widescreenIndicators[key] = nil
@@ -73,6 +73,6 @@ end
 
 -- --------------------------------------------------------------= Watchers =--=
 
-_wideClockSpaceWatcher = hs.spaces.watcher.new(updateWideClocks):start()
-_wideClockTimer        = hs.timer.new(hs.timer.seconds(15), updateWideClocks):start()
-updateWideClocks()
+_wideScreenClockSpaceWatcher = hs.spaces.watcher.new(updateWideScreenClocks):start()
+_wideScreenClockTimer        = hs.timer.new(hs.timer.seconds(15), updateWideScreenClocks):start()
+updateWideScreenClocks()
