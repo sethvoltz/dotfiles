@@ -26,7 +26,7 @@ if [ -f ${HOMEBREW_PREFIX}/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; 
     source ${HOMEBREW_PREFIX}/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 fi
 
-# source every .zsh file in this rep
+# source every .zsh file in this repo
 for config_file ($ZSH/**/*.zsh~*/backups/*) source $config_file
 
 # use .localrc for SUPER SECRET CRAP that you don't
@@ -55,18 +55,14 @@ fi;
 # load every completion after autocomplete loads
 for config_file ($ZSH/**/completion.sh~*/backups/*) source $config_file
 
-# Python Development Environment. - Must run last after all paths are setup.
-if [ -f ${HOMEBREW_PREFIX}/share/python/virtualenvwrapper.sh ]; then
-    source ${HOMEBREW_PREFIX}/share/python/virtualenvwrapper.sh
-fi
-
 # Z hopping around folders
 if [ -f ${HOMEBREW_PREFIX}/etc/profile.d/z.sh ]; then
     source ${HOMEBREW_PREFIX}/etc/profile.d/z.sh
 fi
 
+# Auto-time commands that run longer than $REPORTTIME seconds
 export TIMEFMT="%U user %S system %P cpu %*E total, running %J"
-REPORTTIME=5
+REPORTTIME=3
 
 eval `/usr/libexec/path_helper -s`
 
@@ -82,11 +78,18 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 # Fuzzy Finder `brew install fzf`
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
+# Fix OpenSSL path order
 [ -d /usr/local/opt/curl-openssl/bin ] && export PATH="/usr/local/opt/curl-openssl/bin:$PATH"
 
+# Enable NVM
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 # Added by serverless binary installer
 export PATH="$HOME/.serverless/bin:$PATH"
+
+# Python Development Environment. Run this last
+if [ -f ${HOMEBREW_PREFIX}/share/python/virtualenvwrapper.sh ]; then
+    source ${HOMEBREW_PREFIX}/share/python/virtualenvwrapper.sh
+fi

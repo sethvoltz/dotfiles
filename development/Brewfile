@@ -1,6 +1,6 @@
 cask "arduino"
 cask "blender"
-cask "font-hack"
+cask "font-hack-nerd-font"
 cask "imageoptim"
 cask "iterm2"
 cask "openscad"
