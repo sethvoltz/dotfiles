@@ -1,4 +1,5 @@
-brew "zsh"
-brew "z"
+brew "bat"
 brew "exa"
 brew "starship"
+brew "zsh"
+brew "z"
