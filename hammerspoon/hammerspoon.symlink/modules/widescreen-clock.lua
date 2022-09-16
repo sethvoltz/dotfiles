@@ -8,6 +8,7 @@ local clockStyle = {
   paragraphStyle = {
       alignment = "center",
   },
+  expansion = 0.02,
   color = indicatorColor,
 }
 
@@ -33,7 +34,7 @@ function drawWideScreenClock(screen)
   local fontInfo = hs.styledtext.fontInfo(clockStyle.font)
   local clockOffset = math.floor(menubarHeight - fontInfo.capHeight) / 2 - (fontInfo.ascender - fontInfo.capHeight)
 
-  local clock = hs.styledtext.new(os.date("%a %b %d %H:%M"), clockStyle)
+  local clock = hs.styledtext.new(os.date("%a %b %d  %H:%M"), clockStyle)
   local width = 250
   local height = menubarHeight
 
