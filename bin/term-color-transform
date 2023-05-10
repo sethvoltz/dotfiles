@@ -318,8 +318,8 @@ def print_all():
         sys.stdout.write("\033[0m  ")
         sys.stdout.write('\033[38;5;%sm%s:%s' % (short, short, rgb))
         sys.stdout.write("\033[0m\n")
-    print "Printed all codes."
-    print "You can translate a hex or 0-255 code by providing an argument."
+    print("Printed all codes.")
+    print("You can translate a hex or 0-255 code by providing an argument.")
 
 def rgb2short(rgb):
     """ Find the closest xterm-256 approximation to the given RGB value.
@@ -349,10 +349,10 @@ def rgb2short(rgb):
                 res.append(closest)
                 break
             i += 1
-    #print '***', res
+    #print('***', res)
     res = ''.join([ ('%02.x' % i) for i in res ])
     equiv = RGB2SHORT_DICT[ res ]
-    #print '***', res, equiv
+    #print('***', res, equiv)
     return equiv, res
 
 RGB2SHORT_DICT, SHORT2RGB_DICT = _create_dicts()

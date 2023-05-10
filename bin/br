@@ -1,10 +1,1 @@
-#!/bin/bash
-# Kudos: @ramses0
-
-COLS=${COLS:-$1}
-[ -z "$COLS" ] && COLS=$(tput cols)
-if [ "" = "$COLS" ] ; then COLS=80; fi
-if [ "" = "$CHAR" ] ; then CHAR=━; fi
-
-printf -v LINE "${CHAR}%.0s" `seq 1 $COLS`
-printf '\e[0;31m%s\e[0m\n' $LINE
+heading

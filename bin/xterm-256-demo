@@ -5,8 +5,6 @@
 # This script has been placed into the Public Domain by its author, J. S. Connell.
 #
 
-clear
-
 column=1
 line=1
 xlimit=6
