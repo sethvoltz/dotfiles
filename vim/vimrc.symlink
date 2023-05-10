@@ -22,16 +22,13 @@ Plug 'michaeljsmith/vim-indent-object'
 Plug 'ddollar/nerdcommenter'
 Plug 'ervandew/supertab'
 Plug 'tsaleh/vim-align'
-" Plug 'scrooloose/syntastic'
 Plug 'tpope/vim-surround'
 Plug 'godlygeek/tabular'
-" Plug 'mattn/gist-vim'
-" Plug 'vim-scripts/searchfold.vim'
 Plug 'bkad/CamelCaseMotion'
 Plug 'chrisbra/vim-diff-enhanced'
 
 " UI Additions
-Plug 'scrooloose/nerdtree'
+Plug 'preservim/nerdtree'
 Plug 'jistr/vim-nerdtree-tabs'
 Plug 'vim-scripts/spacehi.vim'
 Plug 'nathanaelkane/vim-indent-guides'
@@ -45,9 +42,10 @@ Plug '/usr/local/opt/fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'sjl/gundo.vim'
 
+" autocomplete, searching, everything
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
 " Languages
-Plug 'vim-ruby/vim-ruby'
-Plug 'tpope/vim-rails'
 Plug 'timcharper/textile.vim'
 Plug 'pangloss/vim-javascript'
 Plug 'tpope/vim-markdown'
