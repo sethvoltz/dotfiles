@@ -1,11 +1,16 @@
-cask "arduino"
-cask "blender"
+work_machine = File.exists?(File.expand_path("~/.workmachine"))
+
+unless work_machine
+  cask "arduino"
+  cask "blender"
+  cask "openscad"
+  cask "raspberry-pi-imager"
+end
+
 cask "font-hack-nerd-font"
 cask "imageoptim"
 cask "iterm2"
-cask "openscad"
 cask "qmk-toolbox"
-cask "raspberry-pi-imager"
 cask "visual-studio-code"
 
 brew "mtr"
