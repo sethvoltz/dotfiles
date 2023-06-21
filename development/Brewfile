@@ -1,5 +1,7 @@
 work_machine = File.exists?(File.expand_path("~/.workmachine"))
 
+tap "homebrew/cask-fonts"
+
 unless work_machine
   cask "arduino"
   cask "blender"

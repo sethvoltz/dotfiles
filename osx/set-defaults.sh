@@ -21,7 +21,7 @@ defaults -currentHost write com.apple.screensaver idleTime 0 # disable screensav
 #sudo pmset -c displaysleep 8
 
 # Disable spotlight folder keyboard shortcut
-/usr/libexec/PlistBuddy -c "Set :AppleSymbolicHotKeys:65:enabled 0" ~/Library/Preferences/com.apple.symbolichotkeys.plist
+# /usr/libexec/PlistBuddy -c "Set :AppleSymbolicHotKeys:65:enabled 0" ~/Library/Preferences/com.apple.symbolichotkeys.plist
 
 # Change shortcut for Emoji & Symbols
 defaults write -globalDomain NSUserKeyEquivalents -dict-add "Emoji \\U0026 Symbols" "@~\\U0020"

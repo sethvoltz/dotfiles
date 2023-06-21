@@ -12,13 +12,13 @@ if [ -f ./system/Brewfile ]; then
   brew bundle install --file ./system/Brewfile
 fi
 if [ -f ./system/install.sh ]; then
-  sh -c "${installer}"
+  sh -c ./system/install.sh
 fi
 
 echo "» Checking topic apps"
 # find the Brewfiles and run them iteratively
 find . -name Brewfile -depth 2 -not -path "./system/*" | while read brewfile ; do
-  echo "  $brewfile"
+  echo "——» $brewfile"
   brew bundle install --file "$brewfile"
 done
 
@@ -28,3 +28,5 @@ find . -name install.sh -depth 2 -not -path "./system/*" | while read installer 
   echo "——» $installer"
   sh -c "${installer}"
 done
+
+echo "» Installation complete

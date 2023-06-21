@@ -18,6 +18,7 @@ if [ -f ${HOMEBREW_PREFIX}/share/zsh-syntax-highlighting/zsh-syntax-highlighting
     source ${HOMEBREW_PREFIX}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
+typeset -gA ZSH_HIGHLIGHT_STYLES
 ZSH_HIGHLIGHT_STYLES[globbing]='fg=cyan'
 
 # `brew install zsh-autosuggestions`

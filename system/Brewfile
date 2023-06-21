@@ -2,7 +2,6 @@ work_machine = File.exists?(File.expand_path("~/.workmachine"))
 
 tap "homebrew/core"
 tap "homebrew/bundle"
-tap "homebrew/cask-drivers"
 tap "buo/cask-upgrade"
 tap "dteoh/sqa"
 
@@ -16,10 +15,10 @@ cask "bettertouchtool"
 cask "istat-menus"
 cask "karabiner-elements"
 cask "notion"
+cask "rectangle"
 # cask "slowquitapps"
 # cask "spotify"
 cask "the-unarchiver"
-cask "ubersicht"
 cask "unicodechecker"
 
 unless work_machine
@@ -27,6 +26,7 @@ unless work_machine
   cask "firefox"
   cask "google-chrome"
   cask "slack"
+  cask "ubersicht"
   cask "zoom"
 end
 
@@ -35,7 +35,6 @@ brew "coreutils"
 brew "ctags"
 brew "gnu-sed"
 brew "graphviz"
-brew "grv"
 brew "htop"
 brew "iftop"
 brew "jq"
