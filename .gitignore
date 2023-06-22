@@ -3,7 +3,6 @@ vim/vim.symlink/backups
 vim/vim.symlink/plugged
 vim/vim.symlink/autoload/plug.vim.old
 docker/boot2docker.symlink/.vagrant
-git/gitconfig.symlink
 mediatomb/mediatomb.symlink/mediatomb.db
 mediatomb/mediatomb.symlink/mediatomb.html
 vim/vim.symlink/backup/*.sw[lmnop]

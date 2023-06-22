@@ -28,15 +28,9 @@ fail () {
 }
 
 setup_gitconfig () {
-  if ! [ -f git/gitconfig.symlink ]
+  if ! [ -f ~/.local.gitconfig ]
   then
     info 'setup gitconfig'
-
-    git_credential='cache'
-    if [ "$(uname -s)" == "Darwin" ]
-    then
-      git_credential='osxkeychain'
-    fi
 
     # TODO: Consider changing this to use `git-config` commands.
     user ' - What is your github author name?'
@@ -44,7 +38,11 @@ setup_gitconfig () {
     user ' - What is your github author email?'
     read -e git_authoremail
 
-    sed -e "s/AUTHORNAME/$git_authorname/g" -e "s/AUTHOREMAIL/$git_authoremail/g" -e "s/GIT_CREDENTIAL_HELPER/$git_credential/g" git/gitconfig.symlink.example > git/gitconfig.symlink
+    cat <<-END_OF_DOC > ~/.local.gitconfig
+[user]
+  name = ${git_authorname}
+  email = ${git_authoremail}
+END_OF_DOC
 
     success 'gitconfig'
   fi
