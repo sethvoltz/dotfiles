@@ -51,6 +51,8 @@ There are a few special files in the hierarchy.
   to ensure they have priority control over order.
 * **topic/completion.sh**: Any files named `completion.sh` get loaded last so that they get loaded
   after we set up zsh autocomplete functions.
+* **topic/Brewfile**: Any file named `Brewfile` will be iterated over and passed to Homebrew for 
+  installation and lockfile creation.
 * **topic/install.sh**: Any file named `install.sh` will be run during the installation phase of
   `script/bootstrap`, or manually at any time with `script/install`.
 
@@ -61,15 +63,6 @@ install them they'll make your life a bit more like a bubble bath.
 
 * If you install the excellent [rbenv](https://github.com/sstephenson/rbenv) to manage multiple
   rubies, your current branch will show up in the prompt. Bonus.
-
-## Bugs
-
-I want this to work for everyone; that means when you clone it down it should work for you even
-though you may not have `rbenv` installed, for example. That said, I do use this as *my* dotfiles,
-so there's a good chance I may break something if I forget to make a check for a dependency.
-
-If you're brand-new to the project and run into any blockers, please [check out the original
-project](https://github.com/holman/dotfiles/) on his repository.
 
 ## Thanks
 
