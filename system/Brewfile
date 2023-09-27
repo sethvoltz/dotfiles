@@ -23,14 +23,11 @@ cask "unicodechecker"
 
 unless work_machine
   cask "backblaze"
-  cask "firefox"
-  cask "google-chrome"
-  cask "slack"
   cask "ubersicht"
-  cask "zoom"
 end
 
 brew "ack"
+brew "adobe-creative-cloud"
 brew "coreutils"
 brew "ctags"
 brew "gnu-sed"
