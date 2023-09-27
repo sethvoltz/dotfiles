@@ -16,8 +16,6 @@ cask "istat-menus"
 cask "karabiner-elements"
 cask "notion"
 cask "rectangle"
-# cask "slowquitapps"
-# cask "spotify"
 cask "the-unarchiver"
 cask "unicodechecker"
 
