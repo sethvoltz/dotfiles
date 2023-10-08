@@ -31,6 +31,7 @@ defaults write com.apple.dashboard mcx-disabled -boolean YES
 
 # Set a really fast key repeat.
 #defaults write NSGlobalDomain KeyRepeat -int 0
+defaults write -g ApplePressAndHoldEnabled -bool false
 
 # Use plain text mode for new TextEdit documents
 defaults write com.apple.TextEdit RichText -int 0
