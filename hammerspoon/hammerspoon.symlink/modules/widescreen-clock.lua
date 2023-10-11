@@ -31,6 +31,10 @@ function drawWideScreenClock(screen)
   local screenRatio = screeng.w / screeng.h
   if screenRatio < 2.5 then return end
 
+  local currentScreenSpace = hs.spaces.activeSpaceOnScreen(screen)
+  if currentScreenSpace == nil then return end
+  if hs.spaces.spaceType(currentScreenSpace) == "fullscreen" then return end
+
   local fontInfo = hs.styledtext.fontInfo(clockStyle.font)
   local clockOffset = math.floor(menubarHeight - fontInfo.capHeight) / 2 - (fontInfo.ascender - fontInfo.capHeight)
 
