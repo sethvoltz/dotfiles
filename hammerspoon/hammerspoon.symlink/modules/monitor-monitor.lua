@@ -11,6 +11,7 @@ local useVirtualIndicator = true
 
 local currentIndicator = nil
 local indicatorBottomHeight = 2
+local indicatorFullscreenHeight = 2
 local indicatorTopColor = drawing.color.asRGB({
   red = 0.99,
   green = 0.76,
@@ -91,37 +92,58 @@ function updateVirtualScreenIndicator(screen, window)
   local width = frame.w
   local menubarHeight = screen:frame().y - screeng.y - 1
   local indicatorTopHeight = menubarHeight - indicatorBottomHeight
-  
-  indicator = canvas.new{
-    x = left,
-    y = screeng.y,
-    w = width,
-    h = menubarHeight
-  }:appendElements(
-    {
-      action = "fill",
-      type = "rectangle",
-      frame = {
-        x = 0,
-        y = 0,
-        w = width,
-        h = indicatorTopHeight
-      },
-      fillColor = indicatorTopColor
-    },
-    {
-      action = "fill",
-      type = "rectangle",
-      frame = {
-        x = 0,
-        y = indicatorTopHeight,
-        w = width,
-        h = indicatorBottomHeight
-      },
-      fillColor = indicatorBottomColor
-    }
-  )
 
+  if window:isFullScreen() then
+    indicator = canvas.new{
+      x = left,
+      y = screeng.y,
+      w = width,
+      h = indicatorFullscreenHeight
+    }:appendElements(
+      {
+        action = "fill",
+        type = "rectangle",
+        frame = {
+          x = 0,
+          y = 0,
+          w = width,
+          h = indicatorFullscreenHeight
+        },
+        fillColor = indicatorBottomColor
+      }
+    )  
+  else
+    indicator = canvas.new{
+      x = left,
+      y = screeng.y,
+      w = width,
+      h = menubarHeight
+    }:appendElements(
+      {
+        action = "fill",
+        type = "rectangle",
+        frame = {
+          x = 0,
+          y = 0,
+          w = width,
+          h = indicatorTopHeight
+        },
+        fillColor = indicatorTopColor
+      },
+      {
+        action = "fill",
+        type = "rectangle",
+        frame = {
+          x = 0,
+          y = indicatorTopHeight,
+          w = width,
+          h = indicatorBottomHeight
+        },
+        fillColor = indicatorBottomColor
+      }
+    )  
+  end
+  
   indicator
     :level(canvas.windowLevels.cursor)
     :behavior(canvas.windowBehaviors.canJoinAllSpaces)
