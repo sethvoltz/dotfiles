@@ -73,7 +73,7 @@ bindkey '^?' backward-delete-char
 # Kudos: https://github.com/cehoffman/dotfiles/blob/cec090cba571074ee77b0cc46f7f821c3ecaa988/zsh/bindings#L105-L110
 # Make it easy to remove directory components when deleting words
 function slash-backward-kill-word() {
-  local WORDCHARS="${WORDCHARS:s#/#}"
+  local WORDCHARS="${${WORDCHARS:s#/#}:s/=/}"
   zle backward-delete-word
 }
 zle -N slash-backward-kill-word
