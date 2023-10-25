@@ -1,6 +1,5 @@
 work_machine = File.exists?(File.expand_path("~/.workmachine"))
 
-tap "homebrew/core"
 tap "homebrew/bundle"
 tap "buo/cask-upgrade"
 tap "dteoh/sqa"
