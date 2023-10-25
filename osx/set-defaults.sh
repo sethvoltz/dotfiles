@@ -26,6 +26,9 @@ defaults -currentHost write com.apple.screensaver idleTime 0 # disable screensav
 # Change shortcut for Emoji & Symbols
 defaults write -globalDomain NSUserKeyEquivalents -dict-add "Emoji \\U0026 Symbols" "@~\\U0020"
 
+# Add Chrome shortcut to open current tab in new window
+defaults write com.google.Chrome NSUserKeyEquivalents -dict-add "Move Tab to New Window" -string "@~n"
+
 # Disable the Dashboard completely
 defaults write com.apple.dashboard mcx-disabled -boolean YES
 
