@@ -30,12 +30,6 @@ fi
 # source every .zsh file in this repo
 for config_file ($ZSH/**/*.zsh~*/backups/*) source $config_file
 
-# use .localrc for SUPER SECRET CRAP that you don't
-# want in your public, versioned repo.
-if [[ -a ~/.localrc ]]; then
-  source ~/.localrc
-fi
-
 # initialize autocomplete here, otherwise functions won't be loaded
 # On slow systems, checking the cached .zcompdump file to see if it must be 
 # regenerated adds a noticable delay to zsh startup.  This little hack restricts 
@@ -90,7 +84,8 @@ export NVM_DIR="$HOME/.nvm"
 # Added by serverless binary installer
 export PATH="$HOME/.serverless/bin:$PATH"
 
-# Python Development Environment. Run this last
-if [ -f ${HOMEBREW_PREFIX}/share/python/virtualenvwrapper.sh ]; then
-    source ${HOMEBREW_PREFIX}/share/python/virtualenvwrapper.sh
+# use .localrc for SUPER SECRET CRAP that you don't
+# want in your public, versioned repo.
+if [[ -a ~/.localrc ]]; then
+  source ~/.localrc
 fi
