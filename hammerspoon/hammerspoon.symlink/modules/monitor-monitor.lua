@@ -25,13 +25,13 @@ local indicatorBottomColor = drawing.color.asRGB({
   red = 0.53,
   green = 0.71,
   blue = 0.2,
-  alpha = 0.8
+  alpha = 1.0
 })
 local indicatorFullscreenColor = drawing.color.asRGB({
   red = 0.53,
   green = 0.71,
   blue = 0.2,
-  alpha = 0.9
+  alpha = 0.8
 })
 
 -- ----------------------------------------------------------------------------= Event Handlers =--=
