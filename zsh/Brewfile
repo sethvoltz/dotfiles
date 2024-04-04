@@ -1,5 +1,5 @@
 brew "bat"
-brew "exa"
+brew "eza"
 brew "starship"
 brew "zsh"
 brew "zsh-autosuggestions"
