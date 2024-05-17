@@ -5,6 +5,12 @@ local uielement=require'hs.uielement'
 local fnutils=require'hs.fnutils'
 -- local serial = require("hs._asm.serial")
 
+-- Filter out these apps. Use `osascript -e 'id of app "App Name"'` to get the bundle ID
+local filteredBundles = {
+  "org.hammerspoon.Hammerspoon",
+  "com.lwouis.alt-tab-macos"
+}
+
 local lastScreenId = -1
 -- local usePhysicalIndicator = false
 local useVirtualIndicator = true
@@ -196,15 +202,24 @@ end
 
 -- ---------------------------------------------------------------------------= Watcher Helpers =--=
 
+function filterApps(apps)
+  return fnutils.filter(apps, function(app) return fnutils.contains(filteredBundles, app:bundleID()) end)
+end
+
+function filterApp(app)
+  return fnutils.contains(filteredBundles, app:bundleID())
+end
+
 -- from https://gist.github.com/cmsj/591624ef07124ad80a1c
 function attachExistingApps()
   local apps = application.runningApplications()
-  apps = fnutils.filter(apps, function(app) return app:title() ~= "Hammerspoon" end)
+  apps = filterApps(apps)
   fnutils.each(apps, function(app) watchApp(app, true) end)
 end
 
 function watchApp(app, initializing)
   if _monitorAppWatchers[app:pid()] then return end
+  if filterApp(app) then return end
   
   local watcher = app:newWatcher(handleAppEvent)
   if not watcher.pid then return end
