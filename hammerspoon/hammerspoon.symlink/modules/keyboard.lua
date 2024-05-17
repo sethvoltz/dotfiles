@@ -7,7 +7,7 @@ hs.hotkey.bind(hyper, "a", hs.toggleConsole)
 
 -- Helpful globals
 -- hs.hotkey.bind(hyper, 'n', function() hs.task.new("/usr/bin/open", nil, {os.getenv("HOME")}):start() end)
-hs.hotkey.bind(hyper, 'z', function() mouseHighlight() end)
+-- hs.hotkey.bind(hyper, 'z', function() mouseHighlight() end)
 -- hs.hotkey.bind(hyper, 'w', function() mouseMoveCurrentApp() end)
 
 -- Move windows around current screen
@@ -70,104 +70,104 @@ hs.hotkey.bind(hyper, 'z', function() mouseHighlight() end)
 --   mouseHighlight()
 -- end
 
-local mouseOutlineColor = hs.drawing.color.asRGB({
-  red = 1,
-  green = 1,
-  blue = 1,
-  alpha = 0.6
-})
+-- local mouseOutlineColor = hs.drawing.color.asRGB({
+--   red = 1,
+--   green = 1,
+--   blue = 1,
+--   alpha = 0.6
+-- })
 
-local mouseColor = hs.drawing.color.asRGB({
-  red = 1,
-  green = 0.25,
-  blue = 0,
-  alpha = 0.9
-})
+-- local mouseColor = hs.drawing.color.asRGB({
+--   red = 1,
+--   green = 0.25,
+--   blue = 0,
+--   alpha = 0.9
+-- })
 
--- Kudos to https://git.io/v6kcO
--- Modified for Canvas API
-function mouseHighlight()
-  if mouseCircle ~= nil then
-    mouseCircle:delete()
-    mouseCircle = nil
-    if mouseCircleTimer then
-      mouseCircleTimer:stop()
-    end
-  end
+-- -- Kudos to https://git.io/v6kcO
+-- -- Modified for Canvas API
+-- function mouseHighlight()
+--   if mouseCircle ~= nil then
+--     mouseCircle:delete()
+--     mouseCircle = nil
+--     if mouseCircleTimer then
+--       mouseCircleTimer:stop()
+--     end
+--   end
 
-  local radius = 42
-  local outerStroke = 2
-  local innerStroke = 5
+--   local radius = 42
+--   local outerStroke = 2
+--   local innerStroke = 5
 
-  mousepoint = hs.mouse.getAbsolutePosition()
-  mouseCircle = hs.canvas.new{
-    x = mousepoint.x - radius - 1,
-    y = mousepoint.y - radius - 1,
-    w = radius * 2 + 2,
-    h = radius * 2 + 2
-  }:appendElements(
-    {
-      action = "build",
-      type = "circle",
-      reversePath = true,
-      radius = radius,
-      padding = 0,
-    }, {
-      action = "clip",
-      type = "circle",
-      padding = 0,
-      radius = radius - outerStroke,
-    }, {
-      action = "fill",
-      type = "rectangle",
-      fillColor = mouseOutlineColor,
-    }, {
-      type = "resetClip"
-    }, {
-      action = "build",
-      type = "circle",
-      radius = radius - outerStroke,
-      reversePath = true,
-      padding = 0,
-    }, {
-      action = "clip",
-      type = "circle",
-      padding = 0,
-      radius = radius - outerStroke - innerStroke,
-    }, {
-      action = "fill",
-      type = "rectangle",
-      fillColor = mouseColor,
-    }, {
-      type = "resetClip"
-    }, {
-      action = "build",
-      type = "circle",
-      radius = radius - outerStroke - innerStroke,
-      reversePath = true,
-      padding = 0,
-    }, {
-      action = "clip",
-      type = "circle",
-      padding = 0,
-      radius = radius - (outerStroke * 2) - innerStroke,
-    }, {
-      action = "fill",
-      type = "rectangle",
-      fillColor = mouseOutlineColor,
-    }, {
-      type = "resetClip"
-    }
-  ):show()
+--   mousepoint = hs.mouse.getAbsolutePosition()
+--   mouseCircle = hs.canvas.new{
+--     x = mousepoint.x - radius - 1,
+--     y = mousepoint.y - radius - 1,
+--     w = radius * 2 + 2,
+--     h = radius * 2 + 2
+--   }:appendElements(
+--     {
+--       action = "build",
+--       type = "circle",
+--       reversePath = true,
+--       radius = radius,
+--       padding = 0,
+--     }, {
+--       action = "clip",
+--       type = "circle",
+--       padding = 0,
+--       radius = radius - outerStroke,
+--     }, {
+--       action = "fill",
+--       type = "rectangle",
+--       fillColor = mouseOutlineColor,
+--     }, {
+--       type = "resetClip"
+--     }, {
+--       action = "build",
+--       type = "circle",
+--       radius = radius - outerStroke,
+--       reversePath = true,
+--       padding = 0,
+--     }, {
+--       action = "clip",
+--       type = "circle",
+--       padding = 0,
+--       radius = radius - outerStroke - innerStroke,
+--     }, {
+--       action = "fill",
+--       type = "rectangle",
+--       fillColor = mouseColor,
+--     }, {
+--       type = "resetClip"
+--     }, {
+--       action = "build",
+--       type = "circle",
+--       radius = radius - outerStroke - innerStroke,
+--       reversePath = true,
+--       padding = 0,
+--     }, {
+--       action = "clip",
+--       type = "circle",
+--       padding = 0,
+--       radius = radius - (outerStroke * 2) - innerStroke,
+--     }, {
+--       action = "fill",
+--       type = "rectangle",
+--       fillColor = mouseOutlineColor,
+--     }, {
+--       type = "resetClip"
+--     }
+--   ):show()
 
-  mouseCircleTimer = hs.timer.doAfter(1.5, function()
-    mouseCircle:hide(0.25)
+--   mouseCircleTimer = hs.timer.doAfter(1.5, function()
+--     mouseCircle:hide(0.25)
 
-    hs.timer.doAfter(0.6, function()
-      if mouseCircle ~= nil then
-        mouseCircle:delete()
-        mouseCircle = nil
-      end
-    end)
-  end)
-end
+--     hs.timer.doAfter(0.6, function()
+--       if mouseCircle ~= nil then
+--         mouseCircle:delete()
+--         mouseCircle = nil
+--       end
+--     end)
+--   end)
+-- end
