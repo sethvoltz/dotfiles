@@ -80,6 +80,15 @@ fi
 # Added by serverless binary installer
 export PATH="$HOME/.serverless/bin:$PATH"
 
+# Python Setup
+export PYENV_VIRTUALENV_DISABLE_PROMPT=1
+
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
+
+# ACME.sh Setup
+. "$HOME/.acme.sh/acme.sh.env"
+
 # use .localrc for SUPER SECRET CRAP that you don't
 # want in your public, versioned repo.
 if [[ -a ~/.localrc ]]; then

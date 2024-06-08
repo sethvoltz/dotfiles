@@ -1,4 +1,0 @@
-# Ensure Homebrew Python is used instead of system
-if [ -d /usr/local/opt/python/libexec/bin ]; then
-  path=('/usr/local/opt/python/libexec/bin' $path)
-fi
