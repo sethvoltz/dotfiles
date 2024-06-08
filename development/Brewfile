@@ -1,4 +1,4 @@
-work_machine = File.exists?(File.expand_path("~/.workmachine"))
+work_machine = File.exist?(File.expand_path("~/.workmachine"))
 
 tap "homebrew/cask-fonts"
 

@@ -1,4 +1,4 @@
-work_machine = File.exists?(File.expand_path("~/.workmachine"))
+work_machine = File.exist?(File.expand_path("~/.workmachine"))
 
 tap "homebrew/bundle"
 tap "buo/cask-upgrade"
@@ -8,6 +8,7 @@ mas "WiFi Signal", id: 525912054
 mas "Deliveries",  id: 290986013
 
 cask "1password"
+cask "adobe-creative-cloud"
 cask "alfred"
 cask "bartender"
 cask "bettertouchtool"
@@ -25,7 +26,6 @@ unless work_machine
 end
 
 brew "ack"
-brew "adobe-creative-cloud"
 brew "coreutils"
 brew "ctags"
 brew "gnu-sed"
