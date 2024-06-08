@@ -5,4 +5,4 @@ export FZF_DEFAULT_COMMAND='
 
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+source <(fzf --zsh)
