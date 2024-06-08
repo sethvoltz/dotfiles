@@ -18,7 +18,12 @@ export CLICOLOR=true
 export EZA_COLORS="uu=33:gu=37:sn=32:sb=32:da=36:"
 export LC_CTYPE=en_US.UTF-8 # Ensure UTF-8 always, everywhere
 
-fpath=(/usr/local/share/zsh-completions $ZSH/zsh/functions $fpath)
+# fpath=(/usr/local/share/zsh-completions $ZSH/zsh/functions $fpath)
+fpath+="/opt/homebrew/share/zsh/site-functions"
+fpath+="$ZSH/zsh/functions"
+
+autoload -Uz compinit
+compinit
 
 autoload -U $ZSH/zsh/functions/*(:t)
 

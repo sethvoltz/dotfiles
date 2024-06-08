@@ -15,7 +15,7 @@ HOMEBREW_PREFIX=$(brew --prefix)
 # `brew install zsh-syntax-highlighting`
 # https://github.com/zsh-users/zsh-syntax-highlighting
 if [ -f ${HOMEBREW_PREFIX}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
-    source ${HOMEBREW_PREFIX}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+  source ${HOMEBREW_PREFIX}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
 typeset -gA ZSH_HIGHLIGHT_STYLES
@@ -24,7 +24,7 @@ ZSH_HIGHLIGHT_STYLES[globbing]='fg=cyan'
 # `brew install zsh-autosuggestions`
 # https://github.com/zsh-users/zsh-autosuggestions
 if [ -f ${HOMEBREW_PREFIX}/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
-    source ${HOMEBREW_PREFIX}/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+  source ${HOMEBREW_PREFIX}/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 fi
 
 # source every .zsh file in this repo
@@ -42,9 +42,9 @@ for config_file ($ZSH/**/*.zsh~*/backups/*) source $config_file
 # - 'mh+24' matches files (or directories or whatever) that are older than 24 hours.
 autoload -Uz compinit 
 if [[ -n ${ZDOTDIR}/.zcompdump(#qN.mh+24) ]]; then
-	compinit;
+  compinit;
 else
-	compinit -C;
+  compinit -C;
 fi;
 
 # load every completion after autocomplete loads
@@ -52,7 +52,7 @@ for config_file ($ZSH/**/completion.sh~*/backups/*) source $config_file
 
 # Z hopping around folders
 if [ -f ${HOMEBREW_PREFIX}/etc/profile.d/z.sh ]; then
-    source ${HOMEBREW_PREFIX}/etc/profile.d/z.sh
+  source ${HOMEBREW_PREFIX}/etc/profile.d/z.sh
 fi
 
 # Auto-time commands that run longer than $REPORTTIME seconds
@@ -76,10 +76,9 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 # Fix OpenSSL path order
 [ -d /usr/local/opt/curl-openssl/bin ] && export PATH="/usr/local/opt/curl-openssl/bin:$PATH"
 
-# Enable NVM
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+if  type "fnm" > /dev/null; then
+  eval "$(fnm env --use-on-cd)"
+fi
 
 # Added by serverless binary installer
 export PATH="$HOME/.serverless/bin:$PATH"
