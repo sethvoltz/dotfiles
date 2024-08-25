@@ -1,0 +1,31 @@
+#!/bin/zsh
+
+if [ $# -eq 0 ]; then
+  echo "Usage: krp <pod-name>"
+  exit 1
+fi
+
+pod_name=$1
+echo "Deleting pods with name containing ${pod_name}..."
+
+# find all pods that contain the pod_name in their name with a space between the name and namespace
+pods=$(kubectl get pods --all-namespaces | awk "\$2~/$pod_name/ { print \$2\" \"\$1 }")
+
+# create a hash of all namespaces, each with an array of all pods in that namespace
+declare -A namespaces
+while read pod; do
+  namespace=$(echo $pod | awk '{ print $2 }')
+  name=$(echo $pod | awk '{ print $1 }')
+  if [ -z ${namespaces[$namespace]} ]; then
+    namespaces[$namespace]=$name
+  else
+    namespaces[$namespace]="${namespaces[$namespace]} $name"
+  fi
+done <<< $pods
+
+# delete all pods in each namespace
+for namespace in "${(@k)namespaces}"; do
+  pods=${namespaces[$namespace]}
+  echo " - Namespace $namespace: $pods"
+  kubectl delete pods $pods --namespace=$namespace
+done

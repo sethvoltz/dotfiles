@@ -1,7 +1,0 @@
-if [ $# -eq 0 ]; then
-  echo "Usage: krp <pod-name>"
-  return 1
-fi
-
-echo "Deleting pods with name containing $1"
-kubectl delete $(kubectl get pods 2>&1 | awk "\$1~/$1/ { print \"pods/\"\$1 }")
