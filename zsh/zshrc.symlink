@@ -1,3 +1,5 @@
+ulimit -n 4096
+
 # Uncomment to enable profiling, then view results with `zprof`
 # zmodload zsh/zprof
 
