@@ -73,24 +73,25 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 # Fix OpenSSL path order
 [ -d /usr/local/opt/curl-openssl/bin ] && export PATH="/usr/local/opt/curl-openssl/bin:$PATH"
 
-if  type "fnm" > /dev/null; then
-  eval "$(fnm env --use-on-cd)"
-fi
-
-# Added by serverless binary installer
-export PATH="$HOME/.serverless/bin:$PATH"
-
 # Python Setup
 export PYENV_VIRTUALENV_DISABLE_PROMPT=1
 
+# Use pyenv over everything
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 
 # ACME.sh Setup
 # . "$HOME/.acme.sh/acme.sh.env"
 
-# use .localrc for SUPER SECRET CRAP that you don't
-# want in your public, versioned repo.
+# Created by `pipx` on 2024-06-24 22:22:06
+export PATH="$PATH:$HOME/.local/bin"
+
+# -----------------------------------------------------------------------------------= Local RC =--=
+
+# Use .localrc for SUPER SECRET CRAP that you don't want in your public, versioned repo.
+# Always put this at the very end so anything in local acts as an override
 if [[ -a ~/.localrc ]]; then
   source ~/.localrc
 fi
+
+# -------------------------------------------------------------------------------------------------=
