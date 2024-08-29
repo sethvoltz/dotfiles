@@ -8,6 +8,7 @@ mas "WiFi Signal", id: 525912054
 mas "Deliveries",  id: 290986013
 
 cask "1password"
+cask "arc"
 cask "adobe-creative-cloud"
 cask "alfred"
 cask "bartender"
