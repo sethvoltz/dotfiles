@@ -1,3 +1,6 @@
+# Create a file in a directory called .tab-color to set the tab color
+# The file should contain a hex color code including the preceeding hash (#)
+
 update_tab_chpwd() {
   # Search for a tab-color file
   color_file=$(pwd -P 2>/dev/null || command pwd)
