@@ -11,9 +11,11 @@ alias glog="git log --graph --pretty=format:'%Cred%h%Creset %an: %s - %Creset %C
 alias gd='git diff' # when using diff-so-fancy
 
 # Repo & branch lifecycle
-alias gco='git checkout'
-alias gcod='gco `default-branch`'
-alias gb='git branch'
+# alias gco='git checkout'
+# alias gb='git branch'
+alias gw='git switch'
+alias gwd='gw `default-branch`'
+alias gn='gw -b'
 alias gs='git status -sb' # upgrade your git if -sb breaks for you. it's fun.
 alias grm="git status | grep deleted | awk '{print \$3}' | xargs git rm"
 alias ga='git add'

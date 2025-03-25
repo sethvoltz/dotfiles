@@ -1,1 +1,3 @@
-git remote show origin | awk '/HEAD/ {print $3}'
+git for-each-ref --format='%(refname:short) %(upstream:short)' refs/heads \
+  | grep $(git rev-parse --abbrev-ref origin/HEAD) \
+  | awk '{print $1}'
