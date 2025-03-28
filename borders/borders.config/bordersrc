@@ -2,7 +2,8 @@
 
 options=(
   style=round
-  width=10.0
+  order=above # undocumented and unsupported https://github.com/FelixKratz/JankyBorders/issues/37#issuecomment-1871262622
+  width=3.0
   active_color=0xff00ff00
   inactive_color=0x00000000
   blacklist=iTerm2
