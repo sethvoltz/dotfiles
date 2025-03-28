@@ -2,3 +2,4 @@ vim.symlink.disabled/.netrwhist
 vim.symlink.disabled/backups
 vim.symlink.disabled/plugged
 vim.symlink.disabled/autoload/plug.vim.old
+vim.symlink.disabled/backup/*.sw[lmnop]
