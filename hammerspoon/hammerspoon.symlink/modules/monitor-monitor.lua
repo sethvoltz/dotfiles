@@ -12,8 +12,8 @@ local filteredBundles = {
 }
 
 local lastScreenId = -1
--- local usePhysicalIndicator = false
-local useVirtualIndicator = true
+-- local usePhysicalIndicator = true
+-- local useVirtualIndicator = true
 
 local currentIndicator = nil
 local indicatorBottomHeight = 2
