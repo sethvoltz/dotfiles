@@ -1,0 +1,22 @@
+# Run `ghostty +show-config --default --docs` to view a list of
+# all available config options and their default values.
+#
+# Additionally, each config option is also explained in detail
+# on Ghostty's website, at https://ghostty.org/docs/config.
+
+keybind = global:cmd+grave_accent=toggle_quick_terminal
+font-family = "Hack Nerd Font Mono"
+font-size = 12
+
+theme = "dark:iTerm2 Tango Dark,light:iTerm2 Tango Light"
+background-opacity = 0.4
+background-blur = 10
+
+macos-titlebar-style = tabs
+macos-window-shadow = false
+
+auto-update = download
+auto-update-channel = stable
+
+window-height = 80
+window-width = 250
