@@ -1,0 +1,49 @@
+#!/bin/bash -e
+
+# Check if the script is running interactively
+if [ -t 1 ]; then
+  yellow="\033[1;33m"
+  red="\033[1;31m"
+  cyan="\033[1;36m"
+  reset="\033[0m"
+else
+  yellow=""
+  red=""
+  reset=""
+  cyan=""
+fi
+
+# Always extract arguments
+input_file="${1}"
+output_file="${2}"
+
+function usage() {
+  echo -e "${yellow}Usage: ${0##*/} <input_file> <output_file>${reset}" >&2
+  exit 1
+}
+
+function help() {
+  echo -e "Easily convert a video to a gif using ffmpeg. This will optimize the color palette to" >&2
+  echo -e "keep it looking good, and drop the framerate to 10fps to keep the file size down." >&2
+  echo >&2
+  usage
+}
+
+# Check for correct arguments
+if [ -z "${input_file}" ] || [ -z "${output_file}" ]; then
+  help
+fi
+
+# Ensure the input file exists
+if [ ! -f "${input_file}" ]; then
+  echo -e "${red}Error: Input file does not exist ${cyan}'${input_file}'${reset}" >&2
+  echo >&2
+  usage
+fi
+
+# Do the dang thing
+ffmpeg -i "${input_file}" \
+  -filter_complex "[0:v] fps=10,scale=640:-1:flags=lanczos,palettegen [p]; \
+    [0:v] fps=10,scale=640:-1:flags=lanczos [x]; \
+    [x][p] paletteuse" \
+  "${output_file}"
