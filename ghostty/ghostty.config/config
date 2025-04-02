@@ -9,8 +9,8 @@ font-family = "Hack Nerd Font Mono"
 font-size = 12
 
 theme = "dark:iTerm2 Tango Dark,light:iTerm2 Tango Light"
-background-opacity = 0.4
-background-blur = 10
+background-opacity = 0.8
+background-blur = 15
 
 macos-titlebar-style = tabs
 macos-window-shadow = false
