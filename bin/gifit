@@ -1,4 +1,8 @@
-#!/bin/bash -e
+#!/usr/bin/env bash
+
+# https://betterdev.blog/minimal-safe-bash-script-template/
+set -Eeuo pipefail
+trap cleanup SIGINT SIGTERM ERR EXIT
 
 # Check if the script is running interactively
 if [ -t 1 ]; then
