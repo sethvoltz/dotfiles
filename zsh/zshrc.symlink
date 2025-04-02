@@ -72,18 +72,14 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 # Finally, set up stderr redirection through colorize to make it red
 #exec 2>>(colorize `tput bold; tput setaf 1` `tput sgr0` > /dev/tty &)
 
-# Fix OpenSSL path order
-[ -d /usr/local/opt/curl-openssl/bin ] && export PATH="/usr/local/opt/curl-openssl/bin:$PATH"
-
 # Python Setup
 export PYENV_VIRTUALENV_DISABLE_PROMPT=1
 
-# Use pyenv over everything
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
-
-# ACME.sh Setup
-# . "$HOME/.acme.sh/acme.sh.env"
+if command -v pyenv > /dev/null 2>&1; then
+  # Use pyenv over everything
+  eval "$(pyenv init -)"
+  eval "$(pyenv virtualenv-init -)"
+fi
 
 # Created by `pipx` on 2024-06-24 22:22:06
 export PATH="$PATH:$HOME/.local/bin"

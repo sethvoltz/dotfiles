@@ -9,4 +9,4 @@
 export ZSH=${ZSH:=$HOME/.dotfiles}
 
 # Install homebrew packages
-$ZSH/script/bootstrap && $ZSH/script/install
+$ZSH/script/bootstrap
