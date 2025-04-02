@@ -61,10 +61,9 @@ fi
 export TIMEFMT="%U user %S system %P cpu %*E total, running %J"
 REPORTTIME=3
 
-eval `/usr/libexec/path_helper -s`
-
 # source every .path file in this rep -- path updates should come last
 for config_file ($ZSH/**/*.path~*/backups/*) source $config_file
+eval `/usr/libexec/path_helper -s`
 
 # Add iTerm shell integration
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
@@ -80,9 +79,6 @@ if command -v pyenv > /dev/null 2>&1; then
   eval "$(pyenv init -)"
   eval "$(pyenv virtualenv-init -)"
 fi
-
-# Created by `pipx` on 2024-06-24 22:22:06
-export PATH="$PATH:$HOME/.local/bin"
 
 # -----------------------------------------------------------------------------------= Local RC =--=
 
