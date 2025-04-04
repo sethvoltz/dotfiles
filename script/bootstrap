@@ -125,7 +125,7 @@ link_file () {
 }
 
 install_dotfiles () {
-  info 'installing dotfiles'
+  info "installing dotfiles\n"
 
   local overwrite_all=false backup_all=false skip_all=false
 
@@ -139,7 +139,7 @@ install_dotfiles () {
 }
 
 install_configfiles () {
-  info 'installing config files'
+  info "installing config files\n"
 
   local overwrite_all=false backup_all=false skip_all=false
 
