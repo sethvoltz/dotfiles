@@ -4,15 +4,18 @@
 # Additionally, each config option is also explained in detail
 # on Ghostty's website, at https://ghostty.org/docs/config.
 
-keybind = global:cmd+grave_accent=toggle_quick_terminal
+# keybind = global:cmd+grave_accent=toggle_quick_terminal
 font-family = "Hack Nerd Font Mono"
 font-size = 12
+adjust-cell-height = -5%
 
 theme = "dark:iTerm2 Tango Dark,light:iTerm2 Tango Light"
 background-opacity = 0.8
-background-blur = 15
+background-blur = 5
 
 macos-titlebar-style = tabs
+window-theme = ghostty
+split-divider-color = #444444
 macos-window-shadow = false
 
 auto-update = download
