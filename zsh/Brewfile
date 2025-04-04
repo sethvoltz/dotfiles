@@ -1,7 +1,6 @@
 brew "bat"
 brew "eza"
 brew "starship"
-brew "zsh"
 brew "zsh-autosuggestions"
 brew "zsh-completions"
 brew "zsh-lovers"
