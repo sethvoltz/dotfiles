@@ -1,2 +1,3 @@
 brew "git"
 brew "git-delta"
+brew "forgit"
