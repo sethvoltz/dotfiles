@@ -1,5 +1,7 @@
 #! /usr/bin/env bash
 
+# Credit: https://github.com/rec/gitz/blob/main/git-st
+
 usage() {
     cat <<EOF
 git st:
