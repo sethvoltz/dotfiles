@@ -5,8 +5,8 @@
 # fi
 
 # Editors
-export EDITOR='vim'
-export LESSEDIT='vim ?lm+%lm. %f'
+export EDITOR='nvim'
+export LESSEDIT='nvim ?lm+%lm. %f'
 export CVSEDITOR=$EDITOR
 export SVN_EDITOR=$EDITOR
 export GIT_EDITOR=$EDITOR

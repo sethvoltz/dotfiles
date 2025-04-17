@@ -5,6 +5,6 @@ if [ $ZSH ]; then
   if [ "$repo_age" -gt "$grace_period" ]; then
     echo "ZSH repo is out of date (older than $grace_period seconds)... updating"
     $ZSH/script/update -f
-    echo "Some updates not run, run \`\$ZSH/script/update\` for a full update."
+    echo "Some updates not run, run \`dotfiles\` for a full update."
   fi
 fi
