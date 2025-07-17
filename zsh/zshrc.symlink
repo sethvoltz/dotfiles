@@ -52,10 +52,8 @@ fi;
 # load every completion after autocomplete loads
 for config_file ($ZSH/**/completion.sh~*/backups/*) source $config_file
 
-# Z hopping around folders
-if [ -f ${HOMEBREW_PREFIX}/etc/profile.d/z.sh ]; then
-  source ${HOMEBREW_PREFIX}/etc/profile.d/z.sh
-fi
+# Zoxide
+eval "$(zoxide init zsh)"
 
 # Auto-time commands that run longer than $REPORTTIME seconds
 export TIMEFMT="%U user %S system %P cpu %*E total, running %J"
