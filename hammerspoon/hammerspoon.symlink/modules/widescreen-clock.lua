@@ -1,5 +1,7 @@
 local widescreenIndicators = {}
-local indicatorColor = hs.drawing.color.asRGB({ red = 1.0, green = 1.0, blue = 1.0, alpha = 1.0 })
+local textColorLightMode = hs.drawing.color.asRGB({ red = 0.0, green = 0.0, blue = 0.0, alpha = 1.0 })
+local textColorDarkMode = hs.drawing.color.asRGB({ red = 1.0, green = 1.0, blue = 1.0, alpha = 1.0 })
+local isDarkMode = false
 
 local clockStyle = {
   font = {
@@ -9,7 +11,6 @@ local clockStyle = {
       alignment = "center",
   },
   expansion = 0.02,
-  color = indicatorColor,
 }
 
 -- -------------------------------------------------------= Change Handlers =--=
@@ -37,7 +38,7 @@ function drawWideScreenClock(screen)
 
   local fontInfo = hs.styledtext.fontInfo(clockStyle.font)
   local clockOffset = math.floor(menubarHeight - fontInfo.capHeight) / 2 - (fontInfo.ascender - fontInfo.capHeight)
-
+  
   local clock = hs.styledtext.new(os.date("%a %b %d  %H:%M"), clockStyle)
   local width = 250
   local height = menubarHeight
@@ -70,14 +71,31 @@ function drawWideScreenClock(screen)
 end
 
 function clearWideScreenIndicators()
-   for key, wideIndicator in pairs(widescreenIndicators) do
-      wideIndicator:delete()
-      widescreenIndicators[key] = nil
-   end
+  for key, wideIndicator in pairs(widescreenIndicators) do
+    wideIndicator:delete()
+    widescreenIndicators[key] = nil
+  end
+end
+
+local function getDarkModeFromSystem()
+	local _, darkmode = hs.osascript.javascript("Application('System Events').appearancePreferences.darkMode.get()")
+  return darkmode
+end
+
+function updateSystemDarkMode(name, object, userInfo)
+  local newDarkMode = getDarkModeFromSystem()
+  if newDarkMode ~= isDarkMode then
+    isDarkMode = newDarkMode
+    clockStyle.color = isDarkMode and textColorDarkMode or textColorLightMode
+    updateWideScreenClocks()
+  end
 end
 
 -- --------------------------------------------------------------= Watchers =--=
 
 _wideScreenClockSpaceWatcher = hs.spaces.watcher.new(updateWideScreenClocks):start()
 _wideScreenClockTimer        = hs.timer.new(hs.timer.seconds(15), updateWideScreenClocks):start()
+_systemDarkModeWatcher       = hs.distributednotifications.new(updateSystemDarkMode, 'AppleInterfaceThemeChangedNotification'):start()
+
+isDarkMode = getDarkModeFromSystem()
 updateWideScreenClocks()
