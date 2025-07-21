@@ -61,7 +61,7 @@ REPORTTIME=3
 
 # source every .path file in this rep -- path updates should come last
 for config_file ($ZSH/**/*.path~*/backups/*) source $config_file
-eval `/usr/libexec/path_helper -s`
+#eval `/usr/libexec/path_helper -s`
 
 # Add iTerm shell integration
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
