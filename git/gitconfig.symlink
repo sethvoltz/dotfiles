@@ -2,10 +2,6 @@
 #
 # Please put all sensitive data (users, emails, auth tokens) into ~/.local.gitconfig
 
-[include]
-  path = .dotfiles/git/themes.gitconfig
-  path = .local.gitconfig
-
 [core]
   excludesfile = ~/.gitignore
   pager = delta --dark
@@ -42,6 +38,9 @@
 
 [delta]
   features = woolly-mammoth
+  hyperlinks = true
+  hyperlinks-file-link-format = "vscode://file/{path}:{line}"
+  # override with `hyperlinks-file-link-format = "cursor://file/{path}:{line}"` in .local.gitconfig
   navigate = true  # use n and N to move between diff sections
   side-by-side = true
   line-numbers = true
@@ -84,3 +83,7 @@
 
 [help]
   autocorrect = prompt
+
+[include]
+  path = .local.gitconfig
+  path = .dotfiles/git/themes.gitconfig
