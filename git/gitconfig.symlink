@@ -6,6 +6,19 @@
   path = .dotfiles/git/themes.gitconfig
   path = .local.gitconfig
 
+[core]
+  excludesfile = ~/.gitignore
+  pager = delta --dark
+
+[column]
+  ui = auto
+
+[branch]
+  sort = -committerdate
+
+[tag]
+  sort = version:refname
+
 [alias]
   stat = status
   quicklog = log --pretty=format:\"%h %cr %cn %Cgreen%s%Creset\"
@@ -24,14 +37,6 @@
   # only add whitespace changes to a commit (???? under trial now)
   addb = "!f() { git add -A ; git diff --cached -w | git apply --cached -R; } f"
 
-[gui]
-  fontui = -family Monaco -size 10 -weight normal -slant roman -underline 0 -overstrike 0
-  fontdiff = -family Monaco -size 10 -weight normal -slant roman -underline 0 -overstrike 0
-
-[core]
-  excludesfile = ~/.gitignore
-  pager = delta --dark
-
 [interactive]
   diffFilter = delta --color-only
 
@@ -42,16 +47,28 @@
   line-numbers = true
 
 [diff]
+  algorithm = histogram
 	compactionHeuristic = true
-  colorMoved = default
+  colorMoved = plain
+  mnemonicPrefix = true
+  renames = true
 
 [merge]
-  conflictstyle = diff3
+  conflictstyle = zdiff3
+
+[rerere]
+  enabled = true
+  autoupdate = true
 
 [push]
-  default = current
+  default = simple
   followTags = true
   autoSetupRemote = true
+
+[fetch]
+  prune = true
+  pruneTags = true
+  all = true
 
 [stash]
 	showPatch = true
@@ -60,7 +77,10 @@
 	date = relative
 
 [pull]
-	rebase = false
+	rebase = true
 
 [init]
 	defaultBranch = main
+
+[help]
+  autocorrect = prompt
