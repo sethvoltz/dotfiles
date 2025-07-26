@@ -1,6 +1,5 @@
 work_machine = File.exist?(File.expand_path("~/.workmachine"))
 
-tap "homebrew/bundle"
 tap "buo/cask-upgrade"
 tap "dteoh/sqa"
 
@@ -20,7 +19,7 @@ cask "osquery"
 cask "rectangle"
 cask "the-unarchiver"
 cask "unicodechecker"
-cask "zen-browser"
+cask "zen"
 
 unless work_machine
   cask "backblaze"
@@ -39,7 +38,6 @@ brew "mas"
 brew "procs"
 brew "rg"
 brew "switchaudio-osx"
-brew "trafshow"
 brew "tree"
 brew "wget"
 brew "zenith"

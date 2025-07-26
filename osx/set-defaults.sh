@@ -11,6 +11,9 @@
 # settings we’re about to change
 osascript -e 'tell application "System Preferences" to quit'
 
+# Ask for the administrator password upfront
+sudo -v
+
 # Disable screensaver even if your managed machine doesn't want you to - display sleep still locks
 sudo dscl . -mcxset /Computers/localhost com.apple.screensaver idleTime always -int 0
 defaults -currentHost write com.apple.screensaver idleTime 0 # disable screensaver
@@ -20,17 +23,11 @@ defaults -currentHost write com.apple.screensaver idleTime 0 # disable screensav
 #sudo pmset -b displaysleep 3
 #sudo pmset -c displaysleep 8
 
-# Disable spotlight folder keyboard shortcut
-# /usr/libexec/PlistBuddy -c "Set :AppleSymbolicHotKeys:65:enabled 0" ~/Library/Preferences/com.apple.symbolichotkeys.plist
-
 # Change shortcut for Emoji & Symbols
 defaults write -globalDomain NSUserKeyEquivalents -dict-add "Emoji \\U0026 Symbols" "@~\\U0020"
 
 # Add Chrome shortcut to open current tab in new window
 defaults write com.google.Chrome NSUserKeyEquivalents -dict-add "Move Tab to New Window" -string "@~n"
-
-# Disable the Dashboard completely
-defaults write com.apple.dashboard mcx-disabled -boolean YES
 
 # Set a really fast key repeat.
 #defaults write NSGlobalDomain KeyRepeat -int 0
@@ -57,11 +54,14 @@ defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
 # Expand print panel by default
 defaults write NSGlobalDomain PMPrintingExpandedStateForPrint -bool true
 
+# Automatically quit printer app once the print jobs complete
+defaults write com.apple.print.PrintingPrefs "Quit When Finished" -bool true
+
 # Enable full keyboard access for all controls (e.g. enable Tab in modal dialogs)
 defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
 
 # Enable subpixel font rendering on non-Apple LCDs
-# defaults write NSGlobalDomain AppleFontSmoothing -int 2
+defaults write NSGlobalDomain AppleFontSmoothing -int 2
 
 # Enable tap to click (Trackpad) for this user and for the login screen
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
@@ -71,9 +71,6 @@ defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
 # Require password 5 seconds after sleep or screen saver begins
 # defaults write com.apple.screensaver askForPassword -int 1
 # defaults write com.apple.screensaver askForPasswordDelay -int 5
-
-# Automatically quit printer app once the print jobs complete
-defaults write com.apple.print.PrintingPrefs "Quit When Finished" -bool true
 
 # Show status bar in Finder
 defaults write com.apple.finder ShowStatusBar -bool true
@@ -127,9 +124,6 @@ defaults write com.apple.Safari FindOnPageMatchesWordStartsOnly -bool false
 # Add a context menu item for showing the Web Inspector in web views
 defaults write NSGlobalDomain WebKitDeveloperExtras -bool true
 
-# Enable the debug menu in Address Book
-defaults write com.apple.addressbook ABShowDebugMenu -bool true
-
 # Hot corners
 # Possible values:
 #  0: no-op
@@ -157,5 +151,35 @@ defaults write com.apple.AppleMultitouchTrackpad HIDScrollZoomModifierMask -int 
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad HIDScrollZoomModifierMask -int 262144
 
 # Kill affected applications
-for app in Finder Dock Mail Safari Address\ Book SystemUIServer; do killall "$app" > /dev/null 2>&1; done
+affected_apps=(
+  "Finder"
+  "Dock"
+  "Mail"
+  "Safari"
+  "SystemUIServer"
+  "TextEdit"
+)
+
+no_need_to_relaunch=(
+  "Finder"
+  "SystemUIServer"
+)
+
+for app in "${affected_apps[@]}"; do
+  if pgrep -x "$app" > /dev/null; then
+    killall "$app" > /dev/null 2>&1
+    # Wait for the app to quit, but don't wait forever (max 5 seconds)
+    for i in {1..10}; do
+      if ! pgrep -x "$app" > /dev/null; then
+        break
+      fi
+      sleep 0.5
+    done
+    # Relaunch unless excluded
+    if [[ ! " ${no_need_to_relaunch[*]} " =~ " $app " ]]; then
+      open -a "$app"
+    fi
+  fi
+done
+
 echo "OSX Preferences Done. Note that some of these changes require a logout/restart to take effect."

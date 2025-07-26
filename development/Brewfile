@@ -1,9 +1,7 @@
 work_machine = File.exist?(File.expand_path("~/.workmachine"))
 
-tap "homebrew/cask-fonts"
-
 unless work_machine
-  cask "arduino"
+  cask "arduino-ide"
   cask "blender"
   cask "openscad"
   cask "raspberry-pi-imager"
