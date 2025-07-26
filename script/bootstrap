@@ -174,6 +174,7 @@ then
   fi
 
   info "Running defaults setup"
+  echo ''
   ${DOTFILES_ROOT}/osx/set-defaults.sh
 fi
 
