@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Sets reasonable OS X defaults... how I like OS X.
 #
 # The original idea (and a couple settings) were grabbed from:
@@ -152,8 +154,8 @@ defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad HIDScrollZoomM
 
 # Kill affected applications
 affected_apps=(
-  "Finder"
   "Dock"
+  "Finder"
   "Mail"
   "Safari"
   "SystemUIServer"
@@ -161,11 +163,14 @@ affected_apps=(
 )
 
 no_need_to_relaunch=(
+  "Dock"
   "Finder"
   "SystemUIServer"
 )
 
+echo -n "Restarting affected apps"
 for app in "${affected_apps[@]}"; do
+  echo -n "."
   if pgrep -x "$app" > /dev/null; then
     killall "$app" > /dev/null 2>&1
     # Wait for the app to quit, but don't wait forever (max 5 seconds)
@@ -181,5 +186,6 @@ for app in "${affected_apps[@]}"; do
     fi
   fi
 done
+echo " done"
 
 echo "OSX Preferences Done. Note that some of these changes require a logout/restart to take effect."
