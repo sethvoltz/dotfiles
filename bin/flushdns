@@ -6,25 +6,6 @@ if [ ! $(which sw_vers) ]; then
   exit 1
 fi
 
-version_component() {
-  printf "%s" "$1" |
-    sed -e "s/\./"$'\t'"/g" -e "s/-/"$'\t'"/" |
-    cut -f "$2"
-}
-
-MAC_OS_VERSION="$(sw_vers -productVersion)"
-MAC_OS_MINOR_VERSION="$(version_component "$MAC_OS_VERSION" 2)"
-
-if [ "$MAC_OS_MINOR_VERSION" -le 6 ]; then
-  sudo dscacheutil -flushcache
-elif [ "$MAC_OS_MINOR_VERSION" -gt 6 ] && [ "$MAC_OS_MINOR_VERSION" -lt 10 ]; then
-  sudo killall -HUP mDNSResponder
-elif [ "$MAC_OS_MINOR_VERSION" -ge 10 ]; then
-  MAC_OS_PATCH_VERSION="$(version_component "$MAC_OS_VERSION" 3)"
-
-  if [ ! -z "$MAC_OS_PATCH_VERSION" ] && [ "$MAC_OS_PATCH_VERSION" -le 3 ]; then
-    sudo discoveryutil mdnsflushcache
-  else
-    sudo killall -HUP mDNSResponder
-  fi
-fi
+# Flush DNS
+sudo dscacheutil -flushcache
+sudo killall -HUP mDNSResponder
