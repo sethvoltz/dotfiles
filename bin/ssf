@@ -1,0 +1,55 @@
+#!/usr/bin/env bash -e
+
+# Requirements:
+# - grep
+# - fzf
+
+# If any parameters are passed, immediately call ssh with them and exit
+if [[ $# -gt 0 ]]; then
+  ssh "$@"
+  exit $?
+fi
+
+# Get list of hosts and usernames
+hosts=()
+current_host=""
+current_user=""
+while IFS= read -r line; do
+  if [[ $line =~ ^Host[[:space:]]+(.+) ]]; then
+    # If we have a previous host, save it before starting a new one
+    if [[ -n $current_host && $current_host != "*" ]]; then
+      if [[ -n $current_user ]]; then
+        hosts+=("$current_host ($current_user)")
+      else
+        hosts+=("$current_host")
+      fi
+    fi
+    current_host=${BASH_REMATCH[1]}
+    current_user=""
+  elif [[ $line =~ ^[[:space:]]*User[[:space:]]+(.+) ]]; then
+    current_user=${BASH_REMATCH[1]}
+  fi
+done < ~/.ssh/config
+
+# Save the last host block
+if [[ -n $current_host && $current_host != "*" ]]; then
+  if [[ -n $current_user ]]; then
+    hosts+=("$current_host ($current_user)")
+  else
+    hosts+=("$current_host")
+  fi
+fi
+
+# Use fzf to select host
+selected=$(printf "%s\n" "${hosts[@]}" |\
+  fzf --prompt "Host > " \
+    --info=inline \
+    --height 50% \
+    --reverse \
+    --border \
+    --margin=5,20% \
+    --padding=1)
+
+host=$(echo "$selected" | awk '{print $1}')
+echo "SSH session started, connecting to $host"
+ssh $host

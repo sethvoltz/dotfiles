@@ -23,6 +23,9 @@ alias fuck='sudo $(fc -ln -1)'
 
 alias help=run-help
 
+# Read in SSH config file and allow fuzzy search to connect, via `fzf` - see bin/ssf
+alias ssh='ssf'
+
 # View HTTP traffic
 alias sniff="sudo ngrep -d 'en1' -t '^(GET|POST) ' 'tcp and port 80'"
 alias httpdump="sudo tcpdump -i en1 -n -s 0 -w - | grep -a -o -E \"Host\: .*|GET \/.*\""
