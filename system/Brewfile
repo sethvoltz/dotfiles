@@ -3,8 +3,8 @@ work_machine = File.exist?(File.expand_path("~/.workmachine"))
 tap "buo/cask-upgrade"
 tap "dteoh/sqa"
 
-mas "WiFi Signal", id: 525912054
-mas "Deliveries",  id: 290986013
+mas "WiFi Signal",   id: 525912054
+mas "Looking Glass", id: 1602004436
 
 cask "1password"
 cask "adobe-creative-cloud"
