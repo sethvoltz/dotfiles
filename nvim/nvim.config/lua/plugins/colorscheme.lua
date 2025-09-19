@@ -1,20 +1,18 @@
 return {
   {
-    -- https://github.com/projekt0n/github-nvim-theme
-    "projekt0n/github-nvim-theme",
-    name = "github-theme",
-    config = function()
-      require("github-theme").setup({
-        options = {
-          transparent = true,
-        },
-      })
-    end,
+    "catppuccin/nvim",
+    name = "catppuccin",
+    priority = 1000,
+    -- config = function()
+    --   require("catppuccin").setup({
+    --     transparent_background = true,
+    --   })
+    -- end,
   },
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "github_dark",
+      colorscheme = "catppuccin",
     },
   },
 }
