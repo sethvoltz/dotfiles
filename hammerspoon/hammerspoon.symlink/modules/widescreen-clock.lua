@@ -78,7 +78,7 @@ function clearWideScreenIndicators()
 end
 
 local function getDarkModeFromSystem()
-	local _, darkmode = hs.osascript.javascript("Application('System Events').appearancePreferences.darkMode.get()")
+	local _, darkmode = hs.osascript.applescript("tell application \"System Events\" to tell appearance preferences to return dark mode")
   return darkmode
 end
 
@@ -97,5 +97,5 @@ _wideScreenClockSpaceWatcher = hs.spaces.watcher.new(updateWideScreenClocks):sta
 _wideScreenClockTimer        = hs.timer.new(hs.timer.seconds(15), updateWideScreenClocks):start()
 _systemDarkModeWatcher       = hs.distributednotifications.new(updateSystemDarkMode, 'AppleInterfaceThemeChangedNotification'):start()
 
-isDarkMode = getDarkModeFromSystem()
+updateSystemDarkMode()
 updateWideScreenClocks()
