@@ -1,0 +1,166 @@
+#!/bin/bash
+
+################################################################################
+#                              git-switch-fzf                                  #
+#                                                                              #
+#  Simple bash wrapper around git and fzf                                      #
+#  for interactively search branches( & tags )                                 # 
+#  and switching (and more) to them.                                           # 
+#                                                                              #
+################################################################################
+#                                                                              #
+#  Repository - https://github.com/emgyrz/git-switch-fzf                       #
+#  Copyright (C) 2024 Max Zommer <emgyrz@gmail.com>                            #
+#                                                                              #
+################################################################################
+
+show_help() {
+  cat << EOF
+
+Usage: git-switch-fzf [options]
+
+Options:
+  -t, --type TYPE     | Specify TYPE of git references where to search. Can be 'local', 'remote', 'tags' separated with ',' comma. Default is 'local'. Short names are 'l', 'r' and 't'
+  -r, --remote        | Same as '--type remote'
+  -e, --exec CMD      | Command to which the selected value will be passed. Default is 'git switch'
+  --take-hash         | Return short commit hash instead of branch or tag name
+  --no-preview        | Hide top preview
+  -h, --help          | Print this help message
+  
+Examples:  
+
+  git-switch-fzf --type local,remote,tags  --  search in all references
+  # same as 
+  git-switch-fzf -t r,t,l
+  
+  git-switch-fzf -type t  --  search only in tags
+  
+  git-switch-fzf -e "git checkout"  --  use 'checkout' instead of 'switch' 
+  
+  git-switch-fzf -e echo  --  just print to console selected item name
+  
+  git-switch-fzf -e echo --take-hash  --  print to console hash of selected item
+  
+  echo "selected hash is \$(git-switch-fzf -e echo --take-hash)" > /tmp/test  --  use returned value in other command, e.g. for write it to file
+  
+EOF
+}
+
+
+err() {
+  echo "error: $1" >&2 && exit 1
+}
+
+
+GSF_HAS_PREVIEW=1
+GSF_TAKE_NTH=2
+GSF_EXEC="git switch"
+GSF_REF_TYPES="refs/heads"
+
+if ! [ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" ]; then
+  err "not in git repo"
+fi
+
+get_type_arg() {
+  GSF_REF_TYPES=""
+  
+  IFS=',' read -ra REF_TYPES <<< "$1"
+  for i in "${REF_TYPES[@]}"; do
+    case $i in
+    remote)   GSF_REF_TYPES+=" refs/remotes";; 
+         r)   GSF_REF_TYPES+=" refs/remotes";;
+     local)   GSF_REF_TYPES+=" refs/heads";; 
+         l)   GSF_REF_TYPES+=" refs/heads";;
+      tags)   GSF_REF_TYPES+=" refs/tags";; 
+         t)   GSF_REF_TYPES+=" refs/tags";;
+         *)   err "invalid git reference TYPE '$i'"
+    esac
+  done
+  
+  if [ -z "$GSF_REF_TYPES" ]; then
+      err "git reference TYPE must be specified"
+  fi
+}
+
+while [ -n "$1" ]
+do 
+  case $1 in
+          --type)   get_type_arg "$2";shift;;
+              -t)   get_type_arg "$2";shift;;
+              -r)   get_type_arg "remote";;
+        --remote)   get_type_arg "remote";;
+    --no-preview)   GSF_HAS_PREVIEW=0;;
+              -e)   GSF_EXEC=$2;shift;;
+          --exec)   GSF_EXEC=$2;shift;;
+     --take-hash)   GSF_TAKE_NTH=1;;
+              -h)   show_help; exit 0;;
+          --help)   show_help; exit 0;;
+               *)   err "unknown option '$1'";;
+  esac
+  shift
+done
+
+
+# normal, black, red, green, yellow, blue, magenta, cyan, white and default
+
+# короткий хэш. красный, если ветка текущая
+GSF_FORMAT='%(if)%(HEAD)%(then)%(color:red)%(objectname:short)%(color:reset)%(else)%(color:magenta)%(objectname:short)%(color:reset)%(end)'
+# имя ветки
+GSF_FORMAT+=' %(color:yellow)%(refname:short)%(color:reset)'
+# разделитель
+GSF_FORMAT+=' %(color:black)--%(color:reset)'
+# сообщение коммита
+GSF_FORMAT+=' %(contents:subject)'
+# имя автора
+GSF_FORMAT+=' %(color:cyan)%(authorname)%(color:reset)'
+# время коммита относительно текущего времени
+GSF_FORMAT+=' (%(color:green)%(committerdate:relative)%(color:reset))'
+
+
+
+GSF_FZF_PREVIEW_ARG='echo {}'
+
+if [ $GSF_HAS_PREVIEW == 0 ]; then
+  GSF_FZF_PREVIEW_ARG=""
+fi
+
+
+# git for-each-ref
+#   $GSF_REF_TYPES - references list
+#   --sort=-committerdate - sort by commit date. newer is higher 
+#   --format="$GSF_FORMAT" - format
+#   --color=always - always put ansi colors to the output
+
+git for-each-ref \
+  $GSF_REF_TYPES \
+  --sort=-committerdate \
+  --format="$GSF_FORMAT" \
+  --color=always |\
+
+#
+#  fzf
+#    --ansi - чтобы воспринимались коды ansi-цветов
+#    --reverse - последний коммит сверху
+#    --tiebreak=begin,index - вес сортировки - начало строки, первые строки
+#    --no-hscroll - без горизонтального скрола
+#    --preview="$GSF_FZF_PREVIEW_ARG" - для отображения полной инфы
+#    --preview-window=up,3,wrap - сверху, три строки, пренос строк
+fzf \
+  --ansi \
+  --reverse \
+  --tiebreak=begin,index \
+  --no-hscroll \
+  --preview="$GSF_FZF_PREVIEW_ARG" \
+  --preview-window=up,3,wrap |\
+
+
+# -v n="..." - отправляет переменную в скрипт awk
+# выдёргивает n слово из строки про git-ветку
+awk -v n="$GSF_TAKE_NTH" '{print $n}' |\
+
+# чистит имя ветки от `origin/` если была выбрана remote-ветка
+sed 's/origin\///' |\
+
+# передать результат предыдущих команд в качестве аргумента указанной команды
+#  -r, --no-run-if-empty
+xargs -o -r $GSF_EXEC;
