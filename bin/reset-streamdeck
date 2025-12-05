@@ -1,0 +1,142 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+usage() {
+  cat <<EOF
+Usage: $(basename "$0") [OPTIONS]
+
+Reset Stream Deck devices by power cycling their USB hub ports.
+
+Options:
+  -a    Reset all matching devices (non-interactive)
+  -l    List matching devices without resetting
+  -h    Show this help message
+
+When multiple devices are found without -a, an interactive menu is shown.
+EOF
+  exit 0
+}
+
+reset_all=false
+list_only=false
+
+while getopts "alh" opt; do
+  case "$opt" in
+    a) reset_all=true ;;
+    l) list_only=true ;;
+    h) usage ;;
+    *) usage ;;
+  esac
+done
+
+# Check if uhubctl is installed
+if ! command -v uhubctl &> /dev/null; then
+  cat <<EOF
+Error: uhubctl is not installed.
+
+To install uhubctl:
+
+    brew install uhubctl
+
+On macOS 26+ ensure at least libusb v1.0.30 or install from source:
+
+    brew uninstall libusb --ignore-dependencies
+    brew install libusb --head
+
+EOF
+  exit 1
+fi
+
+# Get all Stream Deck lines from uhubctl
+lines=()
+while IFS= read -r line; do
+  lines+=("$line")
+done < <(uhubctl | grep "Stream Deck" || true)
+
+if [[ ${#lines[@]} -eq 0 ]]; then
+  echo "No Stream Deck found in uhubctl output."
+  exit 1
+fi
+
+# Function to extract VID:PID from a line
+extract_vidpid() {
+  sed -E 's/.*\[([0-9a-fA-F]{4}:[0-9a-fA-F]{4}).*/\1/' <<<"$1"
+}
+
+# Function to reset a device by VID:PID
+reset_device() {
+  local vidpid="$1"
+  local desc="$2"
+  echo "Resetting Stream Deck ($vidpid): $desc"
+  sudo uhubctl -s "$vidpid" -a cycle
+}
+
+# List only mode
+if [[ "$list_only" == true ]]; then
+  echo "Found ${#lines[@]} Stream Deck(s):"
+  for line in "${lines[@]}"; do
+    vidpid=$(extract_vidpid "$line")
+    echo "  [$vidpid] $line"
+  done
+  exit 0
+fi
+
+# Single device or -a flag: reset without menu
+if [[ ${#lines[@]} -eq 1 ]] || [[ "$reset_all" == true ]]; then
+  for line in "${lines[@]}"; do
+    vidpid=$(extract_vidpid "$line")
+    if [[ -n "$vidpid" ]]; then
+      reset_device "$vidpid" "$line"
+    else
+      echo "Warning: Could not parse VID:PID from: $line"
+    fi
+  done
+else
+  # Multiple devices found - show selection menu
+  echo "Multiple Stream Decks found:"
+  echo ""
+  echo "  0) All devices"
+  i=1
+  for line in "${lines[@]}"; do
+    echo "  $i) $line"
+    ((i++))
+  done
+  echo ""
+
+  read -rp "Select device to reset [0-${#lines[@]}]: " selection
+
+  # Validate input
+  if ! [[ "$selection" =~ ^[0-9]+$ ]] || [[ "$selection" -gt ${#lines[@]} ]]; then
+    echo "Invalid selection."
+    exit 1
+  fi
+
+  if [[ "$selection" -eq 0 ]]; then
+    # Reset all devices
+    echo ""
+    for line in "${lines[@]}"; do
+      vidpid=$(extract_vidpid "$line")
+      if [[ -n "$vidpid" ]]; then
+        reset_device "$vidpid" "$line"
+      else
+        echo "Warning: Could not parse VID:PID from: $line"
+      fi
+    done
+  else
+    # Reset selected device
+    line="${lines[$((selection - 1))]}"
+    vidpid=$(extract_vidpid "$line")
+
+    if [[ -z "$vidpid" ]]; then
+      echo "Found Stream Deck line, but could not parse VID:PID:"
+      echo "  $line"
+      exit 1
+    fi
+
+    echo ""
+    reset_device "$vidpid" "$line"
+  fi
+fi
+
+echo "Done."
