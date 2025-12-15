@@ -80,3 +80,6 @@ fi
 # -------------------------------------------------------------------------------------------------=
 
 eval "$(brew shellenv)"
+
+# bun completions
+[ -s "/Users/seth/.bun/_bun" ] && source "/Users/seth/.bun/_bun"
