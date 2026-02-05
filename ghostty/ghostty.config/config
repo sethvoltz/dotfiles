@@ -9,17 +9,20 @@ font-family = "Hack Nerd Font Mono"
 font-size = 12
 adjust-cell-height = -5%
 
-theme = "dark:iTerm2 Tango Dark,light:iTerm2 Tango Light"
+theme = "dark:Catppuccin Mocha,light:Catppuccin Latte"
 background-opacity = 0.8
 background-blur = 5
 
+window-show-tab-bar = always
 macos-titlebar-style = tabs
 window-theme = ghostty
 split-divider-color = #444444
 macos-window-shadow = false
 
 auto-update = download
-auto-update-channel = stable
+auto-update-channel = tip
 
 window-height = 80
 window-width = 250
+
+shell-integration = zsh
