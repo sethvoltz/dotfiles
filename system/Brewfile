@@ -4,22 +4,20 @@ tap "buo/cask-upgrade"
 tap "dteoh/sqa"
 
 mas "WiFi Signal",   id: 525912054
-mas "Looking Glass", id: 1602004436
 
 cask "1password"
 cask "adobe-creative-cloud"
 cask "alfred"
-# cask "arc"
+cask "arc"
 cask "bettertouchtool"
+cask "hyperkey"
 cask "istat-menus"
 cask "jordanbaird-ice"
-cask "karabiner-elements"
 cask "notion"
 cask "osquery"
 cask "rectangle"
 cask "the-unarchiver"
 cask "unicodechecker"
-cask "zen"
 
 unless work_machine
   cask "backblaze"
