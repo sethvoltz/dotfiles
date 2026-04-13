@@ -83,3 +83,6 @@ eval "$(brew shellenv)"
 
 # bun completions
 [ -s "/Users/seth/.bun/_bun" ] && source "/Users/seth/.bun/_bun"
+
+# Add user-local binaries to PATH (used by pipx, pip --user, etc.)
+[ -d "$HOME/.local/bin" ] && export PATH="$PATH:$HOME/.local/bin"
