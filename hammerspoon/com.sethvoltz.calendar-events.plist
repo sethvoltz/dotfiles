@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.sethvoltz.calendar-events</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>__HAMMERSPOON_DIR__/bin/calendar-events</string>
+        <string>--minutes</string>
+        <string>60</string>
+        <string>--output</string>
+        <string>__HAMMERSPOON_DIR__/cache/calendar-events.json</string>
+    </array>
+    <key>StartInterval</key>
+    <integer>30</integer>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>StandardErrorPath</key>
+    <string>/tmp/calendar-events.err</string>
+</dict>
+</plist>
