@@ -15,63 +15,72 @@
 --   testTwoMeetings()
 --   checkNow()
 
--- Configuration Variables
 local filteredEventPatterns = {"Clockwise", "Focus Time", "Block"}
-local notificationLeadTime = 60 -- seconds before meeting
-local flashCount = 10 -- total number of flashes
-local flashOnDuration = 0.25 -- seconds on
-local displayDurationAfterStart = 300 -- seconds (5 minutes) to show after meeting starts
+local notificationLeadTime = 60
+local flashCount = 10
+local flashOnDuration = 0.25
+local displayDurationAfterStart = 300
 
--- Flash colors (orange announcement style)
+local filteredPatternsLower = {}
+for _, p in ipairs(filteredEventPatterns) do
+  table.insert(filteredPatternsLower, string.lower(p))
+end
+
 local flashOverlayColor = {red = 1.0, green = 0.584, blue = 0, alpha = 0.8}
+local ambientOverlayColor = {red = 1.0, green = 0.584, blue = 0, alpha = 0.1}
 local flashTextColor = {red = 1.0, green = 1.0, blue = 1.0, alpha = 1.0}
 
--- Text colors for steady state (adaptive to OS appearance)
 local textColorLightMode = hs.drawing.color.asRGB({ red = 0.0, green = 0.0, blue = 0.0, alpha = 1.0 })
 local textColorDarkMode = hs.drawing.color.asRGB({ red = 1.0, green = 1.0, blue = 1.0, alpha = 1.0 })
 local isDarkMode = false
 
--- Path to the cached calendar data (written by LaunchAgent)
 local cachePath = hs.configdir .. "/cache/calendar-events.json"
-local cacheWarned = false -- throttle missing-cache warnings
+local cacheWarned = false
+local lastCacheMtime = nil
+local lastCacheEvents = {}
 
--- State tracking
-local activeOverlays = {} -- {groupId = {textOverlay, bgOverlay, removalTimer, eventIds}}
-local notifiedEvents = {} -- Track events we've already notified about
+local activeOverlays = {}
+local notifiedEvents = {}
 
--- Get dark mode setting from system
+-- Stop previous instances on config reload
+if _calendarCheckTimer then _calendarCheckTimer:stop() end
+if _systemDarkModeWatcher then _systemDarkModeWatcher:stop() end
+if _screenWatcher then _screenWatcher:stop() end
+
 local function getDarkModeFromSystem()
   local _, darkmode = hs.osascript.applescript('tell application "System Events" to tell appearance preferences to return dark mode')
   return darkmode
 end
 
--- Update dark mode when system changes
-local function updateSystemDarkMode()
-  isDarkMode = getDarkModeFromSystem()
-  for _, overlayInfo in pairs(activeOverlays) do
-    if overlayInfo.textOverlay and not overlayInfo.bgOverlay then
-      local textColor = isDarkMode and textColorDarkMode or textColorLightMode
-      for i = 1, overlayInfo.textOverlay:elementCount() do
-        if overlayInfo.textOverlay[i].type == "text" then
-          overlayInfo.textOverlay[i].textColor = textColor
-        end
-      end
+local function setTextStyle(textOverlay, flash)
+  local color = flash and flashTextColor or (isDarkMode and textColorDarkMode or textColorLightMode)
+  for i = 1, textOverlay:elementCount() do
+    if textOverlay[i].type == "text" then
+      textOverlay[i].textColor = color
+      textOverlay[i].textFont = "Helvetica Neue"
     end
   end
 end
 
--- Check if an event name should be filtered out
+local function updateSystemDarkMode()
+  isDarkMode = getDarkModeFromSystem()
+  for _, info in pairs(activeOverlays) do
+    if info.textOverlay and not info.flashing then
+      setTextStyle(info.textOverlay, false)
+    end
+  end
+end
+
 local function isEventFiltered(eventName)
   local lowerName = string.lower(eventName)
-  for _, pattern in ipairs(filteredEventPatterns) do
-    if string.find(lowerName, string.lower(pattern)) then
+  for _, pattern in ipairs(filteredPatternsLower) do
+    if string.find(lowerName, pattern) then
       return true
     end
   end
   return false
 end
 
--- Read upcoming calendar events from cache file (written by LaunchAgent)
 local function readUpcomingEvents()
   local attrs = hs.fs.attributes(cachePath)
   if not attrs then
@@ -84,10 +93,11 @@ local function readUpcomingEvents()
   end
   cacheWarned = false
 
-  -- Skip if cache is stale (older than 2 minutes)
   local age = os.time() - attrs.modification
-  if age > 120 then
-    return {}
+  if age > 120 then return {} end
+
+  if lastCacheMtime and attrs.modification == lastCacheMtime then
+    return lastCacheEvents
   end
 
   local file = io.open(cachePath, "r")
@@ -95,19 +105,22 @@ local function readUpcomingEvents()
   local content = file:read("*a")
   file:close()
 
-  local data = hs.json.decode(content)
-  if not data or data.status ~= "ok" then
-    if data and data.status == "permission_denied" then
+  -- pcall guards against partially-written JSON from concurrent LaunchAgent writes
+  local ok, data = pcall(hs.json.decode, content)
+  if not ok or type(data) ~= "table" then return {} end
+  if data.status ~= "ok" then
+    if data.status == "permission_denied" then
       print("Calendar notifier: access denied. Run from terminal to grant permission:")
       print("  ~/.hammerspoon/bin/calendar-events --request-access")
     end
     return {}
   end
 
-  return data.events or {}
+  lastCacheMtime = attrs.modification
+  lastCacheEvents = data.events or {}
+  return lastCacheEvents
 end
 
--- Get menubar geometry
 local function getMenubarGeometry()
   local mainScreen = hs.screen.mainScreen()
   local screeng = mainScreen:fullFrame()
@@ -115,49 +128,38 @@ local function getMenubarGeometry()
   return screeng, menubarHeight
 end
 
--- Create the text overlay (persistent, shown for the full duration)
 local function createTextOverlay(meetingNames, textColor, font)
-  if type(meetingNames) == "string" then
-    meetingNames = {meetingNames}
-  end
+  if type(meetingNames) == "string" then meetingNames = {meetingNames} end
 
   local screeng, menubarHeight = getMenubarGeometry()
   local fontSize = 16
   local textWidth = 400
-  local textY = (menubarHeight - fontSize - 4) / 2 -- vertically center with padding for descenders
+  local textY = (menubarHeight - fontSize - 4) / 2
 
   local overlay = hs.canvas.new{
     x = screeng.x, y = screeng.y,
     w = screeng.w, h = menubarHeight
   }
 
-  local firstX = (screeng.w / 3) - (textWidth / 2)
-  local secondX = (2 * screeng.w / 3) - (textWidth / 2)
-
-  -- First position (1/3)
-  overlay:appendElements({
-    action = "fill", type = "text",
-    text = meetingNames[1],
-    textSize = fontSize, textColor = textColor,
-    textAlignment = "center", textFont = font,
-    frame = { x = firstX, y = textY, w = textWidth, h = menubarHeight - textY }
-  })
-
-  -- Second position (2/3) — second meeting name, or repeat the first
-  overlay:appendElements({
-    action = "fill", type = "text",
-    text = meetingNames[2] or meetingNames[1],
-    textSize = fontSize, textColor = textColor,
-    textAlignment = "center", textFont = font,
-    frame = { x = secondX, y = textY, w = textWidth, h = menubarHeight - textY }
-  })
+  local positions = {
+    {x = (screeng.w / 3) - (textWidth / 2), text = meetingNames[1]},
+    {x = (2 * screeng.w / 3) - (textWidth / 2), text = meetingNames[2] or meetingNames[1]}
+  }
+  for _, pos in ipairs(positions) do
+    overlay:appendElements({
+      action = "fill", type = "text",
+      text = pos.text,
+      textSize = fontSize, textColor = textColor,
+      textAlignment = "center", textFont = font,
+      frame = { x = pos.x, y = textY, w = textWidth, h = menubarHeight - textY }
+    })
+  end
 
   overlay:level(hs.canvas.windowLevels.popUpMenu)
   overlay:behavior(hs.canvas.windowBehaviors.canJoinAllSpaces)
   return overlay
 end
 
--- Create the background overlay (flashes independently)
 local function createBgOverlay()
   local screeng, menubarHeight = getMenubarGeometry()
 
@@ -172,13 +174,14 @@ local function createBgOverlay()
     frame = { x = 0, y = 0, w = screeng.w, h = menubarHeight }
   })
 
-  -- Background sits below text
+  -- Below text so text remains readable during flash
   overlay:level(hs.canvas.windowLevels.popUpMenu - 1)
   overlay:behavior(hs.canvas.windowBehaviors.canJoinAllSpaces)
   return overlay
 end
 
--- Flash the background overlay, then remove it
+-- Returns the flash timer so callers can cancel mid-animation.
+-- Hides (not deletes) bgOverlay when done — callers own the lifecycle.
 local function flashBackground(bgOverlay, callback)
   local flashesRemaining = flashCount * 2
   local flashTimer
@@ -186,7 +189,7 @@ local function flashBackground(bgOverlay, callback)
   local function doFlash()
     if flashesRemaining <= 0 then
       flashTimer:stop()
-      bgOverlay:delete()
+      bgOverlay:hide()
       if callback then callback() end
       return
     end
@@ -202,40 +205,75 @@ local function flashBackground(bgOverlay, callback)
 
   bgOverlay:show()
   flashTimer = hs.timer.doEvery(flashOnDuration, doFlash)
+  return flashTimer
 end
 
--- Transition text overlay from flash colors to steady-state colors
-local function transitionTextToSteadyState(textOverlay)
-  local textColor = isDarkMode and textColorDarkMode or textColorLightMode
-  for i = 1, textOverlay:elementCount() do
-    if textOverlay[i].type == "text" then
-      textOverlay[i].textColor = textColor
-      textOverlay[i].textFont = "Helvetica Neue"
+local function cleanupOverlayGroup(groupId)
+  local info = activeOverlays[groupId]
+  if not info then return end
+  if info.flashTimer then info.flashTimer:stop() end
+  if info.startFlashTimer then info.startFlashTimer:stop() end
+  if info.removalTimer then info.removalTimer:stop() end
+  if info.textOverlay then info.textOverlay:delete() end
+  if info.bgOverlay then info.bgOverlay:delete() end
+  activeOverlays[groupId] = nil
+end
+
+local function scheduleOverlayRemoval(groupId, meetingStartTime)
+  local removalDelay = math.max(0, meetingStartTime - os.time() + displayDurationAfterStart)
+  return hs.timer.doAfter(removalDelay, function()
+    cleanupOverlayGroup(groupId)
+  end)
+end
+
+-- Callers must stop removalTimer/startFlashTimer before calling.
+local function beginFlash(groupId, onComplete)
+  local info = activeOverlays[groupId]
+  if not info then return end
+  if info.flashTimer then info.flashTimer:stop(); info.flashTimer = nil end
+  if info.bgOverlay then info.bgOverlay:delete(); info.bgOverlay = nil end
+  info.flashing = true
+  setTextStyle(info.textOverlay, true)
+  local bg = createBgOverlay()
+  info.bgOverlay = bg
+  info.flashTimer = flashBackground(bg, function()
+    if not activeOverlays[groupId] then return end
+    info.flashing = false
+    info.flashTimer = nil
+    if onComplete then onComplete(info, bg) end
+  end)
+end
+
+local function repositionOverlays()
+  for _, info in pairs(activeOverlays) do
+    if info.meetingNames and not info.flashing then
+      local oldText = info.textOverlay
+      info.textOverlay = createTextOverlay(info.meetingNames, flashTextColor, "Helvetica Neue")
+      setTextStyle(info.textOverlay, false)
+      info.textOverlay:show()
+      if oldText then oldText:delete() end
+
+      if info.bgOverlay then
+        local oldBg = info.bgOverlay
+        info.bgOverlay = createBgOverlay()
+        info.bgOverlay[1].fillColor = ambientOverlayColor
+        info.bgOverlay:show()
+        oldBg:delete()
+      end
     end
   end
 end
 
--- Schedule overlay removal after meeting starts
-local function scheduleOverlayRemoval(groupId, meetingStartTime)
-  local now = os.time()
-  local removalDelay = math.max(0, meetingStartTime - now + displayDurationAfterStart)
-
-  return hs.timer.doAfter(removalDelay, function()
-    if activeOverlays[groupId] then
-      activeOverlays[groupId].textOverlay:delete()
-      if activeOverlays[groupId].bgOverlay then
-        activeOverlays[groupId].bgOverlay:delete()
-      end
-      activeOverlays[groupId] = nil
-    end
-  end)
-end
-
--- Check for upcoming meetings
 local function checkForUpcomingMeetings()
   local events = readUpcomingEvents()
   local now = os.time()
   local upcomingMeetings = {}
+
+  -- Build set of current event IDs for stale entry cleanup
+  local currentEventIds = {}
+  for _, event in ipairs(events) do
+    if event.id then currentEventIds[event.id] = true end
+  end
 
   for _, event in ipairs(events) do
     if event.title and not event.isAllDay and not isEventFiltered(event.title) then
@@ -243,7 +281,6 @@ local function checkForUpcomingMeetings()
       local timeUntilStart = event.startDate - now
       local phase = notifiedEvents[eventId] or "none"
 
-      -- Flash at lead time (60s before) and again at start time (0s)
       local shouldNotify = false
       if timeUntilStart > 0 and timeUntilStart <= notificationLeadTime and phase == "none" then
         shouldNotify = true
@@ -264,7 +301,7 @@ local function checkForUpcomingMeetings()
     end
   end
 
-  -- Group meetings by start time (within 5 minutes of each other)
+  -- Group meetings starting within 5 minutes of each other
   local groupedMeetings = {}
   for _, meeting in ipairs(upcomingMeetings) do
     local grouped = false
@@ -280,7 +317,6 @@ local function checkForUpcomingMeetings()
     end
   end
 
-  -- Create notifications for each group
   for _, group in ipairs(groupedMeetings) do
     local meetingNames = {}
     local groupId = "group-" .. os.time() .. "-" .. math.random(1000)
@@ -290,7 +326,6 @@ local function checkForUpcomingMeetings()
     end
 
     if #meetingNames > 0 then
-      -- Check if there's already an active overlay for these events
       local existingGroupId = nil
       for gid, info in pairs(activeOverlays) do
         if info.eventIds then
@@ -304,37 +339,33 @@ local function checkForUpcomingMeetings()
         if existingGroupId then break end
       end
 
-      if existingGroupId then
-        -- Re-flash the background on an existing text overlay
-        local info = activeOverlays[existingGroupId]
-        if info.removalTimer then info.removalTimer:stop() end
-
-        -- Switch text back to flash style
-        for i = 1, info.textOverlay:elementCount() do
-          if info.textOverlay[i].type == "text" then
-            info.textOverlay[i].textColor = flashTextColor
-            info.textOverlay[i].textFont = "Helvetica Neue"
-          end
+      -- Clean up unrelated overlays to prevent visual overlap
+      if not existingGroupId then
+        for gid, _ in pairs(activeOverlays) do
+          if not gid:match("^test%-") then cleanupOverlayGroup(gid) end
         end
+      end
 
-        local bgOverlay = createBgOverlay()
-        info.bgOverlay = bgOverlay
-        flashBackground(bgOverlay, function()
-          if activeOverlays[existingGroupId] then
-            activeOverlays[existingGroupId].bgOverlay = nil
-            transitionTextToSteadyState(info.textOverlay)
-            activeOverlays[existingGroupId].removalTimer = scheduleOverlayRemoval(existingGroupId, group[1].startDate)
-          end
+      if existingGroupId then
+        local info = activeOverlays[existingGroupId]
+        if info.removalTimer then info.removalTimer:stop(); info.removalTimer = nil end
+        if info.startFlashTimer then info.startFlashTimer:stop(); info.startFlashTimer = nil end
+        beginFlash(existingGroupId, function(info, bg)
+          bg:delete(); info.bgOverlay = nil
+          setTextStyle(info.textOverlay, false)
+          info.removalTimer = scheduleOverlayRemoval(existingGroupId, group[1].startDate)
         end)
       else
-        -- New notification
         local textOverlay = createTextOverlay(meetingNames, flashTextColor, "Helvetica Neue")
         local bgOverlay = createBgOverlay()
+        local meetingStartTime = group[1].startDate
 
         activeOverlays[groupId] = {
           textOverlay = textOverlay,
           bgOverlay = bgOverlay,
-          startTime = group[1].startDate,
+          flashing = true,
+          meetingNames = meetingNames,
+          startTime = meetingStartTime,
           eventIds = {}
         }
 
@@ -343,20 +374,46 @@ local function checkForUpcomingMeetings()
         end
 
         textOverlay:show()
-        flashBackground(bgOverlay, function()
-          if activeOverlays[groupId] then
-            activeOverlays[groupId].bgOverlay = nil
-            transitionTextToSteadyState(textOverlay)
-            activeOverlays[groupId].removalTimer = scheduleOverlayRemoval(groupId, group[1].startDate)
-          end
-        end)
+
+        if group[1].timeUntilStart > 0 then
+          -- Lead notification: flash → ambient bg → precise start-time flash
+          beginFlash(groupId, function(info, bg)
+            bg[1].fillColor = ambientOverlayColor
+            bg:show()
+            setTextStyle(info.textOverlay, false)
+
+            local delay = math.max(0, meetingStartTime - os.time())
+            info.startFlashTimer = hs.timer.doAfter(delay, function()
+              if not activeOverlays[groupId] then return end
+              activeOverlays[groupId].startFlashTimer = nil
+              beginFlash(groupId, function(info2, bg2)
+                bg2:delete(); info2.bgOverlay = nil
+                setTextStyle(info2.textOverlay, false)
+                info2.removalTimer = scheduleOverlayRemoval(groupId, meetingStartTime)
+              end)
+            end)
+
+            for _, meeting in ipairs(group) do
+              notifiedEvents[meeting.eventId] = "start"
+            end
+          end)
+        else
+          -- Start-time notification: flash → steady state
+          beginFlash(groupId, function(info, bg)
+            bg:delete(); info.bgOverlay = nil
+            setTextStyle(info.textOverlay, false)
+            info.removalTimer = scheduleOverlayRemoval(groupId, meetingStartTime)
+          end)
+        end
       end
     end
   end
 
-  -- Clean up old notified events that have no active overlay and are past start
+  -- Clean up stale notified events
   for eventId, phase in pairs(notifiedEvents) do
-    if phase == "start" then
+    if not currentEventIds[eventId] then
+      notifiedEvents[eventId] = nil
+    elseif phase == "start" then
       local hasOverlay = false
       for _, info in pairs(activeOverlays) do
         if info.eventIds then
@@ -373,54 +430,50 @@ local function checkForUpcomingMeetings()
   end
 end
 
--- Test function for manual triggering (single flash, hold text for 60s)
 function testCalendarNotification(meetingNames)
   meetingNames = meetingNames or "Test Meeting"
+  local names = type(meetingNames) == "string" and {meetingNames} or meetingNames
 
-  local textOverlay = createTextOverlay(meetingNames, flashTextColor, "Helvetica Neue")
-  local bgOverlay = createBgOverlay()
+  -- Clean up any previous test overlay
+  for gid, _ in pairs(activeOverlays) do
+    if gid:match("^test%-") then cleanupOverlayGroup(gid) end
+  end
+
   local eventId = "test-" .. os.time()
 
   activeOverlays[eventId] = {
-    textOverlay = textOverlay,
-    bgOverlay = bgOverlay,
+    textOverlay = createTextOverlay(names, flashTextColor, "Helvetica Neue"),
+    bgOverlay = createBgOverlay(),
+    flashing = true,
+    meetingNames = names,
     startTime = os.time()
   }
 
-  -- One round of flash animation, then hold text for 60s total
-  textOverlay:show()
-  flashBackground(bgOverlay, function()
-    if activeOverlays[eventId] then
-      activeOverlays[eventId].bgOverlay = nil
-      transitionTextToSteadyState(textOverlay)
-      activeOverlays[eventId].removalTimer = hs.timer.doAfter(60, function()
-        if activeOverlays[eventId] then
-          activeOverlays[eventId].textOverlay:delete()
-          activeOverlays[eventId] = nil
-        end
-      end)
-    end
+  activeOverlays[eventId].textOverlay:show()
+  beginFlash(eventId, function(info, bg)
+    bg:delete(); info.bgOverlay = nil
+    setTextStyle(info.textOverlay, false)
+    info.removalTimer = hs.timer.doAfter(60, function()
+      cleanupOverlayGroup(eventId)
+    end)
   end)
 
   print("Test notification triggered for:", type(meetingNames) == "table" and table.concat(meetingNames, ", ") or meetingNames)
 end
 
--- Test function for two meetings at once
 function testTwoMeetings()
   testCalendarNotification({"Team Standup", "1:1 with Manager"})
 end
 
--- Force an immediate calendar check
 function checkNow()
   print("Forcing immediate calendar check...")
   checkForUpcomingMeetings()
 end
 
--- Start watchers
 _calendarCheckTimer = hs.timer.new(30, checkForUpcomingMeetings):start()
 _systemDarkModeWatcher = hs.distributednotifications.new(updateSystemDarkMode, 'AppleInterfaceThemeChangedNotification'):start()
+_screenWatcher = hs.screen.watcher.new(repositionOverlays):start()
 
--- Initialize
 updateSystemDarkMode()
 checkForUpcomingMeetings()
 
