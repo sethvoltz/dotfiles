@@ -27,7 +27,7 @@ for _, p in ipairs(filteredEventPatterns) do
 end
 
 local flashOverlayColor = {red = 1.0, green = 0.584, blue = 0, alpha = 0.8}
-local ambientOverlayColor = {red = 1.0, green = 0.584, blue = 0, alpha = 0.1}
+local ambientOverlayColor = {red = 1.0, green = 0.584, blue = 0, alpha = 0.3}
 local flashTextColor = {red = 1.0, green = 1.0, blue = 1.0, alpha = 1.0}
 
 local textColorLightMode = hs.drawing.color.asRGB({ red = 0.0, green = 0.0, blue = 0.0, alpha = 1.0 })
