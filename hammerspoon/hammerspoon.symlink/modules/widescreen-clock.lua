@@ -1,7 +1,7 @@
 local widescreenIndicators = {}
-local textColorLightMode = hs.drawing.color.asRGB({ red = 0.0, green = 0.0, blue = 0.0, alpha = 1.0 })
-local textColorDarkMode = hs.drawing.color.asRGB({ red = 1.0, green = 1.0, blue = 1.0, alpha = 1.0 })
-local isDarkMode = false
+local screenColors = {}
+local white = { red = 1.0, green = 1.0, blue = 1.0, alpha = 1.0 }
+local black = { red = 0.0, green = 0.0, blue = 0.0, alpha = 1.0 }
 
 local clockStyle = {
   font = {
@@ -12,6 +12,24 @@ local clockStyle = {
   },
   expansion = 0.02,
 }
+
+local function sampleMenubarColor(screen)
+  local snapshot = screen:snapshot()
+  if not snapshot then return black end
+
+  local frame = screen:fullFrame()
+  local pixel = snapshot:colorAt({ x = math.floor(frame.w / 2), y = 6 })
+  if not pixel then return black end
+
+  local luminance = 0.299 * pixel.red + 0.587 * pixel.green + 0.114 * pixel.blue
+  return luminance < 0.5 and white or black
+end
+
+local function refreshMenubarColors()
+  for _, screen in pairs(hs.screen.allScreens()) do
+    screenColors[screen:id()] = sampleMenubarColor(screen)
+  end
+end
 
 -- -------------------------------------------------------= Change Handlers =--=
 
@@ -39,6 +57,7 @@ function drawWideScreenClock(screen)
   local fontInfo = hs.styledtext.fontInfo(clockStyle.font)
   local clockOffset = math.floor(menubarHeight - fontInfo.capHeight) / 2 - (fontInfo.ascender - fontInfo.capHeight)
   
+  clockStyle.color = screenColors[screen:id()] or black
   local clock = hs.styledtext.new(os.date("%a %b %d  %H:%M"), clockStyle)
   local width = 250
   local height = menubarHeight
@@ -77,25 +96,15 @@ function clearWideScreenIndicators()
   end
 end
 
-local function getDarkModeFromSystem()
-	local _, darkmode = hs.osascript.applescript("tell application \"System Events\" to tell appearance preferences to return dark mode")
-  return darkmode
-end
-
-function updateSystemDarkMode(name, object, userInfo)
-  local newDarkMode = getDarkModeFromSystem()
-  if newDarkMode ~= isDarkMode then
-    isDarkMode = newDarkMode
-    clockStyle.color = isDarkMode and textColorDarkMode or textColorLightMode
-    updateWideScreenClocks()
-  end
+local function refreshAndRedraw()
+  refreshMenubarColors()
+  updateWideScreenClocks()
 end
 
 -- --------------------------------------------------------------= Watchers =--=
 
-_wideScreenClockSpaceWatcher = hs.spaces.watcher.new(updateWideScreenClocks):start()
+_wideScreenClockSpaceWatcher = hs.spaces.watcher.new(refreshAndRedraw):start()
 _wideScreenClockTimer        = hs.timer.new(hs.timer.seconds(15), updateWideScreenClocks):start()
-_systemDarkModeWatcher       = hs.distributednotifications.new(updateSystemDarkMode, 'AppleInterfaceThemeChangedNotification'):start()
+_systemDarkModeWatcher       = hs.distributednotifications.new(refreshAndRedraw, 'AppleInterfaceThemeChangedNotification'):start()
 
-updateSystemDarkMode()
-updateWideScreenClocks()
+refreshAndRedraw()
