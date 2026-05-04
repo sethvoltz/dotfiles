@@ -1,4 +1,12 @@
 {
-  "model": "opus",
-  "skipDangerousModePermissionPrompt": true
+  "permissions": {},
+  "model": "opus[1m]",
+  "enabledPlugins": {
+    "swift-lsp@claude-plugins-official": true
+  },
+  "skipDangerousModePermissionPrompt": true,
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/statusline.sh"
+  }
 }
