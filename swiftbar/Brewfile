@@ -1,1 +1,5 @@
-cask "swiftbar"
+server_machine = File.exist?(File.expand_path("~/.servermachine"))
+
+unless server_machine
+  cask "swiftbar"
+end

@@ -1,35 +1,40 @@
 work_machine = File.exist?(File.expand_path("~/.workmachine"))
+server_machine = File.exist?(File.expand_path("~/.servermachine"))
 
 tap "buo/cask-upgrade"
 tap "dteoh/sqa"
 
-mas "WiFi Signal",   id: 525912054
+unless server_machine
+  mas "WiFi Signal",   id: 525912054
+
+  cask "adobe-creative-cloud"
+  cask "alfred"
+  cask "istat-menus"
+  cask "jordanbaird-ice"
+  cask "notion"
+end
 
 cask "1password"
-cask "adobe-creative-cloud"
-cask "alfred"
+
 cask "arc"
 cask "bettertouchtool"
 cask "hyperkey"
-cask "istat-menus"
-cask "jordanbaird-ice"
-cask "notion"
 cask "osquery"
 cask "rectangle"
 cask "the-unarchiver"
 cask "unicodechecker"
 
-unless work_machine
+unless work_machine || server_machine
   cask "backblaze"
   cask "ubersicht"
 end
 
 brew "ack"
+brew "btop"
 brew "coreutils"
 brew "ctags"
 brew "gnu-sed"
 brew "graphviz"
-brew "htop"
 brew "iftop"
 brew "jq"
 brew "mas"

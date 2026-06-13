@@ -11,6 +11,7 @@
 # Assumes Homebrew is installed
 git clone git@github.com:sethvoltz/dotfiles.git ~/.dotfiles
 touch ~/.workmachine # if on a work machine
+touch ~/.servermachine # if on a server machine
 cd ~/.dotfiles
 script/bootstrap
 ```

@@ -1,1 +1,5 @@
-cask "hammerspoon"
+server_machine = File.exist?(File.expand_path("~/.servermachine"))
+
+unless server_machine
+  cask "hammerspoon"
+end
