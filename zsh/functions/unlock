@@ -1,0 +1,47 @@
+emulate -L zsh
+local OPTIND opt force=0 relock=1
+
+_unlock_msg() { print -u2 -- "unlock: $*" }
+
+while getopts ":fnh" opt; do
+  case $opt in
+    f) force=1 ;;
+    n) relock=0 ;;
+    h)
+      _unlock_msg "unlock the macOS login keychain for this session"
+      _unlock_msg "usage: unlock [-f force] [-n no re-lock] [-h help]"
+      _unlock_msg "default: SSH sessions only, re-locks on shell exit"
+      return 0 ;;
+    \?) _unlock_msg "unknown flag -$OPTARG (try -h)"; return 1 ;;
+  esac
+done
+
+# Discover the default keychain instead of hardcoding the path.
+local keychain
+keychain="$(security default-keychain -d user 2>/dev/null | sed -E 's/^[[:space:]]*"(.*)"$/\1/')"
+[[ -f "$keychain" ]] || { _unlock_msg "could not determine default keychain"; return 1 }
+
+# SSH-only unless forced.
+if [[ -z "$SSH_CONNECTION" && $force -eq 0 ]]; then
+  _unlock_msg "not an SSH session; use -f to force"
+  return 1
+fi
+
+# show-keychain-info succeeds only when already unlocked.
+if security show-keychain-info "$keychain" 2>/dev/null; then
+  _unlock_msg "already unlocked"
+  return 0
+fi
+
+security unlock-keychain "$keychain" || { _unlock_msg "unlock failed (bad password or keychain error)"; return 1 }
+
+if (( relock )); then
+  autoload -Uz add-zsh-hook
+  # Bake the resolved path into the hook body now; $keychain is gone by exit time.
+  functions[_unlock_relock]="security lock-keychain ${(q)keychain} 2>/dev/null"
+  add-zsh-hook zshexit _unlock_relock
+  _unlock_msg "unlocked; will re-lock on shell exit"
+else
+  _unlock_msg "unlocked (no auto re-lock)"
+fi
+
