@@ -4,14 +4,13 @@ server_machine = File.exist?(File.expand_path("~/.servermachine"))
 unless work_machine || server_machine
   cask "arduino-ide"
   cask "blender"
-  cask "openscad"
+  cask "openscad@snapshot"
   cask "raspberry-pi-imager"
 end
 
 cask "font-hack-nerd-font"
 cask "imageoptim"
 cask "iterm2"
-cask "qmk-toolbox"
 cask "visual-studio-code"
 
 brew "ffmpeg"
