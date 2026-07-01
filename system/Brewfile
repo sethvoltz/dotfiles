@@ -1,13 +1,9 @@
 work_machine = File.exist?(File.expand_path("~/.workmachine"))
 server_machine = File.exist?(File.expand_path("~/.servermachine"))
 
-tap "buo/cask-upgrade"
-tap "dteoh/sqa"
-
 unless server_machine
   mas "WiFi Signal",   id: 525912054
 
-  cask "adobe-creative-cloud"
   cask "alfred"
   cask "istat-menus"
   cask "jordanbaird-ice"
@@ -19,14 +15,14 @@ cask "1password"
 cask "arc"
 cask "bettertouchtool"
 cask "hyperkey"
-cask "osquery"
 cask "rectangle"
-cask "the-unarchiver"
 cask "unicodechecker"
 
 unless work_machine || server_machine
+  cask "adobe-creative-cloud"
   cask "backblaze"
   cask "ubersicht"
+  cask "osquery"
 end
 
 brew "ack"
