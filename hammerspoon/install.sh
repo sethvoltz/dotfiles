@@ -32,6 +32,10 @@ if [ -f "$PLIST_SRC" ]; then
   launchctl bootout "gui/$(id -u)/$LABEL" 2>/dev/null || true
 
   # Template the plist with actual paths
+  if [ ! -f "$PLIST_DEST" ]; then
+    mkdir -p "$(dirname "$PLIST_DEST")"
+    touch "$PLIST_DEST"
+  fi
   sed "s|__HAMMERSPOON_DIR__|$HS_DIR|g" "$PLIST_SRC" > "$PLIST_DEST"
 
   # Load the agent
