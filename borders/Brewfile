@@ -1,5 +1,7 @@
+work_machine = File.exist?(File.expand_path("~/.workmachine"))
 server_machine = File.exist?(File.expand_path("~/.servermachine"))
-unless server_machine
+
+unless server_machine || work_machine
   tap "felixkratz/formulae"
   brew "felixkratz/formulae/borders"
 end
