@@ -1,1 +1,5 @@
-cask "claude-code"
+work_machine = File.exist?(File.expand_path("~/.workmachine"))
+
+unless work_machine
+  cask "claude-code"
+end
