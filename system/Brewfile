@@ -6,7 +6,7 @@ unless server_machine
 
   cask "alfred"
   cask "istat-menus"
-  cask "jordanbaird-ice"
+  cask "jordanbaird-ice@beta"
   cask "notion"
 end
 
