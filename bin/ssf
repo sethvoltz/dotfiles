@@ -1,7 +1,6 @@
 #!/usr/bin/env bash -e
 
 # Requirements:
-# - grep
 # - fzf
 
 # If any parameters are passed, immediately call ssh with them and exit
@@ -9,6 +8,29 @@ if [[ $# -gt 0 ]]; then
   ssh "$@"
   exit $?
 fi
+
+ssh_dir="$HOME/.ssh"
+
+# Stream a config file's lines, recursively inlining any `Include` directives.
+# Include arguments may list multiple files, use globs, and be relative to
+# ~/.ssh - matching ssh's own resolution rules.
+emit_config() {
+  local file=$1 line pattern path
+  [[ -r $file ]] || return 0
+  while IFS= read -r line; do
+    if [[ $line =~ ^[[:space:]]*[Ii]nclude[[:space:]]+(.+) ]]; then
+      for pattern in ${BASH_REMATCH[1]}; do
+        pattern=${pattern/#\~/$HOME}
+        [[ $pattern != /* ]] && pattern="$ssh_dir/$pattern"
+        for path in $pattern; do
+          [[ -f $path ]] && emit_config "$path"
+        done
+      done
+    else
+      printf '%s\n' "$line"
+    fi
+  done < "$file"
+}
 
 # Get list of hosts and usernames
 hosts=()
@@ -29,7 +51,7 @@ while IFS= read -r line; do
   elif [[ $line =~ ^[[:space:]]*User[[:space:]]+(.+) ]]; then
     current_user=${BASH_REMATCH[1]}
   fi
-done < ~/.ssh/config
+done < <(emit_config "$ssh_dir/config")
 
 # Save the last host block
 if [[ -n $current_host && $current_host != "*" ]]; then
