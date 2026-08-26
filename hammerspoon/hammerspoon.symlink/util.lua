@@ -23,10 +23,12 @@ return {
 
   autoimport = function(dir)
     for _, file in pairs(util.ls(dir)) do
-      if file:find(".+%.lua") then
-        local a = string.gsub(file, '%.lua', '')
-        print(a .. " loaded")
-        require(dir .. "/" .. a)
+      -- Anchored so only files *ending* in .lua load; append anything
+      -- (e.g. ".disable") to the filename to skip a module.
+      local name = file:match("^([^.].-)%.lua$")
+      if name then
+        print(name .. " loaded")
+        require(dir .. "/" .. name)
       end
     end
   end
