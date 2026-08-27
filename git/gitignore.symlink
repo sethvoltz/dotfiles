@@ -26,5 +26,6 @@ Thumbs.db
 # Random
 .tissues
 .tab-color
+.background-color
 
 **/.claude/settings.local.json
