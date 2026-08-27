@@ -123,11 +123,8 @@ def purple s; $color ? "\033[35m#{s}\033[0m" : s end
 ## the set of commits in 'to' that aren't in 'from'.
 ## if empty, 'to' has been merged into 'from'.
 def commits_between from, to
-  if $long
-    `git log --pretty=format:"- %s [#{yellow "%h"}] (#{purple "%ae"}; %ar)" #{from}..#{to}`
-  else
-    `git log --pretty=format:"- %s [#{yellow "%h"}]" #{from}..#{to}`
-  end.split(/[\r\n]+/)
+  fmt = $long ? "- %s [#{yellow "%h"}] (#{purple "%ae"}; %ar)" : "- %s [#{yellow "%h"}]"
+  IO.popen(["git", "log", "--pretty=format:#{fmt}", "#{from}..#{to}"]) { |io| io.read }.split(/[\r\n]+/)
 end
 
 def show_commits commits, prefix="    "
