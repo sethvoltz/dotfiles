@@ -1,7 +1,7 @@
 util = require('util')
-util.autoimport("./modules")
 
--- Fancy auto-reload thing
+-- Fancy auto-reload thing. Started before any module loads, so a module that
+-- fails to load cannot take reloading down with it.
 function reloadConfig(files)
   doReload = false
   for _,file in pairs(files) do
@@ -15,6 +15,8 @@ function reloadConfig(files)
 end
 
 _reloadPathWatcher = hs.pathwatcher.new(os.getenv("HOME") .. "/.hammerspoon/", reloadConfig):start()
+
+util.autoimport("./modules")
 
 hs.notify.new({
   title="Hammerspoon",

@@ -27,8 +27,12 @@ return {
       -- (e.g. ".disable") to the filename to skip a module.
       local name = file:match("^([^.].-)%.lua$")
       if name then
-        print(name .. " loaded")
-        require(dir .. "/" .. name)
+        local ok, err = xpcall(require, debug.traceback, dir .. "/" .. name)
+        if ok then
+          print(name .. " loaded")
+        else
+          hs.showError(name .. " failed to load: " .. tostring(err))
+        end
       end
     end
   end
