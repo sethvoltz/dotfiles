@@ -20,14 +20,15 @@ local RECHECK_SECONDS = 0.5
 
 local HAND_MOVE_TOLERANCE = 4
 local SETTINGS_KEY = "windowLayout.assigned"
+local BOOT_KEY = "windowLayout.bootTime"
 local BUILTIN_NAME_PATTERNS = { "Built%-in", "Color LCD", "Liquid Retina" }
 
 local hyper = { "shift", "cmd", "alt", "ctrl" }
 
 local config, profile, gap = nil, nil, DEFAULT_GAP
 
--- Frames this module last set, by window id. A window whose frame no longer matches was moved by
--- hand and is left alone until a forced layout.
+-- Where each window was left after this module last placed it, by window id. A window whose
+-- frame no longer matches was moved by hand and is left alone until a forced layout.
 local assigned = {}
 local fresh = {}
 local appWatchers = {}
@@ -66,22 +67,27 @@ local function loadConfig()
   return compiled
 end
 
+local function bootTime()
+  return hs.execute("/usr/sbin/sysctl -n kern.boottime"):match("sec = (%d+)")
+end
+
 local function saveAssigned()
   local stored = {}
   for id, frame in pairs(assigned) do stored[tostring(id)] = frame end
   hs.settings.set(SETTINGS_KEY, stored)
 end
 
--- Window ids are reused after a reboot, so only ids of live windows survive.
+-- Window ids are reused after a reboot, so a record from an earlier boot is dropped. Checked
+-- against the boot time rather than live windows, which would query every app at load.
 local function restoreAssigned()
-  local live = {}
-  for _, window in ipairs(hs.window.allWindows()) do
-    local id = window:id()
-    if id then live[id] = true end
+  local boot = bootTime()
+  if hs.settings.get(BOOT_KEY) ~= boot then
+    hs.settings.set(BOOT_KEY, boot)
+    hs.settings.set(SETTINGS_KEY, {})
+    return
   end
   for key, frame in pairs(hs.settings.get(SETTINGS_KEY) or {}) do
-    local id = tonumber(key)
-    if live[id] then assigned[id] = frame end
+    assigned[tonumber(key)] = frame
   end
 end
 
@@ -137,21 +143,24 @@ local function ruledApplications(layout)
   return apps
 end
 
+-- A hidden app's windows cannot be moved, so they wait for the app to be unhidden.
 local function placeableWindows(apps)
   local windows = {}
   for _, app in ipairs(apps) do
-    local bundleID, file = app:bundleID(), appFile(app)
-    for _, window in ipairs(app:allWindows()) do
-      local id = window:id()
-      if id and window:isStandard() and not window:isMinimized() and not window:isFullScreen() then
-        windows[#windows + 1] = {
-          id = id,
-          app = bundleID,
-          appFile = file,
-          title = config.needsTitles and window:title() or nil,
-          frame = toList(window:frame()),
-          window = window,
-        }
+    if not app:isHidden() then
+      local bundleID, file = app:bundleID(), appFile(app)
+      for _, window in ipairs(app:allWindows()) do
+        local id = window:id()
+        if id and window:isStandard() and not window:isMinimized() and not window:isFullScreen() then
+          windows[#windows + 1] = {
+            id = id,
+            app = bundleID,
+            appFile = file,
+            title = config.needsTitles and window:title() or nil,
+            frame = toList(window:frame()),
+            window = window,
+          }
+        end
       end
     end
   end
@@ -169,11 +178,17 @@ local function handMoved(windows)
   return pinned
 end
 
--- A move across a screen edge can land short (see hs.window.setFrameCorrectness); retry settles it
+-- A move across a screen edge can land short (see hs.window.setFrameCorrectness); retry settles it.
+-- Returns where the window ended up, which is not the target for a window that refused the move.
 local function place(window, target)
   local rect = hs.geometry.rect(target[1], target[2], target[3], target[4])
   window:setFrame(rect, 0)
-  if planner.movedByHand(target, toList(window:frame()), 1) then window:setFrame(rect, 0) end
+  local landed = toList(window:frame())
+  if planner.movedByHand(target, landed, 1) then
+    window:setFrame(rect, 0)
+    landed = toList(window:frame())
+  end
+  return landed
 end
 
 local relayout
@@ -212,11 +227,22 @@ local function watchApplication(app)
   if watcher then appWatchers[pid] = watcher:start({ hs.uielement.watcher.windowCreated }) end
 end
 
-local function watchApplications()
-  for _, watcher in pairs(appWatchers) do watcher:stop() end
-  appWatchers = {}
-  if not profile then return end
-  for _, app in ipairs(ruledApplications(config.layouts[profile])) do watchApplication(app) end
+-- Registering a watcher messages the app, and an app slow to answer stalls it, so only apps that
+-- joined or left the layout are touched.
+local function syncApplicationWatchers()
+  local wanted = {}
+  if config and profile then
+    for _, app in ipairs(ruledApplications(config.layouts[profile])) do
+      wanted[app:pid()] = true
+      watchApplication(app)
+    end
+  end
+  for pid, watcher in pairs(appWatchers) do
+    if not wanted[pid] then
+      watcher:stop()
+      appWatchers[pid] = nil
+    end
+  end
 end
 
 relayout = function(force)
@@ -224,13 +250,16 @@ relayout = function(force)
 
   local screens = currentScreens()
   local detected = planner.detect(config, screens)
-  if detected ~= profile then
-    if profile then force = true end
-    profile = detected
-    watchApplications()
-    if profile then hs.alert.show("Layout: " .. profile) end
-  end
+  local changed = detected ~= profile
+  if changed and profile then force = true end
+  profile = detected
+  if changed and profile then hs.alert.show("Layout: " .. profile) end
+  if changed then syncApplicationWatchers() end
   if not profile then return end
+
+  -- Forgetting every record on a forced layout means a window skipped this pass, such as one
+  -- that was hidden, is placed when it next appears rather than read as moved by hand.
+  if force then assigned = {} end
 
   local windows = placeableWindows(ruledApplications(config.layouts[profile]))
   local pinned = force and {} or handMoved(windows)
@@ -239,8 +268,8 @@ relayout = function(force)
   for _, entry in ipairs(windows) do
     local target = plan[entry.id]
     if target then
-      if planner.movedByHand(target, entry.frame, 1) then place(entry.window, target) end
-      assigned[entry.id] = target
+      local moved = planner.movedByHand(target, entry.frame, 1)
+      assigned[entry.id] = moved and place(entry.window, target) or entry.frame
       watchClose(entry)
     end
   end
@@ -264,6 +293,8 @@ local function applicationEvent(_, event, app)
     end
     recheck(ids)
     scheduleRelayout()
+  elseif event == hs.application.watcher.unhidden and isRuled(config.layouts[profile], app) then
+    scheduleRelayout()
   elseif event == hs.application.watcher.terminated then
     appFiles[app:pid()] = nil
     local watcher = appWatchers[app:pid()]
@@ -280,21 +311,24 @@ local function screensChanged()
   settleTimer = hs.timer.doAfter(SETTLE_SECONDS, function() relayout(true) end)
 end
 
-local function reloadConfig()
-  config = loadConfig()
-  profile = nil
-  watchApplications()
-  relayout(true)
+-- An alert is drawn only once control returns to the run loop, so the layout waits a tick for it.
+local function forceLayout()
+  if profile then hs.alert.show("Layout: " .. profile) end
+  hs.timer.doAfter(0, function()
+    config = loadConfig()
+    syncApplicationWatchers()
+    relayout(true)
+  end)
 end
 
 local function configSaved()
   if saveTimer then saveTimer:stop() end
-  saveTimer = hs.timer.doAfter(SAVE_SETTLE_SECONDS, reloadConfig)
+  saveTimer = hs.timer.doAfter(SAVE_SETTLE_SECONDS, forceLayout)
 end
 
 hs.hotkey.bind(hyper, "p", function()
   gap = readGap()
-  reloadConfig()
+  forceLayout()
 end)
 
 -- ---------------------------------------------------------------------------------= Watchers =--=
