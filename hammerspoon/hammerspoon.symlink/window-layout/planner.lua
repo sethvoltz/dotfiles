@@ -50,11 +50,20 @@ function M.compile(raw)
       for key in pairs(rule) do
         if not RULE_KEYS[key] then fail("%s: unknown key '%s'", where, key) end
       end
-      local rect = type(rule.at) == "table" and rule.at or regions[rule.at]
+      -- `at` is one region, or a list taken in opening order with the last shared by the rest.
+      -- An inline rect is itself a list of numbers, so a list is told apart by its first item.
+      local slots = {}
+      local list = type(rule.at) == "table" and type(rule.at[1]) ~= "number" and rule.at or { rule.at }
+      for n, value in ipairs(list) do
+        slots[n] = type(value) == "table" and value or regions[value]
+        if not slots[n] and not rule.skip then fail("%s: unknown region '%s'", where, tostring(value)) end
+      end
       if rule.skip then
         if rule.at or rule.screen or rule.split then fail("%s: a skip rule takes only apps and title", where) end
-      elseif not rect then
+      elseif #list == 0 then
         fail("%s: unknown region '%s'", where, tostring(rule.at))
+      elseif #list > 1 and rule.split then
+        fail("%s: split takes a single region", where)
       end
       if rule.split and rule.split ~= "columns" and rule.split ~= "rows" then
         fail("%s: split must be 'columns' or 'rows'", where)
@@ -65,7 +74,7 @@ function M.compile(raw)
       if rule.title then needsTitles = true end
       local apps = asList(rule.apps)
       local compiled = {
-        index = i, title = rule.title, screen = screen, rect = rect,
+        index = i, title = rule.title, screen = screen, slots = slots,
         split = rule.split, max = rule.max, skip = rule.skip, order = {},
       }
       for position, app in ipairs(apps) do
@@ -212,7 +221,9 @@ function M.plan(config, profileName, screens, windows, pinned, gap)
     local screen = roles[rule.screen].frame
     for i, window in ipairs(members) do
       if rule.split and i > count then break end
-      frames[window.id] = absolute(slot(rule.rect, rule.split, rule.split and i or 1, count), screen, gap)
+      local unit = rule.split and slot(rule.slots[1], rule.split, i, count)
+        or rule.slots[math.min(i, #rule.slots)]
+      frames[window.id] = absolute(unit, screen, gap)
     end
   end
   return frames

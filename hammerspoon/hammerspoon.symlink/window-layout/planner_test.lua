@@ -94,6 +94,26 @@ eq("skip rule rejects placement keys", { #badSkip }, { 1 })
 eq("hand-move detected",  { tostring(P.movedByHand({0,0,1280,1415}, {0,0,1000,1415})) }, { "true" })
 eq("rounding not a move", { tostring(P.movedByHand({0,0,1280,1415}, {0,0,1282,1415})) }, { "false" })
 
+local firstThenRest = assert(P.compile({ profiles = {}, layouts = { office = {
+  { apps = "Notes.app", screen = 1, at = { "right half", "left half" } },
+  { apps = "Mail.app",  screen = 1, at = { 0.25, 0, 0.5, 1 } } } } }))
+local one = { { name = "S", frame = { x = 0, y = 0, w = 2000, h = 1000 } } }
+local notes = {
+  { id = 1, app = NOTES, appFile = "Notes.app" }, { id = 2, app = NOTES, appFile = "Notes.app" },
+  { id = 3, app = NOTES, appFile = "Notes.app" }, { id = 4, app = MAIL, appFile = "Mail.app" },
+}
+f = P.plan(firstThenRest, "office", one, notes)
+eq("at list: first window takes the first region", f[1], { 1000, 0, 1000, 1000 })
+eq("at list: second takes the next",              f[2], { 0, 0, 1000, 1000 })
+eq("at list: the rest share the last region",     f[3], { 0, 0, 1000, 1000 })
+eq("at list: a single inline rect is not a list", f[4], { 500, 0, 1000, 1000 })
+f = P.plan(firstThenRest, "office", one, { notes[2], notes[3] })
+eq("at list: when the first closes, the oldest left moves up", f[2], { 1000, 0, 1000, 1000 })
+local _, badList = P.compile({ profiles = {}, layouts = { office = {
+  { apps = "Notes.app", screen = 1, at = { "right half", "left hlaf" } },
+  { apps = "Mail.app",  screen = 1, at = { "right half", "left half" }, split = "rows" } } } })
+eq("at list validation: bad region, list with split", { #badList }, { 2 })
+
 local _, bad = P.compile({ profiles = { { name = "office" } }, layouts = { office = {
   { apps = SAFARI, screen = "1", at = "left hlaf", spilt = "rows" } } } })
 eq("validation reports every typo at once", { #bad }, { 3 })

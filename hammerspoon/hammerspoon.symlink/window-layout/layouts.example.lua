@@ -3,7 +3,8 @@
 --
 -- The first profile whose `when` matches wins. Monitor numbers count external
 -- displays only, left to right. Region names are in planner.lua; windows past
--- a split's `max` are left alone.
+-- a split's `max` are left alone. A list for `at` places windows in opening
+-- order, and every window past the end of the list shares its last region.
 
 return {
   profiles = {
