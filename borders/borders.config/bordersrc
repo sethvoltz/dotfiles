@@ -2,12 +2,13 @@
 
 options=(
   style=round
-  order=above # undocumented and unsupported https://github.com/FelixKratz/JankyBorders/issues/37#issuecomment-1871262622
-  width=3.0
-  active_color=0xff00ff00
+  # order=above # undocumented and unsupported https://github.com/FelixKratz/JankyBorders/issues/37#issuecomment-1871262622
+  width=6.0
+  active_color=0xffff2aa8
   inactive_color=0x00000000
-  blacklist=iTerm2
 )
+
+[[ -f ~/.workmachine ]] || options+=(blacklist="iTerm2")
 
 borders "${options[@]}"
 
