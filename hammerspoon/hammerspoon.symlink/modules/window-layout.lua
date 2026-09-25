@@ -143,6 +143,20 @@ local function ruledApplications(layout)
   return apps
 end
 
+-- Some apps present modal dialogs as standard windows. Sent to a slot, a window that cannot be
+-- resized only moves, and lands in the slot's top-left corner at its own size. Cached per window,
+-- except when the check fails, so a transient error does not exclude a real window for good.
+local fitsSlot = {}
+local function canFillSlot(window, id)
+  if fitsSlot[id] == nil then
+    local ax = hs.axuielement.windowElement(window)
+    local resizable = ax and ax:isAttributeSettable("AXSize")
+    if resizable == nil then return true end
+    fitsSlot[id] = resizable and ax:attributeValue("AXModal") ~= true
+  end
+  return fitsSlot[id]
+end
+
 -- A hidden app's windows cannot be moved, so they wait for the app to be unhidden.
 local function placeableWindows(apps)
   local windows = {}
@@ -151,7 +165,8 @@ local function placeableWindows(apps)
       local bundleID, file = app:bundleID(), appFile(app)
       for _, window in ipairs(app:allWindows()) do
         local id = window:id()
-        if id and window:isStandard() and not window:isMinimized() and not window:isFullScreen() then
+        if id and window:isStandard() and not window:isMinimized() and not window:isFullScreen()
+          and canFillSlot(window, id) then
           windows[#windows + 1] = {
             id = id,
             app = bundleID,
@@ -201,6 +216,7 @@ local function watchClose(entry)
     self:stop()
     closeWatchers[id] = nil
     assigned[id] = nil
+    fitsSlot[id] = nil
     scheduleRelayout()
   end)
   if watcher then closeWatchers[id] = watcher:start({ hs.uielement.watcher.elementDestroyed }) end
