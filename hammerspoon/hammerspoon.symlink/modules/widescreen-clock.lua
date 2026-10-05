@@ -1,7 +1,7 @@
 local widescreenIndicators = {}
-local screenColors = {}
 local white = { red = 1.0, green = 1.0, blue = 1.0, alpha = 1.0 }
 local black = { red = 0.0, green = 0.0, blue = 0.0, alpha = 1.0 }
+local clockWidth = 250
 
 local clockStyle = {
   font = {
@@ -13,22 +13,30 @@ local clockStyle = {
   expansion = 0.02,
 }
 
-local function sampleMenubarColor(screen)
-  local snapshot = screen:snapshot()
-  if not snapshot then return black end
-
-  local frame = screen:fullFrame()
-  local pixel = snapshot:colorAt({ x = math.floor(frame.w / 2), y = 6 })
-  if not pixel then return black end
-
-  local luminance = 0.299 * pixel.red + 0.587 * pixel.green + 0.114 * pixel.blue
-  return luminance < 0.5 and white or black
+local function appearanceColor()
+  return hs.host.interfaceStyle() == "Dark" and white or black
 end
 
-local function refreshMenubarColors()
-  for _, screen in pairs(hs.screen.allScreens()) do
-    screenColors[screen:id()] = sampleMenubarColor(screen)
+-- The menu bar is transparent, so its text follows the wallpaper rather than
+-- the appearance setting. Sample either side of the clock so it never reads
+-- its own text.
+local function menubarColor(screen)
+  local frame = screen:fullFrame()
+  local snapshot = screen:snapshot({ x = 0, y = 0, w = frame.w, h = 10 })
+  if not snapshot then return appearanceColor() end
+
+  local middle = math.floor(frame.w / 2)
+  local total, samples = 0, 0
+  for _, x in ipairs({ middle - clockWidth / 2 - 20, middle + clockWidth / 2 + 20 }) do
+    local pixel = snapshot:colorAt({ x = x, y = 6 })
+    if pixel then
+      total = total + 0.299 * pixel.red + 0.587 * pixel.green + 0.114 * pixel.blue
+      samples = samples + 1
+    end
   end
+  if samples == 0 then return appearanceColor() end
+
+  return total / samples < 0.5 and white or black
 end
 
 -- -------------------------------------------------------= Change Handlers =--=
@@ -57,9 +65,9 @@ function drawWideScreenClock(screen)
   local fontInfo = hs.styledtext.fontInfo(clockStyle.font)
   local clockOffset = math.floor(menubarHeight - fontInfo.capHeight) / 2 - (fontInfo.ascender - fontInfo.capHeight)
   
-  clockStyle.color = screenColors[screen:id()] or black
+  clockStyle.color = menubarColor(screen)
   local clock = hs.styledtext.new(os.date("%a %b %d  %H:%M"), clockStyle)
-  local width = 250
+  local width = clockWidth
   local height = menubarHeight
 
   wideIndicator = hs.canvas.new{
@@ -96,15 +104,10 @@ function clearWideScreenIndicators()
   end
 end
 
-local function refreshAndRedraw()
-  refreshMenubarColors()
-  updateWideScreenClocks()
-end
-
 -- --------------------------------------------------------------= Watchers =--=
 
-_wideScreenClockSpaceWatcher = hs.spaces.watcher.new(refreshAndRedraw):start()
+_wideScreenClockSpaceWatcher = hs.spaces.watcher.new(updateWideScreenClocks):start()
 _wideScreenClockTimer        = hs.timer.new(hs.timer.seconds(15), updateWideScreenClocks):start()
-_systemDarkModeWatcher       = hs.distributednotifications.new(refreshAndRedraw, 'AppleInterfaceThemeChangedNotification'):start()
+_systemDarkModeWatcher       = hs.distributednotifications.new(updateWideScreenClocks, 'AppleInterfaceThemeChangedNotification'):start()
 
-refreshAndRedraw()
+updateWideScreenClocks()
