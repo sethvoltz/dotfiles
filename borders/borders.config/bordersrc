@@ -3,7 +3,7 @@
 options=(
   style=round
   # order=above # undocumented and unsupported https://github.com/FelixKratz/JankyBorders/issues/37#issuecomment-1871262622
-  width=6.0
+  width=8.0
   active_color=0xffff2aa8
   inactive_color=0x00000000
 )
