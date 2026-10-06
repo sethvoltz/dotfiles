@@ -141,5 +141,32 @@ eq("gap: right half inset 2 at centre, 4 at screen edge", f[2], { -1278, 29, 127
 f = P.plan(config, "office", menubar, { { id = 3, app = TERM } }, nil, 4)
 eq("gap: full screen inset 4 on every side", f[3], { 4, 29, 2552, 1407 })
 
+local function names(set)
+  if not set then return { "every app" } end
+  local list = {}
+  for name in pairs(set) do list[#list + 1] = name end
+  table.sort(list)
+  return list
+end
+local linking = assert(P.compile({ profiles = {}, layouts = {
+  office = {
+    { apps = { MAIL, NOTES }, screen = 1, at = "left half" },
+    { apps = { TERM, SAFARI }, screen = 2, at = "full", split = "columns" },
+    { apps = SAFARI, title = "Docs", screen = 1, at = { "right half", "left half" } },
+    { apps = { SAFARI, "Radar.app" }, title = "Bugs", screen = 1, at = { "right half", "left half" } },
+  },
+  laptop = {
+    { apps = "*", screen = "builtin", at = "full" },
+  },
+  home = {
+    { apps = { "*", MAIL }, screen = 1, at = "full", split = "rows" },
+  },
+} }))
+eq("linked: a single region ties nothing", names(P.linked(linking.layouts.office, { [MAIL] = true })), { MAIL })
+eq("linked: a split ties its apps, and onward through theirs",
+  names(P.linked(linking.layouts.office, { [TERM] = true })), { "Radar.app", SAFARI, TERM })
+eq("linked: a plain wildcard ties nothing", names(P.linked(linking.layouts.laptop, { [MAIL] = true })), { MAIL })
+eq("linked: a coupled wildcard ties every app", names(P.linked(linking.layouts.home, { [NOTES] = true })), { "every app" })
+
 print(failures == 0 and "ALL PASS" or (failures .. " FAILED"))
 os.exit(failures == 0 and 0 or 1)

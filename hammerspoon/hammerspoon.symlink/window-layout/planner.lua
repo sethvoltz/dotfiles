@@ -76,6 +76,7 @@ function M.compile(raw)
       local compiled = {
         index = i, title = rule.title, screen = screen, slots = slots,
         split = rule.split, max = rule.max, skip = rule.skip, order = {},
+        coupled = not rule.skip and (rule.split ~= nil or #slots > 1),
       }
       for position, app in ipairs(apps) do
         compiled.order[app] = position
@@ -160,6 +161,34 @@ function M.ruleFor(layout, window)
     end
   end
   return nil
+end
+
+-- The app names whose windows must be planned alongside those in `seeds`, a set of app names.
+-- Where a window lands under a split or a list of regions depends on every window the rule
+-- holds, so such a rule ties its apps together. Returns nil when that reaches a wildcard rule,
+-- which can hold any app.
+function M.linked(layout, seeds)
+  for _, rule in ipairs(layout.wildcard) do
+    if rule.coupled then return nil end
+  end
+  local names, queue = {}, {}
+  for name in pairs(seeds) do
+    names[name] = true
+    queue[#queue + 1] = name
+  end
+  while #queue > 0 do
+    for _, rule in ipairs(layout.byApp[table.remove(queue)] or {}) do
+      if rule.coupled then
+        for name in pairs(rule.order) do
+          if not names[name] then
+            names[name] = true
+            queue[#queue + 1] = name
+          end
+        end
+      end
+    end
+  end
+  return names
 end
 
 local function slot(rect, split, index, count)

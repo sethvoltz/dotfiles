@@ -8,7 +8,7 @@ local CONFIG_FILE = CONFIG_DIR .. "/layouts.lua"
 local DEFAULT_GAP = 8
 
 -- Docking emits several screen-change events as displays settle.
-local SETTLE_SECONDS = 3
+local SETTLE_SECONDS = 2
 local BATCH_SECONDS = 0.05
 
 -- Editors save in several writes; one reload per save.
@@ -128,6 +128,16 @@ local function appFile(app)
   return appFiles[pid] or nil
 end
 
+local function addNames(names, bundleID, file)
+  if bundleID then names[bundleID] = true end
+  if file then names[file] = true end
+  return names
+end
+
+local function appNames(app)
+  return addNames({}, app:bundleID(), appFile(app))
+end
+
 local function isRuled(layout, app)
   local bundleID = app:bundleID()
   if not bundleID or app:kind() == -1 then return false end
@@ -141,6 +151,27 @@ local function ruledApplications(layout)
     if isRuled(layout, app) then apps[#apps + 1] = app end
   end
   return apps
+end
+
+-- Reading an app's windows messages it, and a busy app stalls the pass, so a change reads only
+-- the apps it can affect. An app named one way in one rule and the other way in another is
+-- followed under both names.
+local function inScope(layout, apps, seeds)
+  local names = seeds
+  while true do
+    names = planner.linked(layout, names)
+    if not names then return apps end
+    local scoped, grown = {}, false
+    for _, app in ipairs(apps) do
+      local bundleID, file = app:bundleID(), appFile(app)
+      if names[bundleID] or (file and names[file]) then
+        scoped[#scoped + 1] = app
+        grown = grown or not names[bundleID] or (file and not names[file])
+        addNames(names, bundleID, file)
+      end
+    end
+    if not grown then return scoped end
+  end
 end
 
 -- Some apps present modal dialogs as standard windows. Sent to a slot, a window that cannot be
@@ -213,35 +244,43 @@ local scheduleRelayout
 local function watchClose(entry)
   if closeWatchers[entry.id] then return end
   local id = entry.id
+  local names = addNames({}, entry.app, entry.appFile)
   local watcher = entry.window:newWatcher(function(_, _, self)
     self:stop()
     closeWatchers[id] = nil
     assigned[id] = nil
     fitsSlot[id] = nil
-    scheduleRelayout()
+    scheduleRelayout(names)
   end)
   if watcher then closeWatchers[id] = watcher:start({ hs.uielement.watcher.elementDestroyed }) end
 end
 
-local function recheck(ids)
+local function recheck(ids, names)
   for _, id in ipairs(ids) do fresh[id] = true end
   hs.timer.doAfter(RECHECK_SECONDS, function()
-    relayout(false)
+    relayout(false, names)
     for _, id in ipairs(ids) do fresh[id] = nil end
   end)
 end
 
-local function windowCreated(element)
+-- Popups, completion lists and tooltips arrive as windows too, and some apps open one per
+-- keystroke. None of them is placed, so none of them is worth a pass.
+local function windowCreated(element, names)
+  local checked, standard = pcall(function() return element:isStandard() end)
+  if checked and not standard then return end
   local ok, id = pcall(function() return element:id() end)
-  if ok and id then recheck({ id }) end
-  scheduleRelayout()
+  if ok and id then recheck({ id }, names) end
+  scheduleRelayout(names)
 end
 
 local function watchApplication(app)
   local pid = app:pid()
   if appWatchers[pid] then return end
-  local watcher = app:newWatcher(windowCreated)
-  if watcher then appWatchers[pid] = watcher:start({ hs.uielement.watcher.windowCreated }) end
+  local names = appNames(app)
+  local watcher = app:newWatcher(function(element) windowCreated(element, names) end)
+  if watcher then
+    appWatchers[pid] = { watcher = watcher:start({ hs.uielement.watcher.windowCreated }), names = names }
+  end
 end
 
 -- Registering a watcher messages the app, and an app slow to answer stalls it, so only apps that
@@ -254,15 +293,16 @@ local function syncApplicationWatchers()
       watchApplication(app)
     end
   end
-  for pid, watcher in pairs(appWatchers) do
+  for pid, watched in pairs(appWatchers) do
     if not wanted[pid] then
-      watcher:stop()
+      watched.watcher:stop()
       appWatchers[pid] = nil
     end
   end
 end
 
-relayout = function(force)
+-- `names` limits the pass to the apps a change to those apps can affect; nil reads every app.
+relayout = function(force, names)
   if not config then return end
 
   local screens = currentScreens()
@@ -274,11 +314,15 @@ relayout = function(force)
   if changed then syncApplicationWatchers() end
   if not profile then return end
 
-  local windows = placeableWindows(ruledApplications(config.layouts[profile]))
+  local layout = config.layouts[profile]
+  local apps = ruledApplications(layout)
+  if names and not force and not changed then apps = inScope(layout, apps, names) end
+  local windows = placeableWindows(apps)
 
   -- Forgetting every record on a forced layout means a window skipped this pass, such as one
   -- that was hidden, is placed when it next appears rather than read as moved by hand.
   if force then assigned = {} end
+
   local pinned = force and {} or handMoved(windows)
   local plan = planner.plan(config, profile, screens, windows, pinned, gap)
 
@@ -293,9 +337,15 @@ relayout = function(force)
   saveAssigned()
 end
 
-scheduleRelayout = function()
+local pendingNames = {}
+scheduleRelayout = function(names)
+  for name in pairs(names) do pendingNames[name] = true end
   if batchTimer then batchTimer:stop() end
-  batchTimer = hs.timer.doAfter(BATCH_SECONDS, function() relayout(false) end)
+  batchTimer = hs.timer.doAfter(BATCH_SECONDS, function()
+    local batch = pendingNames
+    pendingNames = {}
+    relayout(false, batch)
+  end)
 end
 
 local function applicationEvent(_, event, app)
@@ -308,17 +358,17 @@ local function applicationEvent(_, event, app)
       local id = window:id()
       if id then ids[#ids + 1] = id end
     end
-    recheck(ids)
-    scheduleRelayout()
+    recheck(ids, appNames(app))
+    scheduleRelayout(appNames(app))
   elseif event == hs.application.watcher.unhidden and isRuled(config.layouts[profile], app) then
-    scheduleRelayout()
+    scheduleRelayout(appNames(app))
   elseif event == hs.application.watcher.terminated then
     appFiles[app:pid()] = nil
-    local watcher = appWatchers[app:pid()]
-    if watcher then
-      watcher:stop()
+    local watched = appWatchers[app:pid()]
+    if watched then
+      watched.watcher:stop()
       appWatchers[app:pid()] = nil
-      scheduleRelayout()
+      scheduleRelayout(watched.names)
     end
   end
 end
@@ -329,9 +379,10 @@ local function screensChanged()
 end
 
 -- An alert is drawn only once control returns to the run loop, so the layout waits a tick for it.
-local function forceLayout()
+local function forceLayout(rereadGap)
   if profile then hs.alert.show("Layout: " .. profile) end
   hs.timer.doAfter(0, function()
+    if rereadGap then gap = readGap() end
     config = loadConfig()
     syncApplicationWatchers()
     relayout(true)
@@ -340,13 +391,10 @@ end
 
 local function configSaved()
   if saveTimer then saveTimer:stop() end
-  saveTimer = hs.timer.doAfter(SAVE_SETTLE_SECONDS, forceLayout)
+  saveTimer = hs.timer.doAfter(SAVE_SETTLE_SECONDS, function() forceLayout(false) end)
 end
 
-hs.hotkey.bind(hyper, "p", function()
-  gap = readGap()
-  forceLayout()
-end)
+hs.hotkey.bind(hyper, "p", function() forceLayout(true) end)
 
 -- ---------------------------------------------------------------------------------= Watchers =--=
 
@@ -371,7 +419,11 @@ function listWindowLayout()
   print(string.format("profile: %s   gap: %d", tostring(detected), gap))
   if not detected then return end
 
-  local windows = placeableWindows(ruledApplications(config.layouts[detected]))
+  local started = hs.timer.absoluteTime()
+  local apps = ruledApplications(config.layouts[detected])
+  local windows = placeableWindows(apps)
+  print(string.format("  read %d windows from %d apps in %d ms", #windows, #apps,
+    (hs.timer.absoluteTime() - started) // 1000000))
   local pinned = handMoved(windows)
   local plan = planner.plan(config, detected, screens, windows, pinned, gap)
   for _, entry in ipairs(windows) do
