@@ -210,10 +210,18 @@ function M.plan(config, profileName, screens, windows, pinned, gap)
   local frames = {}
   for _, rule in ipairs(groupOrder) do
     local members = groups[rule]
+    -- Split slots run along one axis, so windows already placed keep the order they sit in and a
+    -- swap made by hand survives a forced layout. New windows follow in opening order, so one
+    -- opened over an existing window cannot push it past `max`.
+    local axis = rule.split == "rows" and 2 or 1
     table.sort(members, function(a, b)
       local pa = appKey(rule.order, a) or rule.order["*"]
       local pb = appKey(rule.order, b) or rule.order["*"]
       if pa ~= pb then return pa < pb end
+      if rule.split then
+        if not a.placed ~= not b.placed then return a.placed == true end
+        if a.placed and a.frame[axis] ~= b.frame[axis] then return a.frame[axis] < b.frame[axis] end
+      end
       return a.id < b.id
     end)
 

@@ -62,6 +62,16 @@ f = P.plan(config, "office", office, wins)
 eq("office 3rd terminal beyond max untouched", untouched(f[22]), { "untouched" })
 eq("office first two keep halves", f[21], { 3840, 0, 1280, 1415 })
 
+local swapped = {
+  { id = 20, app = TERM, placed = true, frame = { 3840, 0, 1280, 1415 } },
+  { id = 21, app = TERM, placed = true, frame = { 2560, 0, 1280, 1415 } },
+  { id = 22, app = TERM, frame = { 2582, 22, 1280, 1415 } },
+}
+f = P.plan(config, "office", office, swapped)
+eq("split keeps a hand swap: B stays left",  f[21], { 2560, 0, 1280, 1415 })
+eq("split keeps a hand swap: A stays right", f[20], { 3840, 0, 1280, 1415 })
+eq("split: a new window cannot bump a placed one", untouched(f[22]), { "untouched" })
+
 f = P.plan(config, "office", office, wins, { [20] = true })
 eq("pinned terminal excluded, next one takes left half", f[21], { 2560, 0, 1280, 1415 })
 

@@ -173,6 +173,7 @@ local function placeableWindows(apps)
             appFile = file,
             title = config.needsTitles and window:title() or nil,
             frame = toList(window:frame()),
+            placed = assigned[id] ~= nil,
             window = window,
           }
         end
@@ -273,11 +274,11 @@ relayout = function(force)
   if changed then syncApplicationWatchers() end
   if not profile then return end
 
+  local windows = placeableWindows(ruledApplications(config.layouts[profile]))
+
   -- Forgetting every record on a forced layout means a window skipped this pass, such as one
   -- that was hidden, is placed when it next appears rather than read as moved by hand.
   if force then assigned = {} end
-
-  local windows = placeableWindows(ruledApplications(config.layouts[profile]))
   local pinned = force and {} or handMoved(windows)
   local plan = planner.plan(config, profile, screens, windows, pinned, gap)
 
