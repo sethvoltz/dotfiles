@@ -9,7 +9,7 @@ num_bytes = ARGV[0].to_i
 filename = ARGV[1]
 
 file_size = File.size(filename)
-file = open(filename, "rb")
+file = File.open(filename, "rb")
 
 if (num_bytes > file_size)
   num_bytes = file_size
